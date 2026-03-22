@@ -1,195 +1,206 @@
 ---
 const uid = Math.random().toString(36).slice(2, 7);
+
+// 12 unique cloud silhouettes — randomly selected per page load for variety
+const cloudPaths = [
+  "M60,140 C20,140 10,115 20,95 C5,85 0,65 20,52 C18,30 40,18 65,25 C80,10 105,5 125,18 C140,2 170,0 190,15 C210,5 240,8 255,25 C275,15 300,25 305,50 C320,60 320,85 305,100 C315,120 300,135 280,140 Z",
+  "M55,140 C15,140 5,118 15,98 C0,88 -2,65 18,50 C22,28 45,15 72,22 C88,6 115,2 138,16 C158,0 185,0 205,12 C225,2 252,6 268,22 C288,14 310,28 312,55 C325,65 322,90 308,102 C312,122 298,138 275,142 Z",
+  "M50,145 C18,145 8,128 15,110 C2,100 -5,78 12,62 C20,42 48,28 78,32 C95,18 120,10 148,18 C168,8 195,5 220,14 C245,6 268,10 285,24 C302,16 318,30 315,55 C325,70 320,92 310,108 C305,125 290,140 265,145 Z",
+  "M65,138 C28,138 12,118 18,98 C4,86 -2,62 16,48 C22,26 50,14 80,20 C98,5 125,0 150,12 C172,-2 200,2 222,18 C248,8 275,12 292,30 C310,22 325,40 318,62 C328,78 322,100 310,112 C300,128 282,140 258,142 Z",
+  "M48,142 C12,142 0,120 8,100 C-5,85 -2,58 18,42 C25,18 55,5 85,15 C105,-2 135,-4 160,10 C180,0 205,4 225,18 C248,10 272,18 288,35 C305,28 318,45 315,68 C322,85 318,108 305,120 C295,135 275,142 250,145 Z",
+  "M70,135 C35,135 18,115 25,95 C10,82 5,60 22,48 C28,30 52,18 78,25 C95,12 118,8 140,16 C160,5 182,4 200,15 C220,8 242,14 258,28 C275,20 295,32 298,52 C308,65 305,88 295,102 C288,118 272,132 248,135 Z",
+  "M42,140 C10,140 0,122 8,105 C-4,92 -2,68 15,54 C18,35 42,22 70,28 C90,14 118,6 145,14 C168,2 198,-2 228,8 C252,0 278,6 298,22 C315,14 328,32 322,55 C330,72 325,95 312,110 C302,128 280,140 252,142 Z",
+  "M58,145 C22,145 8,125 14,105 C0,92 -4,68 12,50 C10,28 30,8 58,12 C75,-5 100,-8 128,5 C148,-6 175,-4 198,10 C218,0 242,5 260,20 C280,10 302,22 308,45 C318,58 320,82 312,100 C305,120 288,138 262,142 Z",
+  "M68,136 C38,136 20,118 28,100 C14,88 8,65 24,52 C30,34 55,24 82,28 C100,15 125,10 148,18 C168,8 190,6 210,16 C230,10 252,15 268,28 C285,22 300,35 298,55 C306,68 302,90 292,105 C282,122 265,135 240,138 Z",
+  "M52,142 C18,142 5,122 12,102 C-2,88 -4,62 14,46 C20,24 48,10 78,18 C98,2 128,-2 155,8 C175,-4 200,-2 218,12 C235,2 258,8 275,25 C295,15 315,30 318,55 C325,72 322,96 310,112 C298,130 278,142 252,144 Z",
+  "M62,138 C25,138 10,120 16,102 C2,90 -2,68 14,52 C16,32 38,16 65,20 C82,4 108,0 135,10 C155,-5 182,-2 205,8 C225,-2 250,2 270,18 C290,8 310,25 312,48 C322,62 318,86 308,100 C298,118 280,135 255,140 Z",
+  "M55,140 C20,142 6,125 10,108 C-4,95 -2,72 12,58 C8,38 28,20 55,22 C72,5 98,-2 125,8 C148,-4 175,-2 200,10 C222,2 248,8 268,24 C290,14 312,28 315,52 C322,68 318,92 306,108 C296,126 275,140 248,142 Z",
+];
+
+// Wider paths for mobile (viewBox 380x170)
+const mobilePaths = [
+  "M45,125 C12,125 5,105 12,88 C0,78 -2,58 15,45 C20,25 42,14 68,18 C85,4 110,0 135,10 C155,-2 180,-2 205,8 C228,-4 255,-2 275,10 C298,2 320,8 335,25 C352,18 370,32 372,52 C382,62 380,82 368,95 C370,112 358,125 338,128 Z",
+  "M40,128 C8,128 0,108 8,90 C-5,78 -2,55 12,42 C18,20 45,8 75,14 C95,-2 125,-5 155,6 C178,-4 205,-2 232,8 C255,-2 280,2 302,16 C322,8 342,22 345,45 C355,58 352,80 342,95 C335,112 318,128 292,130 Z",
+  "M48,122 C15,122 4,105 10,90 C-2,80 -4,60 10,48 C15,28 38,15 65,20 C82,6 108,0 138,8 C160,-4 188,-2 215,10 C238,0 262,4 285,18 C305,10 325,25 328,48 C338,60 335,82 325,96 C318,112 300,125 275,128 Z",
+  "M42,126 C10,126 2,110 8,94 C-4,82 -2,60 14,46 C18,24 42,10 72,16 C92,0 120,-4 150,6 C172,-4 200,-2 228,8 C250,-2 275,4 295,20 C315,12 335,28 338,50 C348,64 345,86 335,100 C325,116 308,128 282,130 Z",
+];
+
+// Pick two DIFFERENT shapes for left and right
+const leftIdx = Math.floor(Math.random() * cloudPaths.length);
+let rightIdx = Math.floor(Math.random() * (cloudPaths.length - 1));
+if (rightIdx >= leftIdx) rightIdx++;
+const mobileIdx = Math.floor(Math.random() * mobilePaths.length);
+
+const leftPath = cloudPaths[leftIdx];
+const rightPath = cloudPaths[rightIdx];
+const mobilePath = mobilePaths[mobileIdx];
 ---
 
 <div class="cloud-decoration" aria-hidden="true" transition:persist>
-  <!-- Desktop left: "SPIRO" -->
+  <!-- Desktop left -->
   <div class="cloud cloud-left">
     <div class="cloud-inner cloud-inner-left">
       <div class="cloud-rotate cloud-rotate-left">
-        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id={`gradL-${uid}`} cx="50%" cy="50%" r="55%">
-              <stop offset="0%" stop-color="#e8837c" />
-              <stop offset="55%" stop-color="#f4a0b5" />
-              <stop offset="100%" stop-color="#ffd1c1" />
-            </radialGradient>
-            <filter id={`filterL-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.04"
-                numOctaves="4"
-                seed="2"
-                result="noise"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="noise"
-                scale="12"
-                result="displaced"
-              />
-              <feGaussianBlur
-                in="displaced"
-                stdDeviation="1.5"
-                result="blurred"
-              />
-            </filter>
-          </defs>
-          <path
-            d="M60,140
-               C20,140 10,115 20,95
-               C5,85 0,65 20,52
-               C18,30 40,18 65,25
-               C80,10 105,5 125,18
-               C140,2 170,0 190,15
-               C210,5 240,8 255,25
-               C275,15 300,25 305,50
-               C320,60 320,85 305,100
-               C315,120 300,135 280,140
-               Z"
-            fill={`url(#gradL-${uid})`}
-            filter={`url(#filterL-${uid})`}
-          />
-          <text
-            x="160"
-            y="100"
-            font-family="var(--font-logo), cursive"
-            font-size="36"
-            fill="#5d3a4a"
-            opacity="0.7"
-            text-anchor="middle"
-            dominant-baseline="central"
-          >
-            SPIRO
-          </text>
-        </svg>
+        <div class="cloud-scale cloud-scale-left">
+          <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id={`gradL-${uid}`} cx="50%" cy="50%" r="55%">
+                <stop offset="0%" stop-color="#e8837c"></stop>
+                <stop offset="55%" stop-color="#f4a0b5"></stop>
+                <stop offset="100%" stop-color="#ffd1c1"></stop>
+              </radialGradient>
+              <filter
+                id={`filterL-${uid}`}
+                x="-10%"
+                y="-10%"
+                width="120%"
+                height="120%"
+              >
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.04"
+                  numOctaves="4"
+                  seed="2"
+                  result="noise"></feTurbulence>
+                <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="noise"
+                  scale="12"
+                  result="displaced"></feDisplacementMap>
+                <feGaussianBlur
+                  in="displaced"
+                  stdDeviation="1.5"
+                  result="blurred"></feGaussianBlur>
+              </filter>
+            </defs>
+            <path
+              d={leftPath}
+              fill={`url(#gradL-${uid})`}
+              filter={`url(#filterL-${uid})`}></path>
+            <text
+              x="160"
+              y="88"
+              font-family="var(--font-logo), cursive"
+              font-size="32"
+              fill="#5d3a4a"
+              opacity="0.7"
+              text-anchor="middle"
+              dominant-baseline="central"
+            >
+              spiro spero
+            </text>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Desktop right: "SPERO" -->
+  <!-- Desktop right -->
   <div class="cloud cloud-right">
     <div class="cloud-inner cloud-inner-right">
       <div class="cloud-rotate cloud-rotate-right">
-        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <radialGradient id={`gradR-${uid}`} cx="50%" cy="50%" r="55%">
-              <stop offset="0%" stop-color="#e8837c" />
-              <stop offset="55%" stop-color="#f4a0b5" />
-              <stop offset="100%" stop-color="#ffd1c1" />
-            </radialGradient>
-            <filter id={`filterR-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
-              <feTurbulence
-                type="fractalNoise"
-                baseFrequency="0.04"
-                numOctaves="4"
-                seed="2"
-                result="noise"
-              />
-              <feDisplacementMap
-                in="SourceGraphic"
-                in2="noise"
-                scale="12"
-                result="displaced"
-              />
-              <feGaussianBlur
-                in="displaced"
-                stdDeviation="1.5"
-                result="blurred"
-              />
-            </filter>
-          </defs>
-          <path
-            d="M55,140
-               C15,140 5,118 15,98
-               C0,88 -2,65 18,50
-               C22,28 45,15 72,22
-               C88,6 115,2 138,16
-               C158,0 185,0 205,12
-               C225,2 252,6 268,22
-               C288,14 310,28 312,55
-               C325,65 322,90 308,102
-               C312,122 298,138 275,142
-               Z"
-            fill={`url(#gradR-${uid})`}
-            filter={`url(#filterR-${uid})`}
-          />
-          <text
-            x="160"
-            y="100"
-            font-family="var(--font-logo), cursive"
-            font-size="36"
-            fill="#5d3a4a"
-            opacity="0.7"
-            text-anchor="middle"
-            dominant-baseline="central"
-          >
-            SPERO
-          </text>
-        </svg>
+        <div class="cloud-scale cloud-scale-right">
+          <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id={`gradR-${uid}`} cx="50%" cy="50%" r="55%">
+                <stop offset="0%" stop-color="#e8837c"></stop>
+                <stop offset="55%" stop-color="#f4a0b5"></stop>
+                <stop offset="100%" stop-color="#ffd1c1"></stop>
+              </radialGradient>
+              <filter
+                id={`filterR-${uid}`}
+                x="-10%"
+                y="-10%"
+                width="120%"
+                height="120%"
+              >
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.04"
+                  numOctaves="4"
+                  seed="2"
+                  result="noise"></feTurbulence>
+                <feDisplacementMap
+                  in="SourceGraphic"
+                  in2="noise"
+                  scale="12"
+                  result="displaced"></feDisplacementMap>
+                <feGaussianBlur
+                  in="displaced"
+                  stdDeviation="1.5"
+                  result="blurred"></feGaussianBlur>
+              </filter>
+            </defs>
+            <path
+              d={rightPath}
+              fill={`url(#gradR-${uid})`}
+              filter={`url(#filterR-${uid})`}></path>
+            <text
+              x="165"
+              y="88"
+              font-family="var(--font-logo), cursive"
+              font-size="32"
+              fill="#5d3a4a"
+              opacity="0.7"
+              text-anchor="middle"
+              dominant-baseline="central"
+            >
+              spiro spero
+            </text>
+          </svg>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Mobile: "SPIRO SPERO" -->
+  <!-- Mobile -->
   <div class="cloud cloud-mobile">
     <div class="cloud-inner cloud-inner-mobile">
       <div class="cloud-rotate cloud-rotate-mobile">
         <svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <radialGradient id={`gradM-${uid}`} cx="50%" cy="50%" r="55%">
-              <stop offset="0%" stop-color="#e8837c" />
-              <stop offset="55%" stop-color="#f4a0b5" />
-              <stop offset="100%" stop-color="#ffd1c1" />
+              <stop offset="0%" stop-color="#e8837c"></stop>
+              <stop offset="55%" stop-color="#f4a0b5"></stop>
+              <stop offset="100%" stop-color="#ffd1c1"></stop>
             </radialGradient>
-            <filter id={`filterM-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
+            <filter
+              id={`filterM-${uid}`}
+              x="-10%"
+              y="-10%"
+              width="120%"
+              height="120%"
+            >
               <feTurbulence
                 type="fractalNoise"
                 baseFrequency="0.04"
                 numOctaves="4"
                 seed="2"
-                result="noise"
-              />
+                result="noise"></feTurbulence>
               <feDisplacementMap
                 in="SourceGraphic"
                 in2="noise"
                 scale="12"
-                result="displaced"
-              />
-              <feGaussianBlur
-                in="displaced"
-                stdDeviation="1.5"
-                result="blurred"
-              />
+                result="displaced"></feDisplacementMap>
+              <feGaussianBlur in="displaced" stdDeviation="1.5" result="blurred"
+              ></feGaussianBlur>
             </filter>
           </defs>
           <path
-            d="M45,125
-               C12,125 5,105 12,88
-               C0,78 -2,58 15,45
-               C20,25 42,14 68,18
-               C85,4 110,0 135,10
-               C155,-2 180,-2 205,8
-               C228,-4 255,-2 275,10
-               C298,2 320,8 335,25
-               C352,18 370,32 372,52
-               C382,62 380,82 368,95
-               C370,112 358,125 338,128
-               Z"
+            d={mobilePath}
             fill={`url(#gradM-${uid})`}
-            filter={`url(#filterM-${uid})`}
-          />
+            filter={`url(#filterM-${uid})`}></path>
           <text
-            x="190"
-            y="82"
+            x="195"
+            y="75"
             font-family="var(--font-logo), cursive"
-            font-size="28"
+            font-size="24"
             fill="#5d3a4a"
             opacity="0.7"
             text-anchor="middle"
             dominant-baseline="central"
           >
-            SPIRO SPERO
+            spiro spero
           </text>
         </svg>
       </div>
@@ -230,7 +241,7 @@ const uid = Math.random().toString(36).slice(2, 7);
 
   .cloud-mobile {
     position: absolute;
-    top: 1rem;
+    top: 5rem;
     left: 0.5rem;
     width: 200px;
   }
@@ -254,40 +265,71 @@ const uid = Math.random().toString(36).slice(2, 7);
     }
   }
 
-  /* Multi-layered animations with coprime durations for natural drift */
-  /* Each wrapper level animates one axis only */
+  /* Multi-layered animations with coprime durations for natural drift.
+     Asymmetric keyframe percentages make the motion feel wind-driven
+     rather than mechanical. 4 layers: sway-x, bob-y, rotate, scale-breathe. */
 
   @keyframes cloud-sway-x {
-    0%,
-    100% {
+    0% {
       transform: translateX(0);
     }
-    50% {
-      transform: translateX(18px);
+    40% {
+      transform: translateX(24px);
+    }
+    70% {
+      transform: translateX(-8px);
+    }
+    100% {
+      transform: translateX(0);
     }
   }
 
   @keyframes cloud-bob-y {
-    0%,
-    100% {
+    0% {
       transform: translateY(0);
     }
-    50% {
-      transform: translateY(-12px);
+    35% {
+      transform: translateY(-16px);
+    }
+    65% {
+      transform: translateY(6px);
+    }
+    100% {
+      transform: translateY(0);
     }
   }
 
   @keyframes cloud-rotate {
-    0%,
+    0% {
+      transform: rotate(0deg);
+    }
+    30% {
+      transform: rotate(2.5deg);
+    }
+    60% {
+      transform: rotate(-1.5deg);
+    }
     100% {
       transform: rotate(0deg);
     }
-    50% {
-      transform: rotate(2deg);
+  }
+
+  @keyframes cloud-breathe {
+    0% {
+      transform: scale(1);
+    }
+    45% {
+      transform: scale(1.04);
+    }
+    80% {
+      transform: scale(0.97);
+    }
+    100% {
+      transform: scale(1);
     }
   }
 
-  /* Left cloud: sway-x on outer, bob-y on inner, rotate on innermost */
+  /* Left cloud: 4 nested layers, each animates one axis */
   .cloud-left {
     animation: cloud-sway-x 8s ease-in-out infinite;
   }
@@ -297,8 +339,11 @@ const uid = Math.random().toString(36).slice(2, 7);
   .cloud-rotate-left {
     animation: cloud-rotate 15s ease-in-out infinite;
   }
+  .cloud-scale-left {
+    animation: cloud-breathe 19s ease-in-out infinite;
+  }
 
-  /* Right cloud: reversed sway, different durations */
+  /* Right cloud: different durations + reversed directions */
   .cloud-right {
     animation: cloud-sway-x 9s ease-in-out infinite reverse;
   }
@@ -308,16 +353,19 @@ const uid = Math.random().toString(36).slice(2, 7);
   .cloud-rotate-right {
     animation: cloud-rotate 17s ease-in-out infinite reverse;
   }
+  .cloud-scale-right {
+    animation: cloud-breathe 23s ease-in-out infinite;
+  }
 
-  /* Mobile cloud */
+  /* Mobile cloud: gentler motion */
   .cloud-mobile {
-    animation: cloud-sway-x 10s ease-in-out infinite;
+    animation: cloud-sway-x 12s ease-in-out infinite;
   }
   .cloud-inner-mobile {
-    animation: cloud-bob-y 14s ease-in-out infinite;
+    animation: cloud-bob-y 16s ease-in-out infinite;
   }
   .cloud-rotate-mobile {
-    animation: cloud-rotate 19s ease-in-out infinite;
+    animation: cloud-rotate 21s ease-in-out infinite;
   }
 
   /* Performance */
@@ -329,7 +377,9 @@ const uid = Math.random().toString(36).slice(2, 7);
   .cloud-inner-mobile,
   .cloud-rotate-left,
   .cloud-rotate-right,
-  .cloud-rotate-mobile {
+  .cloud-rotate-mobile,
+  .cloud-scale-left,
+  .cloud-scale-right {
     will-change: transform;
   }
 
@@ -343,7 +393,9 @@ const uid = Math.random().toString(36).slice(2, 7);
     .cloud-inner-mobile,
     .cloud-rotate-left,
     .cloud-rotate-right,
-    .cloud-rotate-mobile {
+    .cloud-rotate-mobile,
+    .cloud-scale-left,
+    .cloud-scale-right {
       animation: none;
       will-change: auto;
     }
