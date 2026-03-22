@@ -4,6 +4,7 @@ import { ClientRouter } from "astro:transitions";
 import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { SITE } from "@/config";
 import "@/styles/global.css";
+import CloudDecoration from "@/components/CloudDecoration.astro";
 
 type Props = {
   title?: string;
@@ -61,9 +62,17 @@ const structuredData = {
     <link rel="canonical" href={canonicalURL} />
     <meta name="generator" content={Astro.generator} />
 
-    <!-- Load Font -->
+    <!-- Load Fonts -->
     <Font
       cssVariable="--font-google-sans-code"
+      preload={[{ subset: "latin", weight: 400, style: "normal" }]}
+    />
+    <Font
+      cssVariable="--font-chicle"
+      preload={[{ subset: "latin", weight: 400, style: "normal" }]}
+    />
+    <Font
+      cssVariable="--font-mclaren"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
 
@@ -168,7 +177,10 @@ const structuredData = {
     </script>
   </head>
   <body>
-    <slot />
+    <CloudDecoration />
+    <div class="relative z-1 flex min-h-svh flex-col">
+      <slot />
+    </div>
 
     <!-- Load full theme logic -->
     <script src="../scripts/theme.ts"></script>
