@@ -1,3 +1,7 @@
+---
+const uid = Math.random().toString(36).slice(2, 7);
+---
+
 <div class="cloud-decoration" aria-hidden="true" transition:persist>
   <!-- Desktop left: "SPIRO" -->
   <div class="cloud cloud-left">
@@ -5,12 +9,12 @@
       <div class="cloud-rotate cloud-rotate-left">
         <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="gradL" cx="50%" cy="50%" r="55%">
+            <radialGradient id={`gradL-${uid}`} cx="50%" cy="50%" r="55%">
               <stop offset="0%" stop-color="#e8837c" />
               <stop offset="55%" stop-color="#f4a0b5" />
               <stop offset="100%" stop-color="#ffd1c1" />
             </radialGradient>
-            <filter id="filterL" x="-10%" y="-10%" width="120%" height="120%">
+            <filter id={`filterL-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
               <feTurbulence
                 type="fractalNoise"
                 baseFrequency="0.04"
@@ -29,11 +33,6 @@
                 stdDeviation="1.5"
                 result="blurred"
               />
-              <feComposite
-                in="blurred"
-                in2="SourceGraphic"
-                operator="atop"
-              />
             </filter>
           </defs>
           <path
@@ -48,8 +47,8 @@
                C320,60 320,85 305,100
                C315,120 300,135 280,140
                Z"
-            fill="url(#gradL)"
-            filter="url(#filterL)"
+            fill={`url(#gradL-${uid})`}
+            filter={`url(#filterL-${uid})`}
           />
           <text
             x="160"
@@ -74,12 +73,12 @@
       <div class="cloud-rotate cloud-rotate-right">
         <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="gradR" cx="50%" cy="50%" r="55%">
+            <radialGradient id={`gradR-${uid}`} cx="50%" cy="50%" r="55%">
               <stop offset="0%" stop-color="#e8837c" />
               <stop offset="55%" stop-color="#f4a0b5" />
               <stop offset="100%" stop-color="#ffd1c1" />
             </radialGradient>
-            <filter id="filterR" x="-10%" y="-10%" width="120%" height="120%">
+            <filter id={`filterR-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
               <feTurbulence
                 type="fractalNoise"
                 baseFrequency="0.04"
@@ -98,11 +97,6 @@
                 stdDeviation="1.5"
                 result="blurred"
               />
-              <feComposite
-                in="blurred"
-                in2="SourceGraphic"
-                operator="atop"
-              />
             </filter>
           </defs>
           <path
@@ -117,8 +111,8 @@
                C325,65 322,90 308,102
                C312,122 298,138 275,142
                Z"
-            fill="url(#gradR)"
-            filter="url(#filterR)"
+            fill={`url(#gradR-${uid})`}
+            filter={`url(#filterR-${uid})`}
           />
           <text
             x="160"
@@ -143,12 +137,12 @@
       <div class="cloud-rotate cloud-rotate-mobile">
         <svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg">
           <defs>
-            <radialGradient id="gradM" cx="50%" cy="50%" r="55%">
+            <radialGradient id={`gradM-${uid}`} cx="50%" cy="50%" r="55%">
               <stop offset="0%" stop-color="#e8837c" />
               <stop offset="55%" stop-color="#f4a0b5" />
               <stop offset="100%" stop-color="#ffd1c1" />
             </radialGradient>
-            <filter id="filterM" x="-10%" y="-10%" width="120%" height="120%">
+            <filter id={`filterM-${uid}`} x="-10%" y="-10%" width="120%" height="120%">
               <feTurbulence
                 type="fractalNoise"
                 baseFrequency="0.04"
@@ -167,11 +161,6 @@
                 stdDeviation="1.5"
                 result="blurred"
               />
-              <feComposite
-                in="blurred"
-                in2="SourceGraphic"
-                operator="atop"
-              />
             </filter>
           </defs>
           <path
@@ -187,8 +176,8 @@
                C382,62 380,82 368,95
                C370,112 358,125 338,128
                Z"
-            fill="url(#gradM)"
-            filter="url(#filterM)"
+            fill={`url(#gradM-${uid})`}
+            filter={`url(#filterM-${uid})`}
           />
           <text
             x="190"
@@ -356,6 +345,7 @@
     .cloud-rotate-right,
     .cloud-rotate-mobile {
       animation: none;
+      will-change: auto;
     }
   }
 
