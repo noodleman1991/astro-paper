@@ -1,5 +1,5 @@
 {
-  "name": "astro-paper",
+  "name": "spiro-spero-studio",
   "type": "module",
   "version": "5.5.1",
   "scripts": {
@@ -15,9 +15,13 @@
   "dependencies": {
     "@astrojs/rss": "^4.0.14",
     "@astrojs/sitemap": "^3.6.0",
+    "@iconify-json/streamline-logos": "^1.2.0",
+    "@iconify-json/streamline-ultimate-color": "^1.2.2",
+    "@iconify-json/tabler": "^1.2.31",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.16.6",
+    "astro-icon": "^1.1.5",
     "dayjs": "^1.11.19",
     "lodash.kebabcase": "^4.1.1",
     "remark-collapse": "^0.1.2",

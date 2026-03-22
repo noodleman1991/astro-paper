@@ -11,14 +11,14 @@ import {
 import { transformerFileName } from "./src/utils/transformers/fileName";
 import { SITE } from "./src/config";
 
+import icon from "astro-icon";
+
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
-  integrations: [
-    sitemap({
-      filter: page => SITE.showArchives || !page.endsWith("/archives"),
-    }),
-  ],
+  integrations: [sitemap({
+    filter: page => SITE.showArchives || !page.endsWith("/archives"),
+  }), icon()],
   markdown: {
     remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
     shikiConfig: {
@@ -67,6 +67,22 @@ export default defineConfig({
         fallbacks: ["monospace"],
         weights: [300, 400, 500, 600, 700],
         styles: ["normal", "italic"],
+      },
+      {
+        name: "Chicle",
+        cssVariable: "--font-chicle",
+        provider: fontProviders.google(),
+        fallbacks: ["cursive"],
+        weights: [400],
+        styles: ["normal"],
+      },
+      {
+        name: "McLaren",
+        cssVariable: "--font-mclaren",
+        provider: fontProviders.google(),
+        fallbacks: ["sans-serif"],
+        weights: [400],
+        styles: ["normal"],
       },
     ],
   },
