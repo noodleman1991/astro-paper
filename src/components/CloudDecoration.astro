@@ -1,0 +1,368 @@
+<div class="cloud-decoration" aria-hidden="true" transition:persist>
+  <!-- Desktop left: "SPIRO" -->
+  <div class="cloud cloud-left">
+    <div class="cloud-inner cloud-inner-left">
+      <div class="cloud-rotate cloud-rotate-left">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gradL" cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stop-color="#e8837c" />
+              <stop offset="55%" stop-color="#f4a0b5" />
+              <stop offset="100%" stop-color="#ffd1c1" />
+            </radialGradient>
+            <filter id="filterL" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.04"
+                numOctaves="4"
+                seed="2"
+                result="noise"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="12"
+                result="displaced"
+              />
+              <feGaussianBlur
+                in="displaced"
+                stdDeviation="1.5"
+                result="blurred"
+              />
+              <feComposite
+                in="blurred"
+                in2="SourceGraphic"
+                operator="atop"
+              />
+            </filter>
+          </defs>
+          <path
+            d="M60,140
+               C20,140 10,115 20,95
+               C5,85 0,65 20,52
+               C18,30 40,18 65,25
+               C80,10 105,5 125,18
+               C140,2 170,0 190,15
+               C210,5 240,8 255,25
+               C275,15 300,25 305,50
+               C320,60 320,85 305,100
+               C315,120 300,135 280,140
+               Z"
+            fill="url(#gradL)"
+            filter="url(#filterL)"
+          />
+          <text
+            x="160"
+            y="100"
+            font-family="var(--font-logo), cursive"
+            font-size="36"
+            fill="#5d3a4a"
+            opacity="0.7"
+            text-anchor="middle"
+            dominant-baseline="central"
+          >
+            SPIRO
+          </text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Desktop right: "SPERO" -->
+  <div class="cloud cloud-right">
+    <div class="cloud-inner cloud-inner-right">
+      <div class="cloud-rotate cloud-rotate-right">
+        <svg viewBox="0 0 320 200" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gradR" cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stop-color="#e8837c" />
+              <stop offset="55%" stop-color="#f4a0b5" />
+              <stop offset="100%" stop-color="#ffd1c1" />
+            </radialGradient>
+            <filter id="filterR" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.04"
+                numOctaves="4"
+                seed="2"
+                result="noise"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="12"
+                result="displaced"
+              />
+              <feGaussianBlur
+                in="displaced"
+                stdDeviation="1.5"
+                result="blurred"
+              />
+              <feComposite
+                in="blurred"
+                in2="SourceGraphic"
+                operator="atop"
+              />
+            </filter>
+          </defs>
+          <path
+            d="M55,140
+               C15,140 5,118 15,98
+               C0,88 -2,65 18,50
+               C22,28 45,15 72,22
+               C88,6 115,2 138,16
+               C158,0 185,0 205,12
+               C225,2 252,6 268,22
+               C288,14 310,28 312,55
+               C325,65 322,90 308,102
+               C312,122 298,138 275,142
+               Z"
+            fill="url(#gradR)"
+            filter="url(#filterR)"
+          />
+          <text
+            x="160"
+            y="100"
+            font-family="var(--font-logo), cursive"
+            font-size="36"
+            fill="#5d3a4a"
+            opacity="0.7"
+            text-anchor="middle"
+            dominant-baseline="central"
+          >
+            SPERO
+          </text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile: "SPIRO SPERO" -->
+  <div class="cloud cloud-mobile">
+    <div class="cloud-inner cloud-inner-mobile">
+      <div class="cloud-rotate cloud-rotate-mobile">
+        <svg viewBox="0 0 380 170" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="gradM" cx="50%" cy="50%" r="55%">
+              <stop offset="0%" stop-color="#e8837c" />
+              <stop offset="55%" stop-color="#f4a0b5" />
+              <stop offset="100%" stop-color="#ffd1c1" />
+            </radialGradient>
+            <filter id="filterM" x="-10%" y="-10%" width="120%" height="120%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency="0.04"
+                numOctaves="4"
+                seed="2"
+                result="noise"
+              />
+              <feDisplacementMap
+                in="SourceGraphic"
+                in2="noise"
+                scale="12"
+                result="displaced"
+              />
+              <feGaussianBlur
+                in="displaced"
+                stdDeviation="1.5"
+                result="blurred"
+              />
+              <feComposite
+                in="blurred"
+                in2="SourceGraphic"
+                operator="atop"
+              />
+            </filter>
+          </defs>
+          <path
+            d="M45,125
+               C12,125 5,105 12,88
+               C0,78 -2,58 15,45
+               C20,25 42,14 68,18
+               C85,4 110,0 135,10
+               C155,-2 180,-2 205,8
+               C228,-4 255,-2 275,10
+               C298,2 320,8 335,25
+               C352,18 370,32 372,52
+               C382,62 380,82 368,95
+               C370,112 358,125 338,128
+               Z"
+            fill="url(#gradM)"
+            filter="url(#filterM)"
+          />
+          <text
+            x="190"
+            y="82"
+            font-family="var(--font-logo), cursive"
+            font-size="28"
+            fill="#5d3a4a"
+            opacity="0.7"
+            text-anchor="middle"
+            dominant-baseline="central"
+          >
+            SPIRO SPERO
+          </text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Container: fixed background layer, content scrolls over it */
+  .cloud-decoration {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+    opacity: 0.55;
+  }
+
+  /* Dark mode: reduce opacity */
+  :where([data-theme="dark"]) .cloud-decoration {
+    opacity: 0.25;
+  }
+
+  /* Desktop cloud positioning */
+  .cloud-left {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 280px;
+  }
+
+  .cloud-right {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 280px;
+  }
+
+  .cloud-mobile {
+    position: absolute;
+    top: 1rem;
+    left: 0.5rem;
+    width: 200px;
+  }
+
+  /* Responsive show/hide */
+  .cloud-left,
+  .cloud-right {
+    display: none;
+  }
+  .cloud-mobile {
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .cloud-left,
+    .cloud-right {
+      display: block;
+    }
+    .cloud-mobile {
+      display: none;
+    }
+  }
+
+  /* Multi-layered animations with coprime durations for natural drift */
+  /* Each wrapper level animates one axis only */
+
+  @keyframes cloud-sway-x {
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+    50% {
+      transform: translateX(18px);
+    }
+  }
+
+  @keyframes cloud-bob-y {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-12px);
+    }
+  }
+
+  @keyframes cloud-rotate {
+    0%,
+    100% {
+      transform: rotate(0deg);
+    }
+    50% {
+      transform: rotate(2deg);
+    }
+  }
+
+  /* Left cloud: sway-x on outer, bob-y on inner, rotate on innermost */
+  .cloud-left {
+    animation: cloud-sway-x 8s ease-in-out infinite;
+  }
+  .cloud-inner-left {
+    animation: cloud-bob-y 11s ease-in-out infinite;
+  }
+  .cloud-rotate-left {
+    animation: cloud-rotate 15s ease-in-out infinite;
+  }
+
+  /* Right cloud: reversed sway, different durations */
+  .cloud-right {
+    animation: cloud-sway-x 9s ease-in-out infinite reverse;
+  }
+  .cloud-inner-right {
+    animation: cloud-bob-y 13s ease-in-out infinite;
+  }
+  .cloud-rotate-right {
+    animation: cloud-rotate 17s ease-in-out infinite reverse;
+  }
+
+  /* Mobile cloud */
+  .cloud-mobile {
+    animation: cloud-sway-x 10s ease-in-out infinite;
+  }
+  .cloud-inner-mobile {
+    animation: cloud-bob-y 14s ease-in-out infinite;
+  }
+  .cloud-rotate-mobile {
+    animation: cloud-rotate 19s ease-in-out infinite;
+  }
+
+  /* Performance */
+  .cloud-left,
+  .cloud-right,
+  .cloud-mobile,
+  .cloud-inner-left,
+  .cloud-inner-right,
+  .cloud-inner-mobile,
+  .cloud-rotate-left,
+  .cloud-rotate-right,
+  .cloud-rotate-mobile {
+    will-change: transform;
+  }
+
+  /* Accessibility: respect reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .cloud-left,
+    .cloud-right,
+    .cloud-mobile,
+    .cloud-inner-left,
+    .cloud-inner-right,
+    .cloud-inner-mobile,
+    .cloud-rotate-left,
+    .cloud-rotate-right,
+    .cloud-rotate-mobile {
+      animation: none;
+    }
+  }
+
+  /* Hide from print */
+  @media print {
+    .cloud-decoration {
+      display: none;
+    }
+  }
+</style>
