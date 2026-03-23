@@ -1,9 +1,9 @@
 ---
 import "@pagefind/default-ui/css/ui.css";
-import Main from "@/layouts/Main.astro";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import { SITE } from "@/config";
 
 const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
@@ -11,9 +11,20 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 
 <Layout title={`Search | ${SITE.title}`}>
   <Header />
-  <Main pageTitle="Search" pageDesc="Search any article ...">
+  <Breadcrumb />
+  <main data-backurl={backUrl} id="main-content" class="app-layout pb-4">
+    <h1 class="font-heading text-2xl font-semibold sm:text-3xl">Search</h1>
+    <input
+      id="search-input"
+      type="text"
+      placeholder="search any article ..."
+      autocomplete="off"
+      autofocus
+      class="mt-2 mb-6 w-full bg-transparent text-foreground italic outline-none placeholder:text-foreground/50 focus:border-b focus:border-accent focus:not-italic"
+      aria-label="Search articles"
+    />
     <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
-  </Main>
+  </main>
   <Footer />
 </Layout>
 
@@ -21,8 +32,10 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
   function initSearch() {
     const pageFindSearch: HTMLElement | null =
       document.querySelector("#pagefind-search");
+    const searchInput: HTMLInputElement | null =
+      document.querySelector("#search-input");
 
-    if (!pageFindSearch) return;
+    if (!pageFindSearch || !searchInput) return;
 
     const params = new URLSearchParams(window.location.search);
 
@@ -32,7 +45,7 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
       // @ts-expect-error — Missing types for @pagefind/default-ui package.
       const { PagefindUI } = await import("@pagefind/default-ui");
 
-      // Display warning inn dev mode
+      // Display warning in dev mode
       if (import.meta.env.DEV) {
         pageFindSearch.innerHTML = `
             <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
@@ -48,8 +61,8 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
         showImages: false,
         showSubResults: true,
         processTerm: function (term: string) {
-          params.set("q", term); // Update the `q` parameter in the URL
-          history.replaceState(history.state, "", "?" + params.toString()); // Push the new URL without reloading
+          params.set("q", term);
+          history.replaceState(history.state, "", "?" + params.toString());
 
           const backUrl = pageFindSearch?.dataset?.backurl;
           sessionStorage.setItem("backUrl", backUrl + "?" + params.toString());
@@ -58,22 +71,21 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
         },
       });
 
+      // Wire custom input to Pagefind
+      searchInput.addEventListener("input", () => {
+        const term = searchInput.value.trim();
+        search.triggerSearch(term);
+
+        if (term === "") {
+          history.replaceState(history.state, "", window.location.pathname);
+        }
+      });
+
       // If search param exists (eg: search?q=astro), trigger search
       const query = params.get("q");
       if (query) {
+        searchInput.value = query;
         search.triggerSearch(query);
-      }
-
-      // Reset search param if search input is cleared
-      const searchInput = document.querySelector(".pagefind-ui__search-input");
-      const clearButton = document.querySelector(".pagefind-ui__search-clear");
-      searchInput?.addEventListener("input", resetSearchParam);
-      clearButton?.addEventListener("click", resetSearchParam);
-
-      function resetSearchParam(e: Event) {
-        if ((e.target as HTMLInputElement)?.value.trim() === "") {
-          history.replaceState(history.state, "", window.location.pathname);
-        }
       }
     });
   }
@@ -86,6 +98,16 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 
     initSearch();
   });
+
+  document.addEventListener("astro:page-load", () => {
+    const mainContent: HTMLElement | null =
+      document.querySelector("#main-content");
+    const backUrl = mainContent?.dataset?.backurl;
+    if (backUrl) {
+      sessionStorage.setItem("backUrl", backUrl);
+    }
+  });
+
   initSearch();
 </script>
 
@@ -102,17 +124,11 @@ const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
     --pagefind-ui-image-border-radius: 8px;
     --pagefind-ui-image-box-ratio: 3 / 2;
 
-    form::before {
-      background-color: var(--foreground);
-    }
-
-    input {
-      font-weight: 400;
-      border: 1px solid var(--border);
-    }
-
-    input:focus-visible {
-      outline: 1px solid var(--accent);
+    /* Hide Pagefind's built-in search form — using custom inline input instead */
+    .pagefind-ui__form::before,
+    .pagefind-ui__search-input,
+    .pagefind-ui__search-clear {
+      display: none;
     }
 
     .pagefind-ui__result-title a {

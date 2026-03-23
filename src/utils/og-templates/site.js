@@ -77,7 +77,7 @@ export default async () => {
                           {
                             type: "p",
                             props: {
-                              style: { fontSize: 72, fontWeight: "bold" },
+                              style: { fontSize: 72, fontWeight: 400 },
                               children: SITE.title,
                             },
                           },
@@ -104,7 +104,7 @@ export default async () => {
                         children: {
                           type: "span",
                           props: {
-                            style: { overflow: "hidden", fontWeight: "bold" },
+                            style: { overflow: "hidden", fontWeight: 400 },
                             children: new URL(SITE.website).hostname,
                           },
                         },

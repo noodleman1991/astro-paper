@@ -55,7 +55,7 @@ import loadGoogleFonts from "../loadGoogleFont";
 //           <p
 //             style={{
 //               fontSize: 72,
-//               fontWeight: "bold",
+//               fontWeight: 400,
 //               maxHeight: "84%",
 //               overflow: "hidden",
 //             }}
@@ -156,7 +156,7 @@ export default async post => {
                       props: {
                         style: {
                           fontSize: 72,
-                          fontWeight: "bold",
+                          fontWeight: 400,
                           maxHeight: "84%",
                           overflow: "hidden",
                         },
@@ -191,7 +191,7 @@ export default async post => {
                                   props: {
                                     style: {
                                       overflow: "hidden",
-                                      fontWeight: "bold",
+                                      fontWeight: 400,
                                     },
                                     children: post.data.author,
                                   },
