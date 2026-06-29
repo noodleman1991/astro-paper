@@ -3,104 +3,43 @@ import { getCollection } from "astro:content";
 import Layout from "@/layouts/Layout.astro";
 import Header from "@/components/Header.astro";
 import Footer from "@/components/Footer.astro";
-import Socials from "@/components/Socials.astro";
-import LinkButton from "@/components/LinkButton.astro";
-import Card from "@/components/Card.astro";
+import HeroBlock from "@/components/home/HeroBlock.astro";
+import ServicesBlock from "@/components/home/ServicesBlock.astro";
+import BlogBlock from "@/components/home/BlogBlock.astro";
+import PortfolioBlock from "@/components/home/PortfolioBlock.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import { Icon } from "astro-icon/components";
-import { SITE } from "@/config";
-import { SOCIALS } from "@/constants";
 
 const posts = await getCollection("blog");
-
-const sortedPosts = getSortedPosts(posts);
-const featuredPosts = sortedPosts.filter(({ data }) => data.featured);
-const recentPosts = sortedPosts.filter(({ data }) => !data.featured);
+const recentPosts = getSortedPosts(posts).slice(0, 3);
 ---
 
 <Layout>
   <Header />
-  <main id="main-content" data-layout="index" class="app-layout">
-    <section id="hero" class:list={["pt-8 pb-6", "border-b border-border"]}>
-      <h1
-        class="my-4 inline-block font-heading text-4xl font-bold sm:my-8 sm:text-5xl"
-      >
-        spiro spero studio
-      </h1>
-      <a
-        target="_blank"
-        href="/rss.xml"
-        class="inline-block"
-        aria-label="rss feed"
-        title="RSS Feed"
-      >
-        <Icon
-          name="streamline-ultimate-color:rss-feed"
-          width={20}
-          height={20}
-          class="scale-125 rtl:-rotate-90"
-        />
-        <span class="sr-only">RSS Feed</span>
-      </a>
-
-      <p>I'm Amit. I build websites and apps, set up hubs and knowledge management with and without AI. I also manage existing systems and provide support and training.</p>
-      {
-        // only display if at least one social link is enabled
-        SOCIALS.length > 0 && (
-          <div class="mt-4 flex max-sm:flex-col sm:items-center">
-            <div class="me-2 mb-1 whitespace-nowrap sm:mb-0">Social Links:</div>
-            <Socials />
-          </div>
-        )
-      }
-    </section>
-
-    {
-      featuredPosts.length > 0 && (
-        <section
-          id="featured"
-          class:list={[
-            "pt-12 pb-6",
-            { "border-b border-border": recentPosts.length > 0 },
-          ]}
-        >
-          <h2 class="font-heading text-2xl font-semibold tracking-wide">
-            Featured
-          </h2>
-          <ul>
-            {featuredPosts.map(data => (
-              <Card variant="h3" {...data} />
-            ))}
-          </ul>
-        </section>
-      )
-    }
-
-    {
-      recentPosts.length > 0 && (
-        <section id="recent-posts" class="pt-12 pb-6">
-          <h2 class="font-heading text-2xl font-semibold tracking-wide">
-            Recent Posts
-          </h2>
-          <ul>
-            {recentPosts.map(
-              (data, index) =>
-                index < SITE.postPerIndex && <Card variant="h3" {...data} />
-            )}
-          </ul>
-        </section>
-      )
-    }
-
-    <div class="my-8 text-center">
-      <LinkButton href="/posts/">
-        All Posts
-        <Icon name="tabler:arrow-right" class="inline-block rtl:-rotate-180" />
-      </LinkButton>
+  <main id="main-content" data-layout="index" class="home-layout my-8">
+    <div class="home-grid">
+      <HeroBlock />
+      <ServicesBlock />
+      <BlogBlock posts={recentPosts} />
+      <PortfolioBlock />
     </div>
   </main>
   <Footer />
 </Layout>
+
+<style>
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-rows: 340px;
+    gap: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .home-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-auto-rows: 380px;
+    }
+  }
+</style>
 
 <script>
   document.addEventListener("astro:page-load", () => {
