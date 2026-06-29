@@ -1,0 +1,106 @@
+---
+// src/components/home/BlogBlock.astro
+import type { CollectionEntry } from "astro:content";
+import { getPath } from "@/utils/getPath";
+import Datetime from "@/components/Datetime.astro";
+
+type Props = { posts: CollectionEntry<"blog">[] };
+const { posts } = Astro.props;
+---
+
+<section class="b-blog" aria-label="From the blog">
+  <svg
+    class="ants"
+    preserveAspectRatio="none"
+    viewBox="0 0 100 100"
+    aria-hidden="true"
+  >
+    <rect x="1" y="1" width="98" height="98"></rect>
+  </svg>
+  <ul class="posts">
+    {
+      posts.map(post => (
+        <li class="post">
+          <Datetime {...post.data} />
+          <a href={getPath(post.id, post.filePath)} class="title">
+            {post.data.title}
+          </a>
+          <p>{post.data.description}</p>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .b-blog {
+    height: 100%;
+    position: relative;
+    background: var(--background);
+    padding: 1.4rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+  }
+  .ants {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: visible;
+  }
+  .ants rect {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+    stroke-dasharray: 7.5 6;
+    animation: ants 4.5s linear infinite;
+  }
+  @keyframes ants {
+    to {
+      stroke-dashoffset: -13.5;
+    }
+  }
+  .posts {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .post {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .post:first-child {
+    padding-top: 0;
+  }
+  .post:last-child {
+    border-bottom: 0;
+  }
+  .title {
+    display: inline-block;
+    font-family: var(--font-heading);
+    font-size: 1.04rem;
+    margin: 0.15rem 0;
+    color: var(--accent);
+    text-decoration: none;
+  }
+  .title:hover {
+    text-decoration: underline;
+    text-decoration-style: dashed;
+    text-underline-offset: 4px;
+  }
+  .post p {
+    margin: 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    opacity: 0.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ants rect {
+      animation: none;
+    }
+  }
+</style>
