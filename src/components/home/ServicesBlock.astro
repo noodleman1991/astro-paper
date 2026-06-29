@@ -1,0 +1,176 @@
+---
+// src/components/home/ServicesBlock.astro
+import { Icon } from "astro-icon/components";
+import { SERVICES } from "@/config/services";
+---
+
+<section class="b-services" aria-label="What I do">
+  <div class="marquee" data-marquee>
+    <ul class="marquee-track" data-track>
+      {
+        SERVICES.map(s => (
+          <li class="tile" data-set="a">
+            <span class="ico" aria-hidden="true">
+              <Icon name={s.icon} width={22} height={22} />
+            </span>
+            <span class="body">
+              <span class="t">{s.title}</span>
+              <span class="b">{s.blurb}</span>
+            </span>
+          </li>
+        ))
+      }
+      {
+        SERVICES.map(s => (
+          <li class="tile" aria-hidden="true">
+            <span class="ico">
+              <Icon name={s.icon} width={22} height={22} />
+            </span>
+            <span class="body">
+              <span class="t">{s.title}</span>
+              <span class="b">{s.blurb}</span>
+            </span>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .b-services {
+    height: 100%;
+  }
+  .marquee {
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 10%,
+      #000 90%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0,
+      #000 10%,
+      #000 90%,
+      transparent 100%
+    );
+  }
+  .marquee-track {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+  }
+  .marquee.playing .marquee-track {
+    animation: marquee-up var(--dur, 40s) linear infinite;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee-up {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-1 * var(--set-h)));
+    }
+  }
+  .tile {
+    /* gap baked in so a "set" is an exact repeating unit (no flex gap!) */
+    margin-bottom: 0.7rem;
+    padding: 1.05rem 1.2rem;
+    background: color-mix(in srgb, var(--muted) 45%, var(--background));
+    display: flex;
+    gap: 0.9rem;
+    align-items: center;
+    flex: 0 0 auto;
+  }
+  .ico {
+    width: 42px;
+    height: 42px;
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--plum, #5d3a4a);
+    background: linear-gradient(135deg, #e8837c, #ffd1c1);
+  }
+  .body {
+    display: flex;
+    flex-direction: column;
+  }
+  .t {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+  }
+  .b {
+    font-size: 0.82rem;
+    line-height: 1.4;
+    opacity: 0.85;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee.playing .marquee-track {
+      animation: none;
+    }
+    .marquee-track {
+      will-change: auto;
+    }
+  }
+</style>
+
+<script>
+  function startMarquee() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const marquee = document.querySelector<HTMLElement>("[data-marquee]");
+    const track = marquee?.querySelector<HTMLElement>("[data-track]");
+    if (!marquee || !track) return;
+
+    const SPEED = 14; // px/sec — calm drift
+
+    function setup() {
+      const setTiles = track!.querySelectorAll<HTMLElement>(
+        '.tile[data-set="a"]'
+      );
+      if (!setTiles.length) return;
+      let setH = 0;
+      setTiles.forEach(t => {
+        setH += t.offsetHeight + parseFloat(getComputedStyle(t).marginBottom);
+      });
+      marquee!.style.setProperty("--set-h", `${setH}px`);
+      marquee!.style.setProperty("--dur", `${setH / SPEED}s`);
+      marquee!.classList.add("playing");
+    }
+
+    // Measure after fonts load — the swap changes tile heights.
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(setup);
+    } else {
+      window.addEventListener("load", setup, { once: true });
+    }
+
+    let rt: number | undefined;
+    const onResize = () => {
+      window.clearTimeout(rt);
+      rt = window.setTimeout(() => {
+        marquee!.classList.remove("playing");
+        setup();
+      }, 200);
+    };
+    window.addEventListener("resize", onResize);
+    document.addEventListener(
+      "astro:before-swap",
+      () => window.removeEventListener("resize", onResize),
+      { once: true }
+    );
+  }
+
+  document.addEventListener("astro:page-load", startMarquee);
+</script>
