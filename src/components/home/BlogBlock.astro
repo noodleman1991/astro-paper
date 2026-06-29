@@ -8,7 +8,7 @@ type Props = { posts: CollectionEntry<"blog">[] };
 const { posts } = Astro.props;
 ---
 
-<section class="b-blog" aria-label="From the blog">
+<section class="b-blog" aria-label="From the blog" data-blog-block>
   <svg
     class="ants"
     preserveAspectRatio="none"
@@ -58,6 +58,11 @@ const { posts } = Astro.props;
     stroke-dasharray: 7.5 6;
     animation: ants 4.5s linear infinite;
   }
+  /* Stop repainting the dashed border while the block is off-screen or the
+     tab is backgrounded (class toggled from JS). */
+  .b-blog.paused .ants rect {
+    animation-play-state: paused;
+  }
   @keyframes ants {
     to {
       stroke-dashoffset: -13.5;
@@ -104,3 +109,36 @@ const { posts } = Astro.props;
     }
   }
 </style>
+
+<script>
+  function pauseAntsOffscreen() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const block = document.querySelector<HTMLElement>("[data-blog-block]");
+    if (!block) return;
+
+    let onScreen = true;
+    const sync = () => {
+      block.classList.toggle("paused", !onScreen || document.hidden);
+    };
+
+    const io = new IntersectionObserver(entries => {
+      onScreen = entries[0]?.isIntersecting ?? false;
+      sync();
+    });
+    io.observe(block);
+
+    const onVisibility = () => sync();
+    document.addEventListener("visibilitychange", onVisibility);
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        io.disconnect();
+        document.removeEventListener("visibilitychange", onVisibility);
+      },
+      { once: true }
+    );
+  }
+
+  document.addEventListener("astro:page-load", pauseAntsOffscreen);
+</script>

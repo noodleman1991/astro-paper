@@ -132,19 +132,31 @@ const frames = ["if1", "if2", "if3", "if4"];
     if (!root) return;
     const frames = Array.from(root.querySelectorAll<HTMLElement>(".frame"));
     if (frames.length < 2) return;
+
     let i = 0;
+    let onScreen = true;
+    // Skip the crossfade advance when off-screen or the tab is backgrounded —
+    // no DOM mutation, no repaint, no wasted transitions while unseen.
     const id = window.setInterval(() => {
+      if (!onScreen || document.hidden) return;
       frames[i].classList.remove("show");
       i = (i + 1) % frames.length;
       frames[i].classList.add("show");
     }, 12000);
+
+    const io = new IntersectionObserver(entries => {
+      onScreen = entries[0]?.isIntersecting ?? false;
+    });
+    io.observe(root);
+
     // Clean up on view-transition navigation away
     document.addEventListener(
       "astro:before-swap",
-      () => window.clearInterval(id),
-      {
-        once: true,
-      }
+      () => {
+        window.clearInterval(id);
+        io.disconnect();
+      },
+      { once: true }
     );
   }
 
