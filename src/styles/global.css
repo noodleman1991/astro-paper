@@ -38,7 +38,13 @@ html[data-theme="dark"] {
     scrollbar-color: var(--color-muted) transparent;
   }
   html {
-    @apply overflow-y-scroll scroll-smooth;
+    @apply overflow-y-scroll;
+  }
+  /* Smooth scrolling only when the user hasn't asked to reduce motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      @apply scroll-smooth;
+    }
   }
   body {
     @apply bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;
@@ -74,4 +80,18 @@ html[data-theme="dark"] {
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 1rem;
+}
+
+/* Global backstop: components already opt out of motion individually, but this
+   collapses any animation/transition/smooth-scroll we might miss. Near-zero
+   (not 0) keeps animation/transition `end` events firing so state still settles. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
