@@ -3,6 +3,14 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+:root {
+  /* Shared motion vocabulary — one easing language across the homepage blocks.
+     --ease-out-soft: entrances & hover settles (decelerate into place).
+     --ease-in-out-soft: crossfades & reversible transforms (the flip). */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.45, 0, 0.2, 1);
+}
+
 :root,
 html[data-theme="light"] {
   --background: #fdfdfd;
