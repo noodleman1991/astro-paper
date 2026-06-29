@@ -1,0 +1,152 @@
+---
+// src/components/home/HeroBlock.astro
+import { Icon } from "astro-icon/components";
+import { SOCIALS } from "@/constants";
+
+// Placeholder gradient "images". Replace `frames` with real <img> layers when
+// the owner supplies the 4-image pool; the crossfade logic is identical.
+const frames = ["if1", "if2", "if3", "if4"];
+---
+
+<section class="b-hero" aria-label="Introduction">
+  <div class="hero-img" data-hero-img>
+    {
+      frames.map((cls, i) => (
+        <div
+          class:list={["frame", cls, { show: i === 0 }]}
+          aria-hidden="true"
+        />
+      ))
+    }
+  </div>
+  <div class="hero-text">
+    <h1>hi, I'm Amit</h1>
+    <p>
+      I build websites and apps, set up hubs and knowledge management with and
+      without AI.
+    </p>
+    <ul class="socials">
+      {
+        SOCIALS.map(social => (
+          <li>
+            <a
+              href={social.href}
+              title={social.linkTitle}
+              aria-label={social.name}
+            >
+              <Icon name={social.icon} width={18} height={18} />
+              <span>{social.name}</span>
+            </a>
+          </li>
+        ))
+      }
+      <li>
+        <a href="/rss.xml" title="RSS Feed" aria-label="RSS feed">RSS</a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .b-hero {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .hero-img {
+    width: 100%;
+    height: 48%;
+    position: relative;
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+  .frame {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 4s ease-in-out;
+  }
+  .frame.show {
+    opacity: 1;
+  }
+  .if1 {
+    background: linear-gradient(135deg, #e8837c, #f4a0b5 55%, #ffd1c1);
+  }
+  .if2 {
+    background: linear-gradient(135deg, #a0c4f4, #b0a0e8 60%, #f4a0b5);
+  }
+  .if3 {
+    background: linear-gradient(135deg, #a0e8b4, #f4e8a0 55%, #ffd1c1);
+  }
+  .if4 {
+    background: linear-gradient(135deg, #ffd1c1, #e8837c 60%, #d4a0e8);
+  }
+  .hero-text {
+    flex: 1 1 auto;
+    padding: 1.1rem 0.25rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.7rem;
+  }
+  .hero-text h1 {
+    margin: 0;
+    font-family: var(--font-logo);
+    font-size: 2.3rem;
+    line-height: 1;
+    color: var(--accent);
+  }
+  .hero-text p {
+    margin: 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+  .socials {
+    display: flex;
+    gap: 0.85rem;
+    margin: 0.1rem 0 0;
+    padding: 0;
+    list-style: none;
+    font-size: 0.8rem;
+  }
+  .socials a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px dashed var(--accent);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .frame {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  function startHeroCrossfade() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const root = document.querySelector<HTMLElement>("[data-hero-img]");
+    if (!root) return;
+    const frames = Array.from(root.querySelectorAll<HTMLElement>(".frame"));
+    if (frames.length < 2) return;
+    let i = 0;
+    const id = window.setInterval(() => {
+      frames[i].classList.remove("show");
+      i = (i + 1) % frames.length;
+      frames[i].classList.add("show");
+    }, 12000);
+    // Clean up on view-transition navigation away
+    document.addEventListener(
+      "astro:before-swap",
+      () => window.clearInterval(id),
+      {
+        once: true,
+      }
+    );
+  }
+
+  document.addEventListener("astro:page-load", startHeroCrossfade);
+</script>
