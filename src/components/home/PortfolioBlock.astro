@@ -1,0 +1,101 @@
+---
+// src/components/home/PortfolioBlock.astro
+// Placeholder projects until a real `portfolio` content collection exists.
+const projects = [
+  { cls: "sq1", label: "project one", href: "#" },
+  { cls: "sq2", label: "project two", href: "#" },
+  { cls: "sq3", label: "project three", href: "#" },
+  { cls: "sq4", label: "project four", href: "#" },
+];
+---
+
+<section class="b-portfolio" aria-label="Portfolio">
+  <ul class="squares">
+    {
+      projects.map(p => (
+        <li>
+          <a class="flip" href={p.href} aria-label={p.label}>
+            <span class="flip-inner">
+              <span class:list={["flip-face", p.cls]} aria-hidden="true" />
+              <span class="flip-face flip-back">{p.label} →</span>
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</section>
+
+<style>
+  .b-portfolio {
+    height: 100%;
+  }
+  .squares {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1.1rem;
+  }
+  .squares > li {
+    min-height: 0;
+  }
+  .flip {
+    display: block;
+    width: 100%;
+    height: 100%;
+    perspective: 800px;
+  }
+  .flip-inner {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.8s cubic-bezier(0.4, 0.2, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+  .flip:hover .flip-inner,
+  .flip:focus-within .flip-inner,
+  .flip:focus .flip-inner {
+    transform: rotateX(180deg);
+  }
+  .flip-face {
+    position: absolute;
+    inset: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .flip-back {
+    transform: rotateX(180deg);
+    background: var(--foreground);
+    color: var(--background);
+    font-family: var(--font-heading);
+    font-size: 0.82rem;
+    text-align: center;
+    padding: 0.4rem;
+  }
+  .sq1 {
+    background: linear-gradient(135deg, #e8837c, #f4a0b5);
+  }
+  .sq2 {
+    background: linear-gradient(135deg, #a0c4f4, #b0a0e8);
+  }
+  .sq3 {
+    background: linear-gradient(135deg, #a0e8b4, #f4e8a0);
+  }
+  .sq4 {
+    background: linear-gradient(135deg, #ffd1c1, #e8837c);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flip-inner {
+      transition: none;
+    }
+  }
+</style>
