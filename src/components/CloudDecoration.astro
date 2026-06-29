@@ -750,6 +750,7 @@ const mobilePath = mobilePaths[mobileIdx];
 
 <script>
   let rainbowInterval: ReturnType<typeof setInterval> | undefined;
+  let rainbowTimeout: ReturnType<typeof setTimeout> | undefined;
   let rainbowPlaying = false;
   let isFirstLoad = true;
 
@@ -912,7 +913,7 @@ const mobilePath = mobilePaths[mobileIdx];
       window.location.pathname === "/" || window.location.pathname === "";
 
     if (isHomepage && !isFirstLoad) {
-      setTimeout(playRainbow, 300);
+      rainbowTimeout = setTimeout(playRainbow, 300);
     }
 
     isFirstLoad = false;
@@ -923,6 +924,10 @@ const mobilePath = mobilePaths[mobileIdx];
     if (rainbowInterval) {
       clearInterval(rainbowInterval);
       rainbowInterval = undefined;
+    }
+    if (rainbowTimeout) {
+      clearTimeout(rainbowTimeout);
+      rainbowTimeout = undefined;
     }
   });
 </script>

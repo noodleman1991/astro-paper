@@ -25,7 +25,10 @@ import { Icon } from "astro-icon/components";
     ></span>
     <Icon name="tabler:chevron-left" class="inline-block rotate-90 md:hidden" />
     <span class="sr-only text-sm group-hover:text-accent md:not-sr-only">
-      <Icon name="streamline-ultimate-color:arrow-button-up" class="inline-block size-4" />
+      <Icon
+        name="streamline-ultimate-color:arrow-button-up"
+        class="inline-block size-4"
+      />
       Back To Top
     </span>
   </button>
@@ -73,7 +76,7 @@ import { Icon } from "astro-icon/components";
     }
 
     let ticking = false;
-    document.addEventListener("scroll", () => {
+    function onScroll() {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           handleScroll();
@@ -81,7 +84,16 @@ import { Icon } from "astro-icon/components";
         });
         ticking = true;
       }
-    });
+    }
+    document.addEventListener("scroll", onScroll);
+
+    // This script reruns on every view transition; remove the listener before
+    // the swap so handlers don't accumulate across navigations.
+    document.addEventListener(
+      "astro:before-swap",
+      () => document.removeEventListener("scroll", onScroll),
+      { once: true }
+    );
   }
   backToTop();
 </script>

@@ -135,7 +135,10 @@ const nextPost =
             href={getPath(prevPost.id, prevPost.filePath)}
             class="flex w-full gap-1 hover:opacity-75"
           >
-            <Icon name="tabler:chevron-left" class="inline-block flex-none rtl:rotate-180" />
+            <Icon
+              name="tabler:chevron-left"
+              class="inline-block flex-none rtl:rotate-180"
+            />
             <div>
               <span>Previous Post</span>
               <div class="text-sm text-accent/85">{prevPost.title}</div>
@@ -153,7 +156,10 @@ const nextPost =
               <span>Next Post</span>
               <div class="text-sm text-accent/85">{nextPost.title}</div>
             </div>
-            <Icon name="tabler:chevron-right" class="inline-block flex-none rtl:rotate-180" />
+            <Icon
+              name="tabler:chevron-right"
+              class="inline-block flex-none rtl:rotate-180"
+            />
           </a>
         )
       }
@@ -166,6 +172,9 @@ const nextPost =
   /** Create a progress indicator
    *  at the top */
   function createProgressBar() {
+    // Guard against duplicates: this script reruns on every view transition.
+    if (document.querySelector(".progress-container")) return;
+
     // Create the main container div
     const progressContainer = document.createElement("div");
     progressContainer.className =
@@ -187,22 +196,23 @@ const nextPost =
   /** Update the progress bar
    *  when user scrolls */
   function updateScrollProgress() {
-    document.addEventListener("scroll", () => {
-      const winScroll =
-        document.body.scrollTop || document.documentElement.scrollTop;
-      const height =
-        document.documentElement.scrollHeight -
-        document.documentElement.clientHeight;
-      const scrolled = (winScroll / height) * 100;
-      if (document) {
-        const myBar = document.getElementById("myBar");
-        if (myBar) {
-          myBar.style.width = scrolled + "%";
-        }
-      }
-    });
+    const winScroll =
+      document.body.scrollTop || document.documentElement.scrollTop;
+    const height =
+      document.documentElement.scrollHeight -
+      document.documentElement.clientHeight;
+    const scrolled = (winScroll / height) * 100;
+    const myBar = document.getElementById("myBar");
+    if (myBar) {
+      myBar.style.width = scrolled + "%";
+    }
   }
-  updateScrollProgress();
+  document.addEventListener("scroll", updateScrollProgress);
+  document.addEventListener(
+    "astro:before-swap",
+    () => document.removeEventListener("scroll", updateScrollProgress),
+    { once: true }
+  );
 
   /** Attaches links to headings in the document,
    *  allowing sharing of sections easily */
@@ -278,7 +288,9 @@ const nextPost =
   attachCopyButtons();
 
   /* Go to page start after page swap */
-  document.addEventListener("astro:after-swap", () =>
-    window.scrollTo({ left: 0, top: 0, behavior: "instant" })
+  document.addEventListener(
+    "astro:after-swap",
+    () => window.scrollTo({ left: 0, top: 0, behavior: "instant" }),
+    { once: true }
   );
 </script>
