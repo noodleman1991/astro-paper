@@ -67,6 +67,18 @@ const frames = ["if1", "if2", "if3", "if4"];
     overflow: hidden;
     flex: 0 0 auto;
   }
+  /* Phone: the grid row is content-sized (minmax(15rem, auto)), so a percentage
+     image height has no definite parent to resolve against and the block can't
+     grow to fit — content overflows. Let the block size to its content and give
+     the image a fixed height instead. */
+  @media (max-width: 767px) {
+    .b-hero {
+      height: auto;
+    }
+    .hero-img {
+      height: 8rem;
+    }
+  }
   /* Wide reuse only (≥ 32rem, above the desktop cell): image beside text so a
      short, very wide cell doesn't become a thin letterbox strip. */
   @container (min-width: 32rem) {
