@@ -30,10 +30,9 @@ const recentPosts = getSortedPosts(posts).slice(0, 3);
   .home-grid {
     display: grid;
     grid-template-columns: 1fr;
-    /* Phone: each block gets a definite, bounded height so internal content
-       (e.g. the services marquee) clips/scrolls inside its box instead of
-       expanding to its full intrinsic height and leaving a gap. */
-    grid-auto-rows: 16rem;
+    /* Phone: blocks grow to fit their content; page scrolls naturally.
+       The services marquee is bounded separately in ServicesBlock.astro. */
+    grid-auto-rows: minmax(15rem, auto);
     gap: 1.25rem;
   }
   @media (min-width: 768px) {

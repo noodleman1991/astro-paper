@@ -118,6 +118,15 @@ import { SERVICES } from "@/config/services";
     opacity: 0.85;
   }
 
+  /* On phones the grid row uses minmax(15rem, auto), so .b-services has no
+     definite height — the marquee can't clip its overflow. Give it an explicit
+     cap matching the grid row min so the marquee clips correctly. */
+  @media (max-width: 767px) {
+    .b-services {
+      height: 15rem;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .marquee.playing .marquee-track {
       animation: none;

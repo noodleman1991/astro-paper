@@ -9,6 +9,10 @@
      --ease-in-out-soft: crossfades & reversible transforms (the flip). */
   --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-in-out-soft: cubic-bezier(0.45, 0, 0.2, 1);
+  /* Fixed header height — used to reserve space on interior pages and for
+     scroll-padding so :target anchor jumps clear the bar. Matches the ~81px
+     rendered header (py-4 sm:py-6 + content); rounded to a clean 5rem. */
+  --header-h: 5rem;
 }
 
 :root,
@@ -47,6 +51,7 @@ html[data-theme="dark"] {
   }
   html {
     @apply overflow-y-scroll;
+    scroll-padding-top: var(--header-h);
   }
   /* Smooth scrolling only when the user hasn't asked to reduce motion. */
   @media (prefers-reduced-motion: no-preference) {
@@ -65,6 +70,18 @@ html[data-theme="dark"] {
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+}
+
+/* Reserve space for the fixed header on interior pages. The homepage opts out
+   (its 100dvh grid owns the viewport and the header is hidden at the top).
+   :has() is well-supported in current browsers. */
+body:not(:has(#main-content[data-layout="index"])) {
+  padding-block-start: var(--header-h);
+}
+
+/* Ensure :target anchor jumps on interior pages land below the fixed header. */
+body:not(:has(#main-content[data-layout="index"])) #main-content {
+  scroll-margin-top: var(--header-h);
 }
 
 @utility max-w-app {

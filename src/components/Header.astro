@@ -174,6 +174,10 @@ const isActive = (path: string) => {
     const header = document.querySelector<HTMLElement>("#site-header");
     if (!header) return;
 
+    // Read actual rendered height so the threshold stays accurate even if the
+    // header's padding/content changes. Fall back to 80 if not yet laid out.
+    const headerH = header.offsetHeight || 80;
+
     let lastY = window.scrollY;
     let ticking = false;
     // Distance scrolled down (since the last reveal) before the header hides —
@@ -189,7 +193,7 @@ const isActive = (path: string) => {
     function topThreshold() {
       const scrollable =
         document.documentElement.scrollHeight - window.innerHeight;
-      return Math.max(8, Math.min(80, scrollable * 0.15));
+      return Math.max(8, Math.min(headerH, scrollable * 0.15));
     }
 
     function update() {
@@ -214,12 +218,18 @@ const isActive = (path: string) => {
       }
     }
 
+    const onResize = () => update();
+
     document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
     update(); // set correct initial state (hidden at top, no flash)
 
     document.addEventListener(
       "astro:before-swap",
-      () => document.removeEventListener("scroll", onScroll),
+      () => {
+        document.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onResize);
+      },
       { once: true }
     );
   }
