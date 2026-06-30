@@ -12,9 +12,26 @@ import LinkButton from "./LinkButton.astro";
         class="p-2 hover:rotate-6 sm:p-1"
         title={social.linkTitle}
       >
-        <Icon name={social.icon} class="inline-block size-6 scale-125 opacity-90 sm:scale-110" />
+        <Icon
+          name={social.icon}
+          class="inline-block size-6 scale-125 opacity-90 sm:scale-110"
+        />
         <span class="sr-only">{social.linkTitle}</span>
       </LinkButton>
     ))
   }
 </div>
+
+<style>
+  /* The LinkedIn logo fills its box edge-to-edge, so it reads larger than
+     lighter icons. Trim its scale so the social row looks optically balanced
+     (the others use scale-125 / sm:scale-110). */
+  [data-icon="streamline-logos:linkedin-logo"] {
+    scale: 1.1;
+  }
+  @media (min-width: 640px) {
+    [data-icon="streamline-logos:linkedin-logo"] {
+      scale: 0.97;
+    }
+  }
+</style>

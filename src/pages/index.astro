@@ -31,15 +31,18 @@ const recentPosts = getSortedPosts(posts).slice(0, 3);
     display: grid;
     grid-template-columns: 1fr;
     /* Phone: blocks grow to fit their content; page scrolls naturally.
-       The services marquee is bounded separately in ServicesBlock.astro. */
+       The services marquee is bounded separately in ServicesBlock.astro.
+       Roomier gap between the stacked blocks so they read as distinct cards. */
     grid-auto-rows: minmax(15rem, auto);
-    gap: 1.25rem;
+    gap: 2rem;
   }
   @media (min-width: 768px) {
     .home-grid {
       /* Tablet+: 2×2 fills the dynamic viewport so all four blocks show on load.
-         Header is hidden at the top (Task 2), so the grid owns the full height. */
+         Header is hidden at the top (Task 2), so the grid owns the full height.
+         Tighter gap here since the grid must fit the viewport. */
       height: 100dvh;
+      gap: 1.25rem;
       grid-template-columns: 1fr 1fr;
       /* minmax(0, 1fr) overrides the implicit `min-height: auto` so rows split
          equally and tall block content (e.g. the marquee) clips/scrolls inside

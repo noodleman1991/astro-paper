@@ -180,6 +180,7 @@ const isActive = (path: string) => {
 
     let lastY = window.scrollY;
     let ticking = false;
+    let hovering = false; // pointer is in the top reveal zone
     // Distance scrolled down (since the last reveal) before the header hides —
     // hysteresis so tiny scroll jitter doesn't flicker it away. Reveal stays
     // instant on any scroll-up.
@@ -198,7 +199,9 @@ const isActive = (path: string) => {
 
     function update() {
       const y = window.scrollY;
-      if (y <= topThreshold()) {
+      if (hovering) {
+        header!.removeAttribute("data-hidden"); // pointer near top → reveal
+      } else if (y <= topThreshold()) {
         header!.setAttribute("data-hidden", ""); // at top → hidden
         downFrom = y;
       } else if (y < lastY) {
@@ -220,6 +223,21 @@ const isActive = (path: string) => {
 
     const onResize = () => update();
 
+    // Hover-to-reveal: moving the pointer into the top strip shows the header.
+    // This is the escape hatch on pages that barely scroll (e.g. the homepage),
+    // where scroll-up can never reveal it. Only meaningful for fine pointers.
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    const onPointerMove = (e: PointerEvent) => {
+      const next = e.clientY <= headerH;
+      if (next !== hovering) {
+        hovering = next;
+        update();
+      }
+    };
+    if (canHover) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+    }
+
     document.addEventListener("scroll", onScroll, { passive: true });
     window.addEventListener("resize", onResize);
     update(); // set correct initial state (hidden at top, no flash)
@@ -229,6 +247,9 @@ const isActive = (path: string) => {
       () => {
         document.removeEventListener("scroll", onScroll);
         window.removeEventListener("resize", onResize);
+        if (canHover) {
+          window.removeEventListener("pointermove", onPointerMove);
+        }
       },
       { once: true }
     );
