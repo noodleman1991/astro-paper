@@ -28,13 +28,13 @@ const isActive = (path: string) => {
 <header
   id="site-header"
   data-hidden
-  class="site-header app-layout flex flex-col items-center justify-between sm:flex-row"
+  class="site-header flex flex-col items-center justify-between sm:flex-row"
 >
   <div
     id="top-nav-wrap"
     class:list={[
+      "app-layout",
       "py-4 sm:py-6",
-      "border-b border-border",
       "relative w-full bg-background",
       "flex items-baseline justify-between sm:items-center",
     ]}
@@ -174,19 +174,34 @@ const isActive = (path: string) => {
     const header = document.querySelector<HTMLElement>("#site-header");
     if (!header) return;
 
-    // Threshold ~ header height: below this we're "at the top" → hidden.
-    const threshold = 80;
     let lastY = window.scrollY;
     let ticking = false;
+    // Distance scrolled down (since the last reveal) before the header hides —
+    // hysteresis so tiny scroll jitter doesn't flicker it away. Reveal stays
+    // instant on any scroll-up.
+    const HIDE_DELTA = 64;
+    let downFrom = window.scrollY; // anchor for accumulating downward scroll
+
+    // "At top" threshold scales with how much the page can actually scroll, so a
+    // barely-scrollable homepage reveals the header on the smallest scroll-up,
+    // while a long article keeps the larger header-height threshold. Floored at
+    // 8px so a nudge at the very top still counts as "at top".
+    function topThreshold() {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      return Math.max(8, Math.min(80, scrollable * 0.15));
+    }
 
     function update() {
       const y = window.scrollY;
-      if (y <= threshold) {
+      if (y <= topThreshold()) {
         header!.setAttribute("data-hidden", ""); // at top → hidden
-      } else if (y > lastY) {
-        header!.setAttribute("data-hidden", ""); // scrolling down → hidden
-      } else {
-        header!.removeAttribute("data-hidden"); // scrolling up → shown
+        downFrom = y;
+      } else if (y < lastY) {
+        header!.removeAttribute("data-hidden"); // scrolling up → reveal instantly
+        downFrom = y;
+      } else if (y - downFrom > HIDE_DELTA) {
+        header!.setAttribute("data-hidden", ""); // scrolled down enough → hide
       }
       lastY = y;
       ticking = false;
@@ -224,8 +239,12 @@ const isActive = (path: string) => {
     inset-block-start: 0;
     inset-inline: 0;
     z-index: 40;
+    width: 100%;
     background: var(--background);
-    transition: transform 0.35s var(--ease-out-soft);
+    /* Full-width separator line under the bar (the inner wrap is width-capped). */
+    border-block-end: 1px solid var(--border);
+    /* Snappy reveal — phases in quickly on scroll-up. */
+    transition: transform 0.18s var(--ease-out-soft);
   }
   /* Hidden at the top / on scroll-down: slid up out of view. */
   .site-header[data-hidden] {
