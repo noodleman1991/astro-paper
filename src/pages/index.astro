@@ -15,7 +15,7 @@ const recentPosts = getSortedPosts(posts).slice(0, 3);
 
 <Layout>
   <Header />
-  <main id="main-content" data-layout="index" class="home-layout my-8">
+  <main id="main-content" data-layout="index" class="home-layout">
     <div class="home-grid">
       <HeroBlock />
       <ServicesBlock />
@@ -30,13 +30,20 @@ const recentPosts = getSortedPosts(posts).slice(0, 3);
   .home-grid {
     display: grid;
     grid-template-columns: 1fr;
-    grid-auto-rows: 340px;
+    /* Phone: readable, stacked, scrollable — never crush to fit. */
+    grid-auto-rows: minmax(15rem, auto);
     gap: 1.25rem;
   }
   @media (min-width: 768px) {
     .home-grid {
+      /* Tablet+: 2×2 fills the dynamic viewport so all four blocks show on load.
+         Header is hidden at the top (Task 2), so the grid owns the full height. */
+      height: 100dvh;
       grid-template-columns: 1fr 1fr;
-      grid-auto-rows: 380px;
+      grid-template-rows: 1fr 1fr;
+      grid-auto-rows: unset;
+      padding-block: 1.25rem;
+      box-sizing: border-box;
     }
   }
 </style>
