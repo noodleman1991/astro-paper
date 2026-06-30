@@ -35,13 +35,15 @@ const frames = ["if1", "if2", "if3", "if4"];
               aria-label={social.name}
             >
               <Icon name={social.icon} width={18} height={18} />
-              <span>{social.name}</span>
+              <span class="label">{social.name}</span>
             </a>
           </li>
         ))
       }
       <li>
-        <a href="/rss.xml" title="RSS Feed" aria-label="RSS feed">RSS</a>
+        <a href="/rss.xml" title="RSS Feed" aria-label="RSS feed">
+          <span class="label">RSS</span>
+        </a>
       </li>
     </ul>
   </div>
@@ -112,10 +114,18 @@ const frames = ["if1", "if2", "if3", "if4"];
   .socials a {
     display: inline-flex;
     align-items: center;
-    gap: 0.3rem;
+    gap: 0.35rem;
+    line-height: 1;
     color: var(--accent);
     text-decoration: none;
+  }
+  .socials a :global(svg) {
+    flex: 0 0 auto;
+    display: block;
+  }
+  .socials .label {
     border-bottom: 1px dashed var(--accent);
+    padding-bottom: 1px;
   }
 
   @media (prefers-reduced-motion: reduce) {
