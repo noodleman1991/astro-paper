@@ -26,7 +26,9 @@ const isActive = (path: string) => {
 </a>
 
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  id="site-header"
+  data-hidden
+  class="site-header app-layout flex flex-col items-center justify-between sm:flex-row"
 >
   <div
     id="top-nav-wrap"
@@ -95,7 +97,10 @@ const isActive = (path: string) => {
                 title="Archives"
                 aria-label="archives"
               >
-                <Icon name="streamline-ultimate-color:archive-books" class="hidden sm:inline-block" />
+                <Icon
+                  name="streamline-ultimate-color:archive-books"
+                  class="hidden sm:inline-block"
+                />
                 <span class="sm:sr-only">Archives</span>
               </LinkButton>
             </li>
@@ -125,8 +130,14 @@ const isActive = (path: string) => {
                 aria-label="auto"
                 aria-live="polite"
               >
-                <Icon name="streamline-ultimate-color:night-moon-half-1" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <Icon name="streamline-ultimate-color:weather-sun" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                <Icon
+                  name="streamline-ultimate-color:night-moon-half-1"
+                  class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
+                />
+                <Icon
+                  name="streamline-ultimate-color:weather-sun"
+                  class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+                />
               </button>
             </li>
           )
@@ -159,6 +170,70 @@ const isActive = (path: string) => {
 
   toggleNav();
 
+  function smartHeader() {
+    const header = document.querySelector<HTMLElement>("#site-header");
+    if (!header) return;
+
+    // Threshold ~ header height: below this we're "at the top" → hidden.
+    const threshold = 80;
+    let lastY = window.scrollY;
+    let ticking = false;
+
+    function update() {
+      const y = window.scrollY;
+      if (y <= threshold) {
+        header!.setAttribute("data-hidden", ""); // at top → hidden
+      } else if (y > lastY) {
+        header!.setAttribute("data-hidden", ""); // scrolling down → hidden
+      } else {
+        header!.removeAttribute("data-hidden"); // scrolling up → shown
+      }
+      lastY = y;
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    document.addEventListener("scroll", onScroll, { passive: true });
+    update(); // set correct initial state (hidden at top, no flash)
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => document.removeEventListener("scroll", onScroll),
+      { once: true }
+    );
+  }
+
+  smartHeader();
+
   // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", toggleNav);
+  document.addEventListener("astro:after-swap", () => {
+    toggleNav();
+    smartHeader();
+  });
 </script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 40;
+    background: var(--background);
+    transition: transform 0.35s var(--ease-out-soft);
+  }
+  /* Hidden at the top / on scroll-down: slid up out of view. */
+  .site-header[data-hidden] {
+    transform: translateY(-100%);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
+</style>
