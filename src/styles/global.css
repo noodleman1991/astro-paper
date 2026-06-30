@@ -103,3 +103,13 @@ html[data-theme="dark"] {
     scroll-behavior: auto !important;
   }
 }
+
+/* Smooth the title morph between list/detail pages. View-transition
+   pseudo-elements are progressively enhanced — unsupported browsers fall back
+   to the default/instant swap. Honors reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(*) {
+    animation-duration: 0.45s;
+    animation-timing-function: var(--ease-in-out-soft);
+  }
+}
