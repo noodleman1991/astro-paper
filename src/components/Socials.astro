@@ -23,15 +23,13 @@ import LinkButton from "./LinkButton.astro";
 </div>
 
 <style>
-  /* The LinkedIn logo fills its box edge-to-edge, so it reads larger than
-     lighter icons. Trim its scale so the social row looks optically balanced
-     (the others use scale-125 / sm:scale-110). */
+  /* The LinkedIn logo fills its box edge-to-edge, so at the same box size it
+     reads larger than the lighter icons. Shrink its actual box (and drop the
+     shared up-scale) so it looks the same size — sizing the box rather than
+     transforming keeps spacing even. The others keep size-6 + scale-125/110. */
   [data-icon="streamline-logos:linkedin-logo"] {
-    scale: 1.1;
-  }
-  @media (min-width: 640px) {
-    [data-icon="streamline-logos:linkedin-logo"] {
-      scale: 0.97;
-    }
+    width: 1.25rem;
+    height: 1.25rem;
+    scale: 1;
   }
 </style>

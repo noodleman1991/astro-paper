@@ -51,6 +51,11 @@ const frames = ["if1", "if2", "if3", "if4"];
 
 <style>
   .b-hero {
+    /* Make the block a query container so its internals respond to the CELL's
+       width, not the viewport. The live homepage range (~20–32rem cell) is left
+       untouched; the guards below only engage if the block is reused at an
+       extreme width (a cramped sidebar, or a wide full-bleed hero). */
+    container-type: inline-size;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -61,6 +66,18 @@ const frames = ["if1", "if2", "if3", "if4"];
     position: relative;
     overflow: hidden;
     flex: 0 0 auto;
+  }
+  /* Wide reuse only (≥ 32rem, above the desktop cell): image beside text so a
+     short, very wide cell doesn't become a thin letterbox strip. */
+  @container (min-width: 32rem) {
+    .b-hero {
+      flex-direction: row;
+      align-items: stretch;
+    }
+    .hero-img {
+      width: 38%;
+      height: 100%;
+    }
   }
   .frame {
     position: absolute;
@@ -123,11 +140,13 @@ const frames = ["if1", "if2", "if3", "if4"];
     flex: 0 0 auto;
     display: block;
   }
-  /* The LinkedIn logo fills its box edge-to-edge (a dense square), so it reads
-     larger than lighter icons like the envelope. Scale it down slightly so the
-     social row looks optically balanced. */
+  /* The LinkedIn logo fills its box edge-to-edge (a dense square), so at the same
+     box size it reads larger than the lighter envelope. Shrink its actual box
+     (not a transform — that would leave phantom width and an uneven icon↔text
+     gap) so it looks the same size AND the gap matches the other links. */
   .socials a :global(svg[data-icon="streamline-logos:linkedin-logo"]) {
-    transform: scale(0.88);
+    width: 16px;
+    height: 16px;
   }
   .socials .label {
     border-bottom: 1px dashed var(--accent);
