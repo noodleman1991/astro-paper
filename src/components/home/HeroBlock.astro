@@ -150,20 +150,11 @@ const frames = ["if1", "if2", "if3", "if4"];
     text-decoration: none;
   }
   .socials a :global(svg) {
+    /* Same box for every icon so they share size and vertical centering. */
     flex: 0 0 auto;
     display: block;
-  }
-  /* The LinkedIn logo fills its box edge-to-edge (a dense square), so at the same
-     box size it reads larger than the lighter envelope. Shrink its actual box
-     (not a transform — that would leave phantom width and an uneven icon↔text
-     gap) so it looks the same size AND the gap matches the other links. */
-  .socials a :global(svg[data-icon="streamline-logos:linkedin-logo"]) {
-    width: 16px;
-    height: 16px;
-    /* Nudge down so its bottom lines up with the taller Mail icon (the shared
-       reference), since both are vertically centered but differ in height. */
-    position: relative;
-    top: 2px;
+    width: 18px;
+    height: 18px;
   }
   .socials .label {
     border-bottom: 1px dashed var(--accent);

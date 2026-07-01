@@ -12,28 +12,9 @@ import LinkButton from "./LinkButton.astro";
         class="p-2 hover:rotate-6 sm:p-1"
         title={social.linkTitle}
       >
-        <Icon
-          name={social.icon}
-          class="inline-block size-6 scale-125 opacity-90 sm:scale-110"
-        />
+        <Icon name={social.icon} class="inline-block size-6 opacity-90" />
         <span class="sr-only">{social.linkTitle}</span>
       </LinkButton>
     ))
   }
 </div>
-
-<style>
-  /* The LinkedIn logo fills its box edge-to-edge, so at the same box size it
-     reads larger than the lighter icons. Shrink its actual box (and drop the
-     shared up-scale) so it looks the same size — sizing the box rather than
-     transforming keeps spacing even. The others keep size-6 + scale-125/110. */
-  [data-icon="streamline-logos:linkedin-logo"] {
-    width: 1.25rem;
-    height: 1.25rem;
-    scale: 1;
-    /* Nudge down so its bottom aligns with the taller Mail icon (the shared
-       reference), since both are centered but differ in height. */
-    position: relative;
-    top: 3px;
-  }
-</style>
