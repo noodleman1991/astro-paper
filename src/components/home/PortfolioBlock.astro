@@ -28,7 +28,19 @@ const projects = [
 
 <style>
   .b-portfolio {
+    /* Query container: the squares grid responds to the CELL's width. The live
+       homepage range keeps the 2×2 layout; the guard below only collapses to a
+       single column when the block is reused in a very narrow column. */
+    container-type: inline-size;
     height: 100%;
+  }
+  /* Phone: the grid row sizes to content, so height:100% has no definite parent
+     and the square grid would collapse. Give the block a definite height for the
+     squares to fill. */
+  @media (max-width: 767px) {
+    .b-portfolio {
+      height: 18rem;
+    }
   }
   .squares {
     list-style: none;
@@ -39,6 +51,15 @@ const projects = [
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
     gap: 1.1rem;
+  }
+  /* Narrow reuse only (< 16rem): stack the four squares in one column so the
+     flip-cards don't shrink to unreadable thumbnails. */
+  @container (max-width: 16rem) {
+    .squares {
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(4, 1fr);
+      gap: 0.8rem;
+    }
   }
   .squares > li {
     min-height: 0;

@@ -30,10 +30,12 @@ const recentPosts = getSortedPosts(posts).slice(0, 3);
   .home-grid {
     display: grid;
     grid-template-columns: 1fr;
-    /* Phone: blocks grow to fit their content; page scrolls naturally.
-       The services marquee is bounded separately in ServicesBlock.astro.
+    /* Phone: each row sizes to its block's own content (no shared min height
+       that would clip content-heavy blocks). Blocks that contain height-filling
+       internals (hero image, services marquee, portfolio squares) set their own
+       definite height in their component; the blog block flows naturally.
        Roomier gap between the stacked blocks so they read as distinct cards. */
-    grid-auto-rows: minmax(15rem, auto);
+    grid-auto-rows: auto;
     gap: 2rem;
   }
   @media (min-width: 768px) {
