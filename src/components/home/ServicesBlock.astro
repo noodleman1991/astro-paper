@@ -39,7 +39,23 @@ import { SERVICES } from "@/config/services";
 
 <style>
   .b-services {
+    /* Query container: the tile layout responds to the CELL's width. The live
+       homepage range is unaffected; the guard below only trims padding when the
+       block is reused in a cramped column. */
+    container-type: inline-size;
     height: 100%;
+  }
+  /* Narrow reuse only (< 18rem): tighten tile padding/gap so service tiles stay
+     readable in a cramped column. No effect at homepage cell widths (~20rem+). */
+  @container (max-width: 18rem) {
+    .tile {
+      padding: 0.8rem 0.9rem;
+      gap: 0.65rem;
+    }
+    .ico {
+      width: 34px;
+      height: 34px;
+    }
   }
   .marquee {
     height: 100%;

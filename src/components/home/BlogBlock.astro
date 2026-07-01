@@ -34,6 +34,10 @@ const { posts } = Astro.props;
 
 <style>
   .b-blog {
+    /* Query container: padding/spacing respond to the CELL's width. The live
+       homepage range is unaffected; the guard below only tightens padding when
+       the block is reused in a cramped column. */
+    container-type: inline-size;
     height: 100%;
     position: relative;
     background: var(--background);
@@ -41,6 +45,12 @@ const { posts } = Astro.props;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
+  }
+  /* Narrow reuse only (< 18rem): trim padding so post text keeps its width. */
+  @container (max-width: 18rem) {
+    .b-blog {
+      padding: 1rem 1.05rem;
+    }
   }
   .ants {
     position: absolute;
