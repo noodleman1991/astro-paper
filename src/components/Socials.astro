@@ -31,5 +31,9 @@ import LinkButton from "./LinkButton.astro";
     width: 1.25rem;
     height: 1.25rem;
     scale: 1;
+    /* Nudge down so its bottom aligns with the taller Mail icon (the shared
+       reference), since both are centered but differ in height. */
+    position: relative;
+    top: 3px;
   }
 </style>

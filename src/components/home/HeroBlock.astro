@@ -160,6 +160,10 @@ const frames = ["if1", "if2", "if3", "if4"];
   .socials a :global(svg[data-icon="streamline-logos:linkedin-logo"]) {
     width: 16px;
     height: 16px;
+    /* Nudge down so its bottom lines up with the taller Mail icon (the shared
+       reference), since both are vertically centered but differ in height. */
+    position: relative;
+    top: 2px;
   }
   .socials .label {
     border-bottom: 1px dashed var(--accent);
