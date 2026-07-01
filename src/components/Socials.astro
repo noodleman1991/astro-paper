@@ -18,3 +18,14 @@ import LinkButton from "./LinkButton.astro";
     ))
   }
 </div>
+
+<style>
+  /* Icons come from different sets with different amounts of drawn content in
+     their box. The envelope's actual artwork is small (~half its box), so match
+     its visible size to the denser LinkedIn logo by scaling its box up. Keeps
+     the icon row visually balanced without distorting either glyph. */
+  [data-icon="streamline-ultimate-color:send-email-envelope"] {
+    width: 2.125rem;
+    height: 2.125rem;
+  }
+</style>

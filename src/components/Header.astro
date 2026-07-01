@@ -272,12 +272,19 @@ const isActive = (path: string) => {
     z-index: 40;
     width: 100%;
     background: var(--background);
-    /* Snappy reveal — phases in quickly on scroll-up. */
-    transition: transform 0.18s var(--ease-out-soft);
+    /* Pronounced, symmetric ease-in-out slide + fade so appearing and
+       disappearing are clearly deliberate — a long curve reads as smooth,
+       intentional motion rather than a flickery snap when the state flips near
+       the threshold. */
+    transition:
+      transform 0.55s var(--ease-in-out-soft),
+      opacity 0.5s var(--ease-in-out-soft);
   }
-  /* Hidden at the top / on scroll-down: slid up out of view. */
+  /* Hidden at the top / on scroll-down: slid fully up (past its own height) and
+     faded out, so the exit is unmistakable. */
   .site-header[data-hidden] {
-    transform: translateY(-100%);
+    transform: translateY(-120%);
+    opacity: 0;
   }
   @media (prefers-reduced-motion: reduce) {
     .site-header {

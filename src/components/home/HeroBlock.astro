@@ -156,6 +156,14 @@ const frames = ["if1", "if2", "if3", "if4"];
     width: 18px;
     height: 18px;
   }
+  /* The envelope's drawn artwork is small (~half its box), so scale its box up
+     to match the denser LinkedIn logo's visible size and keep the row balanced. */
+  .socials
+    a
+    :global(svg[data-icon="streamline-ultimate-color:send-email-envelope"]) {
+    width: 25px;
+    height: 25px;
+  }
   .socials .label {
     border-bottom: 1px dashed var(--accent);
     /* Equal top/bottom padding keeps the label box vertically symmetric so the
