@@ -77,6 +77,16 @@ html[lang="he"] body {
   letter-spacing: normal;
 }
 
+/* Code is an LTR island even on RTL pages. */
+pre,
+code,
+kbd,
+samp {
+  direction: ltr;
+  unicode-bidi: isolate;
+  text-align: left;
+}
+
 /* Reserve space for the fixed header on interior pages. The homepage opts out
    (its 100dvh grid owns the viewport and the header is hidden at the top).
    :has() is well-supported in current browsers. */
