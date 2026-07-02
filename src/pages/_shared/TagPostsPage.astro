@@ -20,7 +20,10 @@ const { page, tag, tagName, locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<Layout locale={locale} title={`Tag: ${tagName} | ${SITE.title}`}>
+<Layout
+  locale={locale}
+  title={`${t.pages.tagDetail.titlePrefix} ${tagName} | ${SITE.title}`}
+>
   <Header locale={locale} />
   <Main
     pageTitle={[`${t.pages.tagDetail.titlePrefix}`, `${tagName}`]}
