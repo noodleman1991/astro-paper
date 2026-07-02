@@ -13,13 +13,16 @@ import { getPath } from "@/utils/getPath";
 import { slugifyStr } from "@/utils/slugify";
 import { Icon } from "astro-icon/components";
 import { SITE } from "@/config";
+import { localePath, useTranslations, type Locale } from "@/i18n";
 
 type Props = {
   post: CollectionEntry<"blog">;
   posts: CollectionEntry<"blog">[];
+  locale?: Locale;
 };
 
-const { post, posts } = Astro.props;
+const { post, posts, locale = "en" } = Astro.props;
+const t = useTranslations(locale);
 
 const {
   title,
@@ -61,9 +64,16 @@ const layoutProps = {
   description,
   pubDatetime,
   modDatetime,
-  canonicalURL,
+  // Hebrew mirrors render the English content (phase 1: no translations yet),
+  // so they canonicalize to the English URL to avoid duplicate-content SEO.
+  canonicalURL:
+    canonicalURL ??
+    (locale !== "en"
+      ? new URL(getPath(post.id, post.filePath), Astro.site).href
+      : undefined),
   ogImage,
   scrollSmooth: true,
+  locale,
 };
 
 /* ========== Prev/Next Posts ========== */
@@ -82,12 +92,14 @@ const nextPost =
 ---
 
 <Layout {...layoutProps}>
-  <Header />
-  <BackButton />
+  <Header locale={locale} />
+  <BackButton locale={locale} />
   <main
     id="main-content"
     class:list={["app-layout pb-12", { "mt-8": !SITE.showBackButton }]}
     data-pagefind-body
+    data-copy-label={t.post.copy}
+    data-copied-label={t.post.copied}
   >
     <h1
       transition:name={slugifyStr(title.replaceAll(".", "-"))}
@@ -96,7 +108,13 @@ const nextPost =
       {title}
     </h1>
     <div class="my-2 flex items-center gap-2">
-      <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+      <Datetime
+        {pubDatetime}
+        {modDatetime}
+        {timezone}
+        size="lg"
+        locale={locale}
+      />
       <span
         aria-hidden="true"
         class:list={[
@@ -106,6 +124,16 @@ const nextPost =
       >
       <EditPost {hideEditPost} {post} class="max-sm:hidden" />
     </div>
+    {
+      locale !== "en" && (
+        <p
+          class="mt-4 border-s-4 border-accent bg-muted/40 px-4 py-2 text-sm"
+          dir="rtl"
+        >
+          {t.post.untranslated}
+        </p>
+      )
+    }
     <article
       id="article"
       class="app-prose mt-8 w-full max-w-app prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)"
@@ -118,12 +146,16 @@ const nextPost =
     <EditPost class="sm:hidden" {hideEditPost} {post} />
 
     <ul class="mt-4 mb-8 flex flex-wrap gap-4 sm:my-8">
-      {tags.map(tag => <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />)}
+      {
+        tags.map(tag => (
+          <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" locale={locale} />
+        ))
+      }
     </ul>
 
-    <BackToTopButton />
+    <BackToTopButton locale={locale} />
 
-    <ShareLinks />
+    <ShareLinks locale={locale} />
 
     <hr class="my-6 border-dashed" />
 
@@ -132,7 +164,7 @@ const nextPost =
       {
         prevPost && (
           <a
-            href={getPath(prevPost.id, prevPost.filePath)}
+            href={localePath(locale, getPath(prevPost.id, prevPost.filePath))}
             class="flex w-full gap-1 hover:opacity-75"
           >
             <Icon
@@ -140,7 +172,7 @@ const nextPost =
               class="inline-block flex-none rtl:rotate-180"
             />
             <div>
-              <span>Previous Post</span>
+              <span>{t.post.prevPost}</span>
               <div class="text-sm text-accent/85">{prevPost.title}</div>
             </div>
           </a>
@@ -149,11 +181,11 @@ const nextPost =
       {
         nextPost && (
           <a
-            href={getPath(nextPost.id, nextPost.filePath)}
+            href={localePath(locale, getPath(nextPost.id, nextPost.filePath))}
             class="flex w-full justify-end gap-1 text-end hover:opacity-75 sm:col-start-2"
           >
             <div>
-              <span>Next Post</span>
+              <span>{t.post.nextPost}</span>
               <div class="text-sm text-accent/85">{nextPost.title}</div>
             </div>
             <Icon
@@ -165,7 +197,7 @@ const nextPost =
       }
     </div>
   </main>
-  <Footer />
+  <Footer locale={locale} />
 </Layout>
 
 <script is:inline data-astro-rerun>
@@ -239,7 +271,9 @@ const nextPost =
   /** Attaches copy buttons to code blocks in the document,
    * allowing users to copy code easily. */
   function attachCopyButtons() {
-    const copyButtonLabel = "Copy";
+    const main = document.getElementById("main-content");
+    const copyButtonLabel = main?.dataset.copyLabel ?? "Copy";
+    const copiedLabel = main?.dataset.copiedLabel ?? "Copied";
     const codeBlocks = Array.from(document.querySelectorAll("pre"));
 
     for (const codeBlock of codeBlocks) {
@@ -278,7 +312,7 @@ const nextPost =
       await navigator.clipboard.writeText(text ?? "");
 
       // visual feedback that task is completed
-      button.innerText = "Copied";
+      button.innerText = copiedLabel;
 
       setTimeout(() => {
         button.innerText = copyButtonLabel;

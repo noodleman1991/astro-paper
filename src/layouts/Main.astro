@@ -1,18 +1,23 @@
 ---
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import { SITE } from "@/config";
+import type { Locale } from "@/i18n";
 
 type StringTitle = { pageTitle: string };
 type ArrayTitle = { pageTitle: [string, string]; titleTransition: string };
 
-type Props = (StringTitle | ArrayTitle) & { pageDesc?: string };
+type Props = (StringTitle | ArrayTitle) & {
+  pageDesc?: string;
+  locale?: Locale;
+};
 
 const { props } = Astro;
+const { locale = "en" } = props;
 
 const backUrl = SITE.showBackButton ? Astro.url.pathname : "/";
 ---
 
-<Breadcrumb />
+<Breadcrumb locale={locale} />
 <main data-backUrl={backUrl} id="main-content" class="app-layout pb-4">
   {
     "titleTransition" in props ? (

@@ -2,6 +2,11 @@
 import { Icon } from "astro-icon/components";
 import LinkButton from "./LinkButton.astro";
 import { SITE } from "@/config";
+import { useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale?: Locale };
+const { locale = "en" } = Astro.props;
+const t = useTranslations(locale);
 ---
 
 {
@@ -16,7 +21,7 @@ import { SITE } from "@/config";
           name="tabler:chevron-left"
           class="inline-block size-6 rtl:rotate-180"
         />
-        <span>Go back</span>
+        <span>{t.post.goBack}</span>
       </LinkButton>
     </div>
   )

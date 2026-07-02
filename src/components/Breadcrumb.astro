@@ -1,4 +1,10 @@
 ---
+import type { Locale } from "@/i18n";
+
+// `locale` is accepted but unused for now — Breadcrumb's strings localize in
+// a follow-up task.
+type Props = { locale?: Locale };
+
 // Remove current url path and remove trailing slash if exists
 const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
 

@@ -23,7 +23,7 @@ const t = useTranslations(locale);
     {
       posts.map(post => (
         <li class="post">
-          <Datetime {...post.data} />
+          <Datetime {...post.data} locale={locale} />
           <a
             href={localePath(locale, getPath(post.id, post.filePath))}
             class="title"
