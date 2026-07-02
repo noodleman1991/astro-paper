@@ -5,6 +5,13 @@ import { PUBLIC_GOOGLE_SITE_VERIFICATION } from "astro:env/client";
 import { SITE } from "@/config";
 import "@/styles/global.css";
 import CloudDecoration from "@/components/CloudDecoration.astro";
+import {
+  alternatePath,
+  localeDir,
+  localePath,
+  LOCALES,
+  type Locale,
+} from "@/i18n";
 
 type Props = {
   title?: string;
@@ -16,6 +23,7 @@ type Props = {
   pubDatetime?: Date;
   modDatetime?: Date | null;
   scrollSmooth?: boolean;
+  locale?: Locale;
 };
 
 const {
@@ -28,6 +36,7 @@ const {
   pubDatetime,
   modDatetime,
   scrollSmooth = false,
+  locale = "en",
 } = Astro.props;
 
 const socialImageURL = new URL(ogImage, Astro.url);
@@ -51,8 +60,8 @@ const structuredData = {
 
 <!doctype html>
 <html
-  dir={SITE.dir}
-  lang=`${SITE.lang ?? "en"}`
+  dir={localeDir(locale)}
+  lang={locale}
   class={`${scrollSmooth && "scroll-smooth"}`}
 >
   <head>
@@ -60,6 +69,20 @@ const structuredData = {
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="canonical" href={canonicalURL} />
+    {
+      LOCALES.map(l => (
+        <link
+          rel="alternate"
+          hreflang={l}
+          href={new URL(alternatePath(Astro.url.pathname, l), Astro.site)}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(alternatePath(Astro.url.pathname, "en"), Astro.site)}
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- Load Fonts -->
@@ -75,8 +98,18 @@ const structuredData = {
       cssVariable="--font-mclaren"
       preload={[{ subset: "latin", weight: 400, style: "normal" }]}
     />
-    <Font cssVariable="--font-assistant" />
-    <Font cssVariable="--font-fredoka" />
+    <Font
+      cssVariable="--font-assistant"
+      preload={locale === "he"
+        ? [{ subset: "hebrew", weight: 400, style: "normal" }]
+        : undefined}
+    />
+    <Font
+      cssVariable="--font-fredoka"
+      preload={locale === "he"
+        ? [{ subset: "hebrew", weight: 500, style: "normal" }]
+        : undefined}
+    />
 
     <!-- General Meta Tags -->
     <title>{title}</title>
@@ -129,7 +162,7 @@ const structuredData = {
       rel="alternate"
       type="application/rss+xml"
       title={SITE.title}
-      href={new URL("rss.xml", Astro.site)}
+      href={new URL(localePath(locale, "/rss.xml").slice(1), Astro.site)}
     />
 
     <meta name="theme-color" content="" />
