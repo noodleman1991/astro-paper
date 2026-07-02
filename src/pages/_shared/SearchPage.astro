@@ -1,0 +1,164 @@
+---
+import "@pagefind/default-ui/css/ui.css";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import { SITE } from "@/config";
+import { useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
+---
+
+<Layout locale={locale} title={`${t.pages.search.title} | ${SITE.title}`}>
+  <Header locale={locale} />
+  <Breadcrumb locale={locale} />
+  <main data-backurl={backUrl} id="main-content" class="app-layout pb-4">
+    <h1 class="font-heading text-2xl font-semibold sm:text-3xl">
+      {t.pages.search.title}
+    </h1>
+    <input
+      id="search-input"
+      type="text"
+      placeholder={t.pages.search.placeholder}
+      autocomplete="off"
+      autofocus
+      class="mt-2 mb-6 w-full bg-transparent text-foreground italic outline-none placeholder:text-foreground/50 focus:border-b focus:border-accent focus:not-italic"
+      aria-label={t.pages.search.inputAria}
+    />
+    <div id="pagefind-search" transition:persist data-backurl={backUrl}></div>
+  </main>
+  <Footer locale={locale} />
+</Layout>
+
+<script>
+  function initSearch() {
+    const pageFindSearch: HTMLElement | null =
+      document.querySelector("#pagefind-search");
+    const searchInput: HTMLInputElement | null =
+      document.querySelector("#search-input");
+
+    if (!pageFindSearch || !searchInput) return;
+
+    const params = new URLSearchParams(window.location.search);
+
+    const onIdle = window.requestIdleCallback || (cb => setTimeout(cb, 1));
+
+    onIdle(async () => {
+      // @ts-expect-error — Missing types for @pagefind/default-ui package.
+      const { PagefindUI } = await import("@pagefind/default-ui");
+
+      // Display warning in dev mode
+      if (import.meta.env.DEV) {
+        pageFindSearch.innerHTML = `
+            <div class="bg-muted/75 rounded p-4 space-y-4 mb-4">
+              <p><strong>DEV mode Warning! </strong>You need to build the project at least once to see the search results during development.</p>
+              <code class="block bg-black text-white px-2 py-1 rounded">pnpm run build</code>
+            </div>
+          `;
+      }
+
+      // Init pagefind ui
+      const search = new PagefindUI({
+        element: "#pagefind-search",
+        showImages: false,
+        showSubResults: true,
+        processTerm: function (term: string) {
+          params.set("q", term);
+          history.replaceState(history.state, "", "?" + params.toString());
+
+          const backUrl = pageFindSearch?.dataset?.backurl;
+          sessionStorage.setItem("backUrl", backUrl + "?" + params.toString());
+
+          return term;
+        },
+      });
+
+      // Wire custom input to Pagefind
+      searchInput.addEventListener("input", () => {
+        const term = searchInput.value.trim();
+        search.triggerSearch(term);
+
+        if (term === "") {
+          history.replaceState(history.state, "", window.location.pathname);
+        }
+      });
+
+      // If search param exists (eg: search?q=astro), trigger search
+      const query = params.get("q");
+      if (query) {
+        searchInput.value = query;
+        search.triggerSearch(query);
+      }
+    });
+  }
+
+  document.addEventListener("astro:after-swap", () => {
+    const pagefindSearch = document.querySelector("#pagefind-search");
+
+    // if pagefind search form already exists, don't initialize search component
+    if (pagefindSearch && pagefindSearch.querySelector("form")) return;
+
+    initSearch();
+  });
+
+  document.addEventListener("astro:page-load", () => {
+    const mainContent: HTMLElement | null =
+      document.querySelector("#main-content");
+    const backUrl = mainContent?.dataset?.backurl;
+    if (backUrl) {
+      sessionStorage.setItem("backUrl", backUrl);
+    }
+  });
+
+  initSearch();
+</script>
+
+<style is:global>
+  #pagefind-search {
+    --pagefind-ui-font: var(--font-app);
+    --pagefind-ui-text: var(--foreground);
+    --pagefind-ui-background: var(--background);
+    --pagefind-ui-border: var(--border);
+    --pagefind-ui-primary: var(--accent);
+    --pagefind-ui-tag: var(--background);
+    --pagefind-ui-border-radius: 0.375rem;
+    --pagefind-ui-border-width: 1px;
+    --pagefind-ui-image-border-radius: 8px;
+    --pagefind-ui-image-box-ratio: 3 / 2;
+
+    /* Hide Pagefind's built-in search form — using custom inline input instead */
+    .pagefind-ui__form::before,
+    .pagefind-ui__search-input,
+    .pagefind-ui__search-clear {
+      display: none;
+    }
+
+    .pagefind-ui__result-title a {
+      color: var(--accent);
+      outline-offset: 1px;
+      outline-color: var(--accent);
+      text-decoration-style: dashed;
+      text-underline-offset: 4px;
+    }
+
+    .pagefind-ui__result-title a:focus-visible,
+    .pagefind-ui__search-clear:focus-visible {
+      text-decoration-line: none;
+      outline-width: 2px;
+      outline-style: dashed;
+    }
+
+    .pagefind-ui__result:last-of-type {
+      border-bottom: 0;
+    }
+
+    .pagefind-ui__result-nested .pagefind-ui__result-link:before {
+      font-family: system-ui;
+    }
+  }
+</style>
