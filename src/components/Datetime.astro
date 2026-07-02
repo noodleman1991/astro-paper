@@ -39,6 +39,7 @@ const date = new Intl.DateTimeFormat(locale === "he" ? "he-IL" : "en-US", {
   day: "numeric",
   month: "short",
   year: "numeric",
+  timeZone: postTimezone || SITE.timezone,
 }).format(datetime.toDate()); // '22 Mar, 2025' / '22 במרץ 2025'
 ---
 
