@@ -33,9 +33,9 @@ html[data-theme="dark"] {
 }
 
 @theme inline {
-  --font-app: var(--font-google-sans-code);
+  --font-app: var(--font-google-sans-code), var(--font-assistant);
   --font-logo: var(--font-chicle);
-  --font-heading: var(--font-mclaren);
+  --font-heading: var(--font-mclaren), var(--font-fredoka);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-accent: var(--accent);
@@ -70,6 +70,11 @@ html[data-theme="dark"] {
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+}
+
+/* Hebrew is never letter-spaced: neutralize inherited tracking on he pages. */
+html[lang="he"] body {
+  letter-spacing: normal;
 }
 
 /* Reserve space for the fixed header on interior pages. The homepage opts out
