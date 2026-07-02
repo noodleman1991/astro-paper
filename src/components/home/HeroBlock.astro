@@ -2,13 +2,18 @@
 // src/components/home/HeroBlock.astro
 import { Icon } from "astro-icon/components";
 import { SOCIALS } from "@/constants";
+import { useTranslations, type Locale } from "@/i18n";
 
 // Placeholder gradient "images". Replace `frames` with real <img> layers when
 // the owner supplies the 4-image pool; the crossfade logic is identical.
 const frames = ["if1", "if2", "if3", "if4"];
+
+type Props = { locale?: Locale };
+const { locale = "en" } = Astro.props;
+const t = useTranslations(locale);
 ---
 
-<section class="b-hero" aria-label="Introduction">
+<section class="b-hero" aria-label={t.home.heroAria}>
   <div class="hero-img" data-hero-img>
     {
       frames.map((cls, i) => (
@@ -20,10 +25,9 @@ const frames = ["if1", "if2", "if3", "if4"];
     }
   </div>
   <div class="hero-text">
-    <h1>hi, I'm Amit</h1>
+    <h1>{t.home.heroHeading}</h1>
     <p>
-      I build websites and apps, set up hubs and knowledge management with and
-      without AI.
+      {t.home.heroIntro}
     </p>
     <ul class="socials">
       {
@@ -41,7 +45,11 @@ const frames = ["if1", "if2", "if3", "if4"];
         ))
       }
       <li>
-        <a href="/rss.xml" title="RSS Feed" aria-label="RSS feed">
+        <a
+          href={locale === "he" ? "/he/rss.xml" : "/rss.xml"}
+          title={t.a11y.rssFeed}
+          aria-label={t.a11y.rssFeed}
+        >
           <span class="label">RSS</span>
         </a>
       </li>

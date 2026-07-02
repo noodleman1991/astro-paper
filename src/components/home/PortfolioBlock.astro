@@ -1,5 +1,7 @@
 ---
 // src/components/home/PortfolioBlock.astro
+import { useTranslations, type Locale } from "@/i18n";
+
 // Placeholder projects until a real `portfolio` content collection exists.
 const projects = [
   { cls: "sq1", label: "project one", href: "#" },
@@ -7,9 +9,13 @@ const projects = [
   { cls: "sq3", label: "project three", href: "#" },
   { cls: "sq4", label: "project four", href: "#" },
 ];
+
+type Props = { locale?: Locale };
+const { locale = "en" } = Astro.props;
+const t = useTranslations(locale);
 ---
 
-<section class="b-portfolio" aria-label="Portfolio">
+<section class="b-portfolio" aria-label={t.home.portfolioAria}>
   <ul class="squares">
     {
       projects.map(p => (

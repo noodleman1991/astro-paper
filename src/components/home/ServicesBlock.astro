@@ -2,13 +2,19 @@
 // src/components/home/ServicesBlock.astro
 import { Icon } from "astro-icon/components";
 import { SERVICES } from "@/config/services";
+import { useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale?: Locale };
+const { locale = "en" } = Astro.props;
+const t = useTranslations(locale);
+const services = SERVICES[locale];
 ---
 
-<section class="b-services" aria-label="What I do">
+<section class="b-services" aria-label={t.home.servicesAria}>
   <div class="marquee" data-marquee>
     <ul class="marquee-track" data-track>
       {
-        SERVICES.map(s => (
+        services.map(s => (
           <li class="tile" data-set="a">
             <span class="ico" aria-hidden="true">
               <Icon name={s.icon} width={22} height={22} />
@@ -21,7 +27,7 @@ import { SERVICES } from "@/config/services";
         ))
       }
       {
-        SERVICES.map(s => (
+        services.map(s => (
           <li class="tile" aria-hidden="true">
             <span class="ico">
               <Icon name={s.icon} width={22} height={22} />

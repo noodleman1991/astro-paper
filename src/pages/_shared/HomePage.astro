@@ -1,0 +1,80 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import HeroBlock from "@/components/home/HeroBlock.astro";
+import ServicesBlock from "@/components/home/ServicesBlock.astro";
+import BlogBlock from "@/components/home/BlogBlock.astro";
+import PortfolioBlock from "@/components/home/PortfolioBlock.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { localePath, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+
+const posts = await getCollection("blog");
+const recentPosts = getSortedPosts(posts).slice(0, 3);
+---
+
+<Layout locale={locale}>
+  <Header locale={locale} />
+  <main
+    id="main-content"
+    data-layout="index"
+    data-home-url={localePath(locale, "/")}
+    class="home-layout"
+  >
+    <div class="home-grid">
+      <HeroBlock locale={locale} />
+      <ServicesBlock locale={locale} />
+      <BlogBlock posts={recentPosts} locale={locale} />
+      <PortfolioBlock locale={locale} />
+    </div>
+  </main>
+  <Footer locale={locale} />
+</Layout>
+
+<style>
+  .home-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    /* Phone: each row sizes to its block's own content (no shared min height
+       that would clip content-heavy blocks). Blocks that contain height-filling
+       internals (hero image, services marquee, portfolio squares) set their own
+       definite height in their component; the blog block flows naturally.
+       Roomier gap between the stacked blocks so they read as distinct cards. */
+    grid-auto-rows: auto;
+    gap: 2rem;
+  }
+  @media (min-width: 768px) {
+    .home-grid {
+      /* Tablet+: 2×2 fills the dynamic viewport so all four blocks show on load.
+         Header is hidden at the top (Task 2), so the grid owns the full height.
+         Tighter gap here since the grid must fit the viewport. */
+      height: 100dvh;
+      gap: 1.25rem;
+      grid-template-columns: 1fr 1fr;
+      /* minmax(0, 1fr) overrides the implicit `min-height: auto` so rows split
+         equally and tall block content (e.g. the marquee) clips/scrolls inside
+         its row instead of blowing the row out past the viewport. */
+      grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+      grid-auto-rows: unset;
+      padding-block: 1.25rem;
+      box-sizing: border-box;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+      ?.dataset?.layout;
+    if (indexLayout) {
+      const homeUrl =
+        (document.querySelector("#main-content") as HTMLElement)?.dataset
+          ?.homeUrl ?? "/";
+      sessionStorage.setItem("backUrl", homeUrl);
+    }
+  });
+</script>

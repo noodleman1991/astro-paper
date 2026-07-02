@@ -3,12 +3,14 @@
 import type { CollectionEntry } from "astro:content";
 import { getPath } from "@/utils/getPath";
 import Datetime from "@/components/Datetime.astro";
+import { localePath, useTranslations, type Locale } from "@/i18n";
 
-type Props = { posts: CollectionEntry<"blog">[] };
-const { posts } = Astro.props;
+type Props = { posts: CollectionEntry<"blog">[]; locale?: Locale };
+const { posts, locale = "en" } = Astro.props;
+const t = useTranslations(locale);
 ---
 
-<section class="b-blog" aria-label="From the blog" data-blog-block>
+<section class="b-blog" aria-label={t.home.blogAria} data-blog-block>
   <svg
     class="ants"
     preserveAspectRatio="none"
@@ -22,7 +24,10 @@ const { posts } = Astro.props;
       posts.map(post => (
         <li class="post">
           <Datetime {...post.data} />
-          <a href={getPath(post.id, post.filePath)} class="title">
+          <a
+            href={localePath(locale, getPath(post.id, post.filePath))}
+            class="title"
+          >
             {post.data.title}
           </a>
           <p>{post.data.description}</p>
