@@ -31,11 +31,12 @@ const { title, description, ...props } = data;
     ]}
   >
     <Heading
+      dir="auto"
       style={{ viewTransitionName: slugifyStr(title.replaceAll(".", "-")) }}
     >
       {title}
     </Heading>
   </a>
   <Datetime {...props} locale={locale} />
-  <p>{description}</p>
+  <p dir="auto">{description}</p>
 </li>

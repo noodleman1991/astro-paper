@@ -27,10 +27,11 @@ const t = useTranslations(locale);
           <a
             href={localePath(locale, getPath(post.id, post.filePath))}
             class="title"
+            dir="auto"
           >
             {post.data.title}
           </a>
-          <p>{post.data.description}</p>
+          <p dir="auto">{post.data.description}</p>
         </li>
       ))
     }
