@@ -69,7 +69,7 @@ const layoutProps = {
   canonicalURL:
     canonicalURL ??
     (locale !== "en"
-      ? new URL(getPath(post.id, post.filePath), Astro.site).href
+      ? new URL(`${getPath(post.id, post.filePath)}/`, Astro.site).href
       : undefined),
   ogImage,
   scrollSmooth: true,

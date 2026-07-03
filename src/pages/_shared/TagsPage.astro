@@ -18,7 +18,11 @@ const posts = await getCollection("blog");
 let tags = getUniqueTags(posts);
 ---
 
-<Layout locale={locale} title={`${t.pages.tags.title} | ${SITE.title}`}>
+<Layout
+  locale={locale}
+  title={`${t.pages.tags.title} | ${SITE.title}`}
+  description={t.pages.tags.desc}
+>
   <Header locale={locale} />
   <Main
     pageTitle={t.pages.tags.title}

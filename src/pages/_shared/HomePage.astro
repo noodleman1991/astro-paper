@@ -8,16 +8,17 @@ import ServicesBlock from "@/components/home/ServicesBlock.astro";
 import BlogBlock from "@/components/home/BlogBlock.astro";
 import PortfolioBlock from "@/components/home/PortfolioBlock.astro";
 import getSortedPosts from "@/utils/getSortedPosts";
-import { localePath, type Locale } from "@/i18n";
+import { localePath, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale };
 const { locale } = Astro.props;
+const t = useTranslations(locale);
 
 const posts = await getCollection("blog");
 const recentPosts = getSortedPosts(posts).slice(0, 3);
 ---
 
-<Layout locale={locale}>
+<Layout locale={locale} description={t.site.desc}>
   <Header locale={locale} />
   <main
     id="main-content"

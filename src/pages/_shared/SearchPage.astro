@@ -14,7 +14,11 @@ const t = useTranslations(locale);
 const backUrl = SITE.showBackButton ? `${Astro.url.pathname}` : "/";
 ---
 
-<Layout locale={locale} title={`${t.pages.search.title} | ${SITE.title}`}>
+<Layout
+  locale={locale}
+  title={`${t.pages.search.title} | ${SITE.title}`}
+  description={t.site.desc}
+>
   <Header locale={locale} />
   <Breadcrumb locale={locale} />
   <main data-backurl={backUrl} id="main-content" class="app-layout pb-4">

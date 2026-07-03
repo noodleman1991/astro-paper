@@ -75,6 +75,7 @@ Phase 6 is deliberately last so color decisions land on the finished bilingual U
 
 - **OG images (Satori):** Satori's RTL support is partial. Plan: load a Hebrew font into Satori and test; if Hebrew titles render wrong, fall back to a static OG image for Hebrew pages (acceptable, low-traffic surface). Verify during phase 1.
   Verified 2026-07-03: Satori Hebrew OG rendering PASSES — Assistant (400/700) loads correctly for Hebrew codepoints, glyphs render with no tofu, and RTL word order is correct (שלום at the far right, "spiro spero" intact and unscrambled at the far left). Dynamic OG generation is safe to use for Hebrew-titled posts; no static-fallback exception needed.
+- Decision 2026-07-03: untranslated /he/ post mirrors keep hreflang alternates + sitemap entries while canonicalizing to the English URL; search engines will consolidate on English (intended). Revisit in phase 2 when real translations make Hebrew posts self-canonical.
 - **Pagefind search:** supports multilingual indexing via `data-pagefind-*` and `lang` attributes — verify Hebrew tokenization during phase 1.
 
 ---

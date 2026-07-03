@@ -18,17 +18,19 @@ type Props = {
 };
 const { page, tag, tagName, locale } = Astro.props;
 const t = useTranslations(locale);
+const pageDesc = fmt(t.pages.tagDetail.desc, { tag: tagName });
 ---
 
 <Layout
   locale={locale}
   title={`${t.pages.tagDetail.titlePrefix} ${tagName} | ${SITE.title}`}
+  description={pageDesc}
 >
   <Header locale={locale} />
   <Main
     pageTitle={[`${t.pages.tagDetail.titlePrefix}`, `${tagName}`]}
     titleTransition={tag}
-    pageDesc={fmt(t.pages.tagDetail.desc, { tag: tagName })}
+    pageDesc={pageDesc}
     locale={locale}
   >
     <h1 slot="title" transition:name={tag}>{`Tag:${tag}`}</h1>

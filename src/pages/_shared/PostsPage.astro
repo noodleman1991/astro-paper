@@ -15,7 +15,11 @@ const { page, locale } = Astro.props;
 const t = useTranslations(locale);
 ---
 
-<Layout locale={locale} title={`${t.pages.posts.title} | ${SITE.title}`}>
+<Layout
+  locale={locale}
+  title={`${t.pages.posts.title} | ${SITE.title}`}
+  description={t.pages.posts.desc}
+>
   <Header locale={locale} />
   <Main
     pageTitle={t.pages.posts.title}

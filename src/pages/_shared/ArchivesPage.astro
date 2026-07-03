@@ -26,7 +26,11 @@ const monthName = (month: number) =>
   }).format(new Date(2026, month - 1, 1));
 ---
 
-<Layout locale={locale} title={`${t.pages.archives.title} | ${SITE.title}`}>
+<Layout
+  locale={locale}
+  title={`${t.pages.archives.title} | ${SITE.title}`}
+  description={t.pages.archives.desc}
+>
   <Header locale={locale} />
   <Main
     pageTitle={t.pages.archives.title}
