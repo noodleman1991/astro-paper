@@ -3,6 +3,18 @@
 
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
+:root {
+  /* Shared motion vocabulary — one easing language across the homepage blocks.
+     --ease-out-soft: entrances & hover settles (decelerate into place).
+     --ease-in-out-soft: crossfades & reversible transforms (the flip). */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-in-out-soft: cubic-bezier(0.45, 0, 0.2, 1);
+  /* Fixed header height — used to reserve space on interior pages and for
+     scroll-padding so :target anchor jumps clear the bar. Matches the ~81px
+     rendered header (py-4 sm:py-6 + content); rounded to a clean 5rem. */
+  --header-h: 5rem;
+}
+
 :root,
 html[data-theme="light"] {
   --background: #fdfdfd;
@@ -38,7 +50,14 @@ html[data-theme="dark"] {
     scrollbar-color: var(--color-muted) transparent;
   }
   html {
-    @apply overflow-y-scroll scroll-smooth;
+    @apply overflow-y-scroll;
+    scroll-padding-top: var(--header-h);
+  }
+  /* Smooth scrolling only when the user hasn't asked to reduce motion. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      @apply scroll-smooth;
+    }
   }
   body {
     @apply bg-background font-app text-foreground selection:bg-accent/75 selection:text-background;
@@ -53,12 +72,29 @@ html[data-theme="dark"] {
   }
 }
 
+/* Reserve space for the fixed header on interior pages. The homepage opts out
+   (its 100dvh grid owns the viewport and the header is hidden at the top).
+   :has() is well-supported in current browsers. */
+body:not(:has(#main-content[data-layout="index"])) {
+  padding-block-start: var(--header-h);
+}
+
+/* Ensure :target anchor jumps on interior pages land below the fixed header. */
+body:not(:has(#main-content[data-layout="index"])) #main-content {
+  scroll-margin-top: var(--header-h);
+}
+
 @utility max-w-app {
   @apply max-w-3xl;
 }
 
 @utility app-layout {
   @apply mx-auto w-full max-w-app px-4;
+}
+
+@utility home-layout {
+  @apply mx-auto w-full px-4;
+  max-width: 64rem; /* ~1024px — wider than article max-w-3xl for the 2×2 grid */
 }
 
 .active-nav {
@@ -69,4 +105,28 @@ html[data-theme="dark"] {
 /* Anything that has been anchored to should have extra scroll margin */
 :target {
   scroll-margin-block: 1rem;
+}
+
+/* Global backstop: components already opt out of motion individually, but this
+   collapses any animation/transition/smooth-scroll we might miss. Near-zero
+   (not 0) keeps animation/transition `end` events firing so state still settles. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Smooth the title morph between list/detail pages. View-transition
+   pseudo-elements are progressively enhanced — unsupported browsers fall back
+   to the default/instant swap. Honors reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-group(*) {
+    animation-duration: 0.45s;
+    animation-timing-function: var(--ease-in-out-soft);
+  }
 }

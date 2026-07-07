@@ -206,6 +206,299 @@ const mobilePath = mobilePaths[mobileIdx];
       </div>
     </div>
   </div>
+
+  <!-- Rainbow: Desktop — arcs from behind left cloud (x≈12%) to behind right cloud (x≈88%).
+       viewBox 0 0 100 50 maps to viewport %. Clouds are at left:0/right:0, top:50%, 280px wide.
+       pathLength="1000" normalizes dasharray math. Mask gradient used for soft dissolve. -->
+  <div class="rainbow-container rainbow-desktop" id="rainbow-desktop">
+    <svg
+      viewBox="0 -10 100 60"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id={`filterRbow-${uid}`}
+          x="-5%"
+          y="-10%"
+          width="110%"
+          height="120%"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.025"
+            numOctaves="3"
+            seed="5"
+            result="noise"></feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="1.2"
+            result="displaced"></feDisplacementMap>
+          <feGaussianBlur in="displaced" stdDeviation="0.3"></feGaussianBlur>
+        </filter>
+        <linearGradient id={`maskGrad-${uid}`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="white"></stop>
+          <stop offset="1" stop-color="white"></stop>
+        </linearGradient>
+        <mask id={`rbowMask-${uid}`} maskContentUnits="objectBoundingBox">
+          <rect width="1" height="1" fill={`url(#maskGrad-${uid})`}></rect>
+        </mask>
+      </defs>
+      <g filter={`url(#filterRbow-${uid})`} mask={`url(#rbowMask-${uid})`}>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,3  72,3  90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4a0a0"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,5  72,5  90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4c4a0"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,7  72,7  90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4e8a0"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,9  72,9  90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#a0e8b4"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,11 72,11 90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#a0c4f4"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,13 72,13 90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#b0a0e8"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 10,26 C 28,15 72,15 90,26"
+          pathLength="1000"
+          fill="none"
+          stroke="#d4a0e8"
+          stroke-width="0.7"
+          stroke-linecap="round"></path>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Rainbow: Mobile left — arc emerges from left edge mid-screen, arcs right, returns to left edge higher up -->
+  <div class="rainbow-container rainbow-mobile-left" id="rainbow-mobile-left">
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id={`filterRbowML-${uid}`}
+          x="-5%"
+          y="-5%"
+          width="110%"
+          height="110%"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.025"
+            numOctaves="3"
+            seed="7"
+            result="noise"></feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="1"
+            result="displaced"></feDisplacementMap>
+          <feGaussianBlur in="displaced" stdDeviation="0.4"></feGaussianBlur>
+        </filter>
+        <linearGradient id={`maskGradML-${uid}`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="white"></stop>
+          <stop offset="1" stop-color="white"></stop>
+        </linearGradient>
+        <mask id={`rbowMaskML-${uid}`} maskContentUnits="objectBoundingBox">
+          <rect width="1" height="1" fill={`url(#maskGradML-${uid})`}></rect>
+        </mask>
+      </defs>
+      <g filter={`url(#filterRbowML-${uid})`} mask={`url(#rbowMaskML-${uid})`}>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 40,50 40,30 -3,18"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4a0a0"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 37,51 37,31 -3,19"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4c4a0"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 34,52 34,32 -3,20"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4e8a0"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 31,53 31,33 -3,21"
+          pathLength="1000"
+          fill="none"
+          stroke="#a0e8b4"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 28,54 28,34 -3,22"
+          pathLength="1000"
+          fill="none"
+          stroke="#a0c4f4"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 25,55 25,35 -3,23"
+          pathLength="1000"
+          fill="none"
+          stroke="#b0a0e8"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M -3,65 C 22,56 22,36 -3,24"
+          pathLength="1000"
+          fill="none"
+          stroke="#d4a0e8"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+      </g>
+    </svg>
+  </div>
+
+  <!-- Rainbow: Mobile right — mirror of left, arcs from right edge -->
+  <div class="rainbow-container rainbow-mobile-right" id="rainbow-mobile-right">
+    <svg
+      viewBox="0 0 100 100"
+      preserveAspectRatio="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <defs>
+        <filter
+          id={`filterRbowMR-${uid}`}
+          x="-5%"
+          y="-5%"
+          width="110%"
+          height="110%"
+        >
+          <feTurbulence
+            type="fractalNoise"
+            baseFrequency="0.025"
+            numOctaves="3"
+            seed="11"
+            result="noise"></feTurbulence>
+          <feDisplacementMap
+            in="SourceGraphic"
+            in2="noise"
+            scale="1"
+            result="displaced"></feDisplacementMap>
+          <feGaussianBlur in="displaced" stdDeviation="0.4"></feGaussianBlur>
+        </filter>
+        <linearGradient id={`maskGradMR-${uid}`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stop-color="white"></stop>
+          <stop offset="1" stop-color="white"></stop>
+        </linearGradient>
+        <mask id={`rbowMaskMR-${uid}`} maskContentUnits="objectBoundingBox">
+          <rect width="1" height="1" fill={`url(#maskGradMR-${uid})`}></rect>
+        </mask>
+      </defs>
+      <g filter={`url(#filterRbowMR-${uid})`} mask={`url(#rbowMaskMR-${uid})`}>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 60,50 60,30 103,18"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4a0a0"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 63,51 63,31 103,19"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4c4a0"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 66,52 66,32 103,20"
+          pathLength="1000"
+          fill="none"
+          stroke="#f4e8a0"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 69,53 69,33 103,21"
+          pathLength="1000"
+          fill="none"
+          stroke="#a0e8b4"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 72,54 72,34 103,22"
+          pathLength="1000"
+          fill="none"
+          stroke="#a0c4f4"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 75,55 75,35 103,23"
+          pathLength="1000"
+          fill="none"
+          stroke="#b0a0e8"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+        <path
+          class="rainbow-band"
+          d="M 103,65 C 78,56 78,36 103,24"
+          pathLength="1000"
+          fill="none"
+          stroke="#d4a0e8"
+          stroke-width="1.1"
+          stroke-linecap="round"></path>
+      </g>
+    </svg>
+  </div>
 </div>
 
 <style>
@@ -401,6 +694,52 @@ const mobilePath = mobilePaths[mobileIdx];
     }
   }
 
+  /* ── Rainbow ── */
+
+  .rainbow-container {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s ease;
+  }
+
+  .rainbow-container svg {
+    width: 100%;
+    height: 100%;
+  }
+
+  .rainbow-desktop {
+    display: none;
+  }
+  .rainbow-mobile-left,
+  .rainbow-mobile-right {
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .rainbow-desktop {
+      display: block;
+    }
+    .rainbow-mobile-left,
+    .rainbow-mobile-right {
+      display: none;
+    }
+  }
+
+  /* Bands start fully hidden (dashoffset = pathLength) */
+  .rainbow-band {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rainbow-container {
+      display: none !important;
+    }
+  }
+
   /* Hide from print */
   @media print {
     .cloud-decoration {
@@ -408,3 +747,187 @@ const mobilePath = mobilePaths[mobileIdx];
     }
   }
 </style>
+
+<script>
+  let rainbowInterval: ReturnType<typeof setInterval> | undefined;
+  let rainbowTimeout: ReturnType<typeof setTimeout> | undefined;
+  let rainbowPlaying = false;
+  let isFirstLoad = true;
+
+  // Easing: slow start, smooth middle, gentle end — feels like a natural arc appearing
+  function easeInOutCubic(t: number): number {
+    return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+  }
+
+  function playRainbow() {
+    if (rainbowPlaying) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    rainbowPlaying = true;
+
+    const containers =
+      document.querySelectorAll<HTMLElement>(".rainbow-container");
+    const isDesktop = window.innerWidth >= 768;
+
+    // Collect visible containers and their bands
+    type BandGroup = {
+      container: HTMLElement;
+      bands: SVGPathElement[];
+      maskStops: SVGStopElement[];
+    };
+    const groups: BandGroup[] = [];
+
+    containers.forEach(container => {
+      const isDesktopEl = container.classList.contains("rainbow-desktop");
+      const isMobileEl =
+        container.classList.contains("rainbow-mobile-left") ||
+        container.classList.contains("rainbow-mobile-right");
+      if ((isDesktop && !isDesktopEl) || (!isDesktop && !isMobileEl)) return;
+
+      const bands = Array.from(
+        container.querySelectorAll<SVGPathElement>(".rainbow-band")
+      );
+      const maskStops = Array.from(
+        container.querySelectorAll<SVGStopElement>("mask linearGradient stop")
+      );
+      if (bands.length === 0) return;
+
+      // Reset bands
+      bands.forEach(band => {
+        band.style.strokeDashoffset = "1000";
+      });
+      // Reset mask (fully visible)
+      if (maskStops.length >= 2) {
+        maskStops[0].setAttribute("offset", "0");
+        maskStops[0].setAttribute("stop-color", "white");
+        maskStops[1].setAttribute("offset", "1");
+        maskStops[1].setAttribute("stop-color", "white");
+      }
+      container.style.opacity = "0";
+      groups.push({ container, bands, maskStops });
+    });
+
+    if (groups.length === 0) {
+      rainbowPlaying = false;
+      return;
+    }
+
+    // Timing
+    const FADE_IN = 400; // ms — container fades in
+    const DRAW_DUR = 2800; // ms — stroke draws on
+    const BAND_STAGGER = 100; // ms — delay between bands
+    const HOLD = 1800; // ms — fully visible hold
+    const FADE_OUT = 400; // ms — container fades out at end
+
+    let startTime: number | null = null;
+    let phase: "draw" | "hold" | "retract" | "fadeout" | "done" = "draw";
+    let phaseStart = 0;
+
+    function tick(now: number) {
+      if (startTime === null) startTime = now;
+      const elapsed = now - startTime;
+
+      if (phase === "draw") {
+        // Fade container in
+        const fadeT = Math.min(1, elapsed / FADE_IN);
+        groups.forEach(g => {
+          g.container.style.opacity = String(fadeT);
+        });
+
+        // Draw each band with stagger
+        groups.forEach(g => {
+          g.bands.forEach((band, i) => {
+            const bandElapsed = Math.max(0, elapsed - i * BAND_STAGGER);
+            const t = Math.min(1, bandElapsed / DRAW_DUR);
+            const eased = easeInOutCubic(t);
+            band.style.strokeDashoffset = String(1000 * (1 - eased));
+          });
+        });
+
+        const totalDrawTime =
+          DRAW_DUR + (groups[0]?.bands.length ?? 0) * BAND_STAGGER;
+        if (elapsed >= totalDrawTime) {
+          phase = "hold";
+          phaseStart = now;
+        }
+      } else if (phase === "hold") {
+        if (now - phaseStart >= HOLD) {
+          phase = "retract";
+          phaseStart = now;
+        }
+      } else if (phase === "retract") {
+        // Inverse of draw: stroke retracts with bands in reverse order
+        const retractElapsed = now - phaseStart;
+        const numBands = groups[0]?.bands.length ?? 0;
+
+        groups.forEach(g => {
+          g.bands.forEach((band, i) => {
+            const reversedI = numBands - 1 - i;
+            const bandElapsed = Math.max(
+              0,
+              retractElapsed - reversedI * BAND_STAGGER
+            );
+            const t = Math.min(1, bandElapsed / DRAW_DUR);
+            const eased = easeInOutCubic(t);
+            band.style.strokeDashoffset = String(1000 * eased);
+          });
+        });
+
+        const totalRetractTime = DRAW_DUR + numBands * BAND_STAGGER;
+        if (retractElapsed >= totalRetractTime) {
+          phase = "fadeout";
+          phaseStart = now;
+        }
+      } else if (phase === "fadeout") {
+        const fadeElapsed = now - phaseStart;
+        const fadeT = 1 - Math.min(1, fadeElapsed / FADE_OUT);
+        groups.forEach(g => {
+          g.container.style.opacity = String(Math.max(0, fadeT));
+        });
+
+        if (fadeElapsed >= FADE_OUT) {
+          phase = "done";
+        }
+      }
+
+      if (phase === "done") {
+        groups.forEach(g => {
+          g.container.style.opacity = "0";
+          g.bands.forEach(band => {
+            band.style.strokeDashoffset = "1000";
+          });
+        });
+        rainbowPlaying = false;
+        return;
+      }
+
+      requestAnimationFrame(tick);
+    }
+
+    requestAnimationFrame(tick);
+  }
+
+  document.addEventListener("astro:page-load", () => {
+    if (rainbowInterval) clearInterval(rainbowInterval);
+
+    const isHomepage =
+      window.location.pathname === "/" || window.location.pathname === "";
+
+    if (isHomepage && !isFirstLoad) {
+      rainbowTimeout = setTimeout(playRainbow, 300);
+    }
+
+    isFirstLoad = false;
+    rainbowInterval = setInterval(playRainbow, 180_000);
+  });
+
+  document.addEventListener("astro:before-swap", () => {
+    if (rainbowInterval) {
+      clearInterval(rainbowInterval);
+      rainbowInterval = undefined;
+    }
+    if (rainbowTimeout) {
+      clearTimeout(rainbowTimeout);
+      rainbowTimeout = undefined;
+    }
+  });
+</script>

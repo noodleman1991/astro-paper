@@ -12,9 +12,20 @@ import LinkButton from "./LinkButton.astro";
         class="p-2 hover:rotate-6 sm:p-1"
         title={social.linkTitle}
       >
-        <Icon name={social.icon} class="inline-block size-6 scale-125 opacity-90 sm:scale-110" />
+        <Icon name={social.icon} class="inline-block size-6 opacity-90" />
         <span class="sr-only">{social.linkTitle}</span>
       </LinkButton>
     ))
   }
 </div>
+
+<style>
+  /* Icons come from different sets with different amounts of drawn content in
+     their box. The envelope's actual artwork is small (~half its box), so match
+     its visible size to the denser LinkedIn logo by scaling its box up. Keeps
+     the icon row visually balanced without distorting either glyph. */
+  [data-icon="streamline-ultimate-color:send-email-envelope"] {
+    width: 2.125rem;
+    height: 2.125rem;
+  }
+</style>

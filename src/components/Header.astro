@@ -26,13 +26,15 @@ const isActive = (path: string) => {
 </a>
 
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  id="site-header"
+  data-hidden
+  class="site-header flex flex-col items-center justify-between sm:flex-row"
 >
   <div
     id="top-nav-wrap"
     class:list={[
+      "app-layout",
       "py-4 sm:py-6",
-      "border-b border-border",
       "relative w-full bg-background",
       "flex items-baseline justify-between sm:items-center",
     ]}
@@ -95,7 +97,10 @@ const isActive = (path: string) => {
                 title="Archives"
                 aria-label="archives"
               >
-                <Icon name="streamline-ultimate-color:archive-books" class="hidden sm:inline-block" />
+                <Icon
+                  name="streamline-ultimate-color:archive-books"
+                  class="hidden sm:inline-block"
+                />
                 <span class="sm:sr-only">Archives</span>
               </LinkButton>
             </li>
@@ -125,8 +130,14 @@ const isActive = (path: string) => {
                 aria-label="auto"
                 aria-live="polite"
               >
-                <Icon name="streamline-ultimate-color:night-moon-half-1" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <Icon name="streamline-ultimate-color:weather-sun" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                <Icon
+                  name="streamline-ultimate-color:night-moon-half-1"
+                  class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
+                />
+                <Icon
+                  name="streamline-ultimate-color:weather-sun"
+                  class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+                />
               </button>
             </li>
           )
@@ -159,6 +170,125 @@ const isActive = (path: string) => {
 
   toggleNav();
 
+  function smartHeader() {
+    const header = document.querySelector<HTMLElement>("#site-header");
+    if (!header) return;
+
+    // Read actual rendered height so the threshold stays accurate even if the
+    // header's padding/content changes. Fall back to 80 if not yet laid out.
+    const headerH = header.offsetHeight || 80;
+
+    let lastY = window.scrollY;
+    let ticking = false;
+    let hovering = false; // pointer is in the top reveal zone
+    // Distance scrolled down (since the last reveal) before the header hides —
+    // hysteresis so tiny scroll jitter doesn't flicker it away. Reveal stays
+    // instant on any scroll-up.
+    const HIDE_DELTA = 64;
+    let downFrom = window.scrollY; // anchor for accumulating downward scroll
+
+    // "At top" threshold scales with how much the page can actually scroll, so a
+    // barely-scrollable homepage reveals the header on the smallest scroll-up,
+    // while a long article keeps the larger header-height threshold. Floored at
+    // 8px so a nudge at the very top still counts as "at top".
+    function topThreshold() {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      return Math.max(8, Math.min(headerH, scrollable * 0.15));
+    }
+
+    function update() {
+      const y = window.scrollY;
+      if (hovering) {
+        header!.removeAttribute("data-hidden"); // pointer near top → reveal
+      } else if (y <= topThreshold()) {
+        header!.setAttribute("data-hidden", ""); // at top → hidden
+        downFrom = y;
+      } else if (y < lastY) {
+        header!.removeAttribute("data-hidden"); // scrolling up → reveal instantly
+        downFrom = y;
+      } else if (y - downFrom > HIDE_DELTA) {
+        header!.setAttribute("data-hidden", ""); // scrolled down enough → hide
+      }
+      lastY = y;
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    const onResize = () => update();
+
+    // Hover-to-reveal: moving the pointer into the top strip shows the header.
+    // This is the escape hatch on pages that barely scroll (e.g. the homepage),
+    // where scroll-up can never reveal it. Only meaningful for fine pointers.
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    const onPointerMove = (e: PointerEvent) => {
+      const next = e.clientY <= headerH;
+      if (next !== hovering) {
+        hovering = next;
+        update();
+      }
+    };
+    if (canHover) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+    }
+
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    update(); // set correct initial state (hidden at top, no flash)
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        document.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onResize);
+        if (canHover) {
+          window.removeEventListener("pointermove", onPointerMove);
+        }
+      },
+      { once: true }
+    );
+  }
+
+  smartHeader();
+
   // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", toggleNav);
+  document.addEventListener("astro:after-swap", () => {
+    toggleNav();
+    smartHeader();
+  });
 </script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 40;
+    width: 100%;
+    background: var(--background);
+    /* Pronounced, symmetric ease-in-out slide + fade so appearing and
+       disappearing are clearly deliberate — a long curve reads as smooth,
+       intentional motion rather than a flickery snap when the state flips near
+       the threshold. */
+    transition:
+      transform 0.55s var(--ease-in-out-soft),
+      opacity 0.5s var(--ease-in-out-soft);
+  }
+  /* Hidden at the top / on scroll-down: slid fully up (past its own height) and
+     faded out, so the exit is unmistakable. */
+  .site-header[data-hidden] {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
+</style>
