@@ -14,14 +14,15 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "@astrojs/rss": "^4.0.14",
-    "@astrojs/sitemap": "^3.6.0",
+    "@astrojs/markdown-remark": "^7.3.5",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.4",
     "@iconify-json/streamline-logos": "^1.2.0",
     "@iconify-json/streamline-ultimate-color": "^1.2.2",
     "@iconify-json/tabler": "^1.2.31",
     "@resvg/resvg-js": "^2.6.2",
     "@tailwindcss/vite": "^4.1.18",
-    "astro": "^5.16.6",
+    "astro": "^7.4.5",
     "astro-icon": "^1.1.5",
     "dayjs": "^1.11.19",
     "lodash.kebabcase": "^4.1.1",
@@ -33,9 +34,9 @@
     "tailwindcss": "^4.1.18"
   },
   "devDependencies": {
-    "@astrojs/check": "^0.9.6",
+    "@astrojs/check": "^0.9.12",
     "@pagefind/default-ui": "^1.4.0",
-    "@shikijs/transformers": "^3.20.0",
+    "@shikijs/transformers": "^4.6.0",
     "@tailwindcss/typography": "^0.5.19",
     "@types/lodash.kebabcase": "^4.1.9",
     "@typescript-eslint/parser": "^8.51.0",
