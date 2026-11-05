@@ -751,6 +751,11 @@ dialog.cp-win::backdrop {
   }
 }
 
+.cp-spark {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
 /* hot (hovered or active) tiles: secondary text goes to fg to stay AA */
 .cp-lbl.is-hot .s {
   color: var(--foreground);

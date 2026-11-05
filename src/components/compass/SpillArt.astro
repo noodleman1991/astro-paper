@@ -20,6 +20,8 @@ type Props = {
 };
 
 const { shape, tiles, stage, neck } = Astro.props;
+// one path per sparkle, so each can turn in place
+const sparks = shape.sparks.split(/(?<=Z)/).filter(Boolean);
 ---
 
 <svg
@@ -49,7 +51,7 @@ const { shape, tiles, stage, neck } = Astro.props;
         }
       </g>
       <path class="cp-ants" transform="translate(5 4)" d={shape.pour}></path>
-      <path class="cp-spark" d={shape.sparks}></path>
+      {sparks.map(d => <path class="cp-spark" d={d} />)}
     </g>
   </g>
 </svg>

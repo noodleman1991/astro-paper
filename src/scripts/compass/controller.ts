@@ -18,7 +18,7 @@ function vary(root: HTMLElement) {
     .querySelector("#cp-rough feTurbulence")
     ?.setAttribute("seed", String(Math.ceil(rand(0, 999))));
   for (const spark of qsa<SVGElement>(root, ".cp-spark"))
-    spark.style.transform = `rotate(${rand(-12, 12).toFixed(1)}deg)`;
+    spark.style.transform = `translate(${rand(-8, 8).toFixed(1)}px, ${rand(-8, 8).toFixed(1)}px) rotate(${rand(-12, 12).toFixed(1)}deg)`;
   for (const ants of qsa<SVGElement>(root, ".cp-ants"))
     ants.style.animationDelay = `${-rand(0, 5).toFixed(2)}s`;
   for (const region of qsa(root, "[data-region]")) {
