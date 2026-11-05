@@ -13,6 +13,10 @@
      scroll-padding so :target anchor jumps clear the bar. Matches the ~81px
      rendered header (py-4 sm:py-6 + content); rounded to a clean 5rem. */
   --header-h: 5rem;
+  --spot-portfolio: #e8837c;
+  --spot-services: #a0c4f4;
+  --spot-blog: #a0e8b4;
+  --spot-about: #f4a0b5;
 }
 
 :root,
@@ -22,6 +26,12 @@ html[data-theme="light"] {
   --accent: #006cac;
   --muted: #e6e6e6;
   --border: #ece9e9;
+  --soft: #4a494a;
+  --k1: 20%;
+  --k2: 30%;
+  --k3: 40%;
+  --k4: 52%;
+  --khot: 72%;
 }
 
 html[data-theme="dark"] {
@@ -30,6 +40,12 @@ html[data-theme="dark"] {
   --accent: #ff6b01;
   --muted: #343f60;
   --border: #ab4b08;
+  --soft: #c3c8d4;
+  --k1: 12%;
+  --k2: 16%;
+  --k3: 20%;
+  --k4: 25%;
+  --khot: 36%;
 }
 
 @theme inline {
