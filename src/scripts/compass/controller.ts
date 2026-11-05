@@ -11,6 +11,12 @@ import {
 } from "./dial";
 import { SECTIONS, formatHash, parseHash, type SectionId } from "./route";
 import { fitScale, layoutFor } from "./stage";
+import {
+  clampOffset,
+  offsetForTile,
+  streamGeometry,
+  type StreamId,
+} from "./stream";
 import { INITIAL, reduce, toRoute, type Action, type State } from "./state";
 
 // `crop` is the band the board kept for its top bar; the real bar sits
@@ -51,6 +57,12 @@ export function initCompass(root: HTMLElement): () => void {
 
   const dialogs = qsa<HTMLDialogElement>(root, "dialog[data-item]");
   const dial = root.querySelector<HTMLElement>("[data-dial]");
+  const stream = root.querySelector<HTMLElement>("[data-stream]");
+  const streamPaths = stream ? qsa<SVGPathElement>(stream, "[data-d]") : [];
+  const streamLabels = stream ? qsa(stream, "[data-l]") : [];
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)");
+  let scale = 1; // the stage's current fit, so a drag tracks the finger
+  let suppressUntil = -Infinity; // a drag's own click is not a pick
 
   function render() {
     const { open, peek, item } = state;
@@ -80,7 +92,40 @@ export function initCompass(root: HTMLElement): () => void {
       else if (d.dataset.item !== want && d.open) d.close();
     }
     if (dial) renderDial(dial);
+    scheduleStream();
   }
+
+  // The stream redraws its 11 tiles and labels at most once per frame.
+  let drawn = 0; // the server drew offset 0
+  let frame = 0;
+  function drawStream() {
+    cancelAnimationFrame(frame);
+    frame = 0;
+    if (state.offset === drawn) return;
+    drawn = state.offset;
+    const geo = streamGeometry(drawn);
+    for (const p of streamPaths)
+      p.setAttribute("d", geo[p.dataset.d as StreamId].d);
+    for (const l of streamLabels) {
+      const {
+        x,
+        y,
+        width,
+        scale: s,
+        opacity,
+      } = geo[l.dataset.l as StreamId].label;
+      l.style.left = `${x}px`;
+      l.style.top = `${y}px`;
+      l.style.width = `${width}px`;
+      l.style.transform = `translate(-50%, -50%) scale(${s})`;
+      l.style.opacity = String(opacity);
+      l.style.pointerEvents = opacity > 0.6 ? "auto" : "none";
+    }
+  }
+  const scheduleStream = () => {
+    if (stream && !frame && state.offset !== drawn)
+      frame = requestAnimationFrame(drawStream);
+  };
 
   /** Ring angle, which cells sit in the window, and the spoken range. */
   function renderDial(el: HTMLElement) {
@@ -132,6 +177,10 @@ export function initCompass(root: HTMLElement): () => void {
     const next = reduce(state, action);
     if (next === state) return;
     state = next;
+    if (action.type === "scroll" || action.type === "offset") {
+      scheduleStream(); // nothing else depends on the stream offset
+      return;
+    }
     render();
     if (record) push();
   }
@@ -150,6 +199,7 @@ export function initCompass(root: HTMLElement): () => void {
       stage.w,
       stage.h - stage.crop
     );
+    scale = k;
     root.style.setProperty("--k", k.toFixed(4));
     root.style.setProperty("--stage-h", `${stage.h}px`);
     root.style.setProperty("--crop", `${stage.crop}px`);
@@ -196,11 +246,14 @@ export function initCompass(root: HTMLElement): () => void {
         return;
       }
       const target = ev.target as Element;
+      if (
+        performance.now() < suppressUntil &&
+        target.closest("[data-dial], [data-stream]")
+      ) {
+        ev.preventDefault(); // the end of a drag, not a pick
+        return;
+      }
       if (dial?.contains(target)) {
-        if (performance.now() - draggedAt < 300) {
-          ev.preventDefault(); // the end of a drag, not a pick
-          return;
-        }
         const cell = target.closest<SVGElement>("svg [data-cell]");
         const role = cell && cellRole(Number(cell.dataset.cell), state.step);
         if (role === "next" || role === "prev") {
@@ -303,7 +356,6 @@ export function initCompass(root: HTMLElement): () => void {
   // The dial turns by wheel, drag and arrow keys while portfolio is open.
   let wheelAt = -Infinity;
   let downX: number | null = null;
-  let draggedAt = -Infinity;
   const dialOpen = () => state.open === "portfolio" && !state.item;
 
   dial?.addEventListener(
@@ -335,7 +387,7 @@ export function initCompass(root: HTMLElement): () => void {
       const by = dragStep(ev.clientX - downX, rtl);
       downX = null;
       if (!by) return;
-      draggedAt = performance.now();
+      suppressUntil = performance.now() + 300;
       dispatch({ type: "turn", by }, false);
     },
     { signal }
@@ -363,6 +415,109 @@ export function initCompass(root: HTMLElement): () => void {
     { signal }
   );
 
+  // The stream scrolls by wheel, drag with a coast, keys and focus.
+  let motion = 0;
+  const stopMotion = () => {
+    cancelAnimationFrame(motion);
+    motion = 0;
+  };
+  const streamOpen = () => state.open === "portfolio" && !state.item;
+  function glide(to: number) {
+    stopMotion();
+    const from = state.offset;
+    const end = clampOffset(to);
+    if (reduced.matches) return dispatch({ type: "offset", to: end }, false);
+    const t0 = performance.now();
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / 420);
+      const to = from + (end - from) * (1 - (1 - k) ** 3);
+      dispatch({ type: "offset", to }, false);
+      drawStream();
+      motion = k < 1 ? requestAnimationFrame(step) : 0;
+    };
+    motion = requestAnimationFrame(step);
+  }
+  function coast(v: number) {
+    stopMotion();
+    if (reduced.matches || Math.abs(v) <= 1) return;
+    const step = () => {
+      v *= 0.94;
+      if (Math.abs(v) < 0.4) return void (motion = 0);
+      dispatch({ type: "scroll", by: v }, false);
+      drawStream();
+      motion = requestAnimationFrame(step);
+    };
+    motion = requestAnimationFrame(step);
+  }
+  let pull: { y: number; t: number; moved: number; v: number } | null = null;
+
+  stream?.addEventListener(
+    "wheel",
+    ev => {
+      if (!streamOpen()) return;
+      ev.preventDefault();
+      stopMotion();
+      const by = ev.deltaMode === 1 ? ev.deltaY * 32 : ev.deltaY;
+      dispatch({ type: "scroll", by }, false);
+    },
+    { passive: false, signal }
+  );
+  stream?.addEventListener(
+    "pointerdown",
+    ev => {
+      if (!streamOpen()) return;
+      stopMotion();
+      pull = { y: ev.clientY, t: ev.timeStamp, moved: 0, v: 0 };
+    },
+    { signal }
+  );
+  window.addEventListener(
+    "pointermove",
+    ev => {
+      if (!pull) return;
+      const dy = (pull.y - ev.clientY) / scale;
+      const dt = Math.max(1, ev.timeStamp - pull.t);
+      pull.y = ev.clientY;
+      pull.t = ev.timeStamp;
+      pull.moved += Math.abs(dy);
+      pull.v = 0.7 * (dy / dt) * 16 + 0.3 * pull.v;
+      if (pull.moved > 6) dispatch({ type: "scroll", by: dy }, false);
+    },
+    { signal }
+  );
+  const letGo = () => {
+    if (!pull) return;
+    const { moved, v } = pull;
+    pull = null;
+    if (moved <= 6) return;
+    suppressUntil = performance.now() + 250;
+    coast(v);
+  };
+  window.addEventListener("pointerup", letGo, { signal });
+  window.addEventListener("pointercancel", letGo, { signal });
+  stream?.addEventListener(
+    "keydown",
+    ev => {
+      const down = ev.key === "ArrowDown" || ev.key === "PageDown";
+      const up = ev.key === "ArrowUp" || ev.key === "PageUp";
+      if (!streamOpen() || !(down || up)) return;
+      ev.preventDefault();
+      glide(state.offset + (down ? 200 : -200));
+    },
+    { signal }
+  );
+  stream?.addEventListener(
+    "focusin",
+    ev => {
+      // keyboard focus only: a tap must not slide the tile from under it
+      const el = ev.target as Element;
+      const id = el.closest<HTMLElement>("[data-l]")?.dataset.l;
+      if (id && streamOpen() && el.matches(":focus-visible"))
+        glide(offsetForTile(id as StreamId));
+    },
+    { signal }
+  );
+
   const ro = new ResizeObserver(fit);
   ro.observe(root);
   window.addEventListener("resize", fit, { signal });
@@ -380,6 +535,8 @@ export function initCompass(root: HTMLElement): () => void {
   return () => {
     ac.abort();
     ro.disconnect();
+    stopMotion();
+    cancelAnimationFrame(frame);
     clearTimeout(peekTimer);
   };
 }

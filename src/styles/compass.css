@@ -1321,3 +1321,23 @@ dialog.cp-drawer[open]::backdrop {
     transition-delay: 0s;
   }
 }
+
+/* phone portfolio: a still envelope the projects stream through */
+.cp-stream {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 390px;
+  height: 844px;
+}
+.cp-stream-lbls {
+  position: absolute;
+  inset: 0;
+}
+[data-stream] .cp-hit,
+[data-stream] .cp-lbl {
+  touch-action: none;
+}
+[data-stream].is-pinned .cp-lbl {
+  animation: none;
+}

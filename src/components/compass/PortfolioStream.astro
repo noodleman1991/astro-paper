@@ -1,0 +1,129 @@
+---
+import { SHAPES, STAGE } from "@/data/compass/shapes";
+import { PROJECTS, projectHash } from "@/config/projects";
+import { SOCIALS } from "@/constants";
+import {
+  STREAM_IDS,
+  streamGeometry,
+  type StreamTile,
+} from "@/scripts/compass/stream";
+import { useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale).compass;
+const stage = STAGE.phone;
+const envelope = SHAPES.ppf.pour;
+const projects = PROJECTS[locale];
+const mail = SOCIALS.find(s => s.name === "Mail")?.href ?? "";
+
+// Tints and riso-dot tiles as on the phone board.
+const TINT = ["k3", "k2", "k4", "k2", "k2", "k3", "k3", "k4", "k2", "k3", "k4"];
+const DOTS = new Set(["p3", "p8", "end"]);
+const geo = streamGeometry(0);
+const tiles = STREAM_IDS.map((id, i) => ({
+  id,
+  i,
+  tint: TINT[i],
+  g: geo[id],
+  project: projects[i],
+}));
+/** Title size from the tile's full width (label width + its 8 px inset). */
+const size = (g: StreamTile) => {
+  const w = g.label.width + 8;
+  return w < 135 ? 16 : w < 155 ? 17.5 : 19;
+};
+const place = ({ label: l }: StreamTile) =>
+  `left: ${l.x}px; top: ${l.y}px; width: ${l.width}px; ` +
+  `transform: translate(-50%, -50%) scale(${l.scale}); ` +
+  `opacity: ${l.opacity}; pointer-events: ${l.opacity > 0.6 ? "auto" : "none"}`;
+---
+
+<section
+  id="cp-p-portfolio"
+  data-region="portfolio"
+  data-stream
+  class="cp-region r-pf"
+  aria-label={t.titles.portfolio}
+>
+  <div class="cp-pour cp-stream" style="transform-origin: 195px 38px">
+    <svg
+      class="cp-art"
+      viewBox={`0 0 ${stage.w} ${stage.h}`}
+      width={stage.w}
+      height={stage.h}
+      aria-hidden="true"
+    >
+      <defs>
+        <clipPath id="ppf-win"><path d={envelope}></path></clipPath>
+      </defs>
+      <g filter="url(#cp-rough-ph)">
+        <path class="pour cp-hit" d={envelope}></path>
+        <g class="cp-tiles" clip-path="url(#ppf-win)">
+          {
+            tiles.map(c => (
+              <Fragment>
+                <path
+                  class:list={["tl", c.tint, "cp-hit", { still: !c.project }]}
+                  d={c.g.d}
+                  data-d={c.id}
+                  data-tile={c.id}
+                  data-win={
+                    c.project
+                      ? `portfolio/${projectHash(c.project.n)}`
+                      : undefined
+                  }
+                />
+                {DOTS.has(c.id) && (
+                  <path class="tdots" d={c.g.d} data-d={c.id} />
+                )}
+              </Fragment>
+            ))
+          }
+        </g>
+        <path class="cp-ants" transform="translate(4 3)" d={envelope}></path>
+      </g>
+    </svg>
+    <div class="cp-stream-lbls" style={`clip-path: path('${envelope}')`}>
+      {
+        tiles.map(c =>
+          c.project ? (
+            <button
+              class="cp-lbl"
+              type="button"
+              data-l={c.id}
+              data-tile-label={c.id}
+              data-win={`portfolio/${projectHash(c.project.n)}`}
+              style={place(c.g)}
+            >
+              <span class="cp-date">{projectHash(c.project.n)}</span>
+              <span
+                class="t"
+                style={`font-size: ${size(c.g)}px; white-space: nowrap`}
+              >
+                {c.project.title}
+              </span>
+              <span class="s">
+                [{c.project.tag} · {t.dial.year}]
+              </span>
+            </button>
+          ) : (
+            <div
+              class="cp-lbl cp-still"
+              data-l={c.id}
+              style={`${place(c.g)}; gap: 10px`}
+            >
+              <span class="t" style="font-size: 22px">
+                {t.dial.end}
+              </span>
+              <span class="s">{t.dial.endSub}</span>
+              <a class="cp-sticker sm" href={mail} draggable="false">
+                {t.dial.sayHi}
+              </a>
+            </div>
+          )
+        )
+      }
+    </div>
+  </div>
+</section>

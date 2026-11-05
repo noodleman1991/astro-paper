@@ -6,6 +6,7 @@ import ServicesSection from "./ServicesSection.astro";
 import BlogSection from "./BlogSection.astro";
 import AboutSection from "./AboutSection.astro";
 import PortfolioDial from "./PortfolioDial.astro";
+import PortfolioStream from "./PortfolioStream.astro";
 import DetailWindows from "./DetailWindows.astro";
 import { localeDir, useTranslations, type Locale } from "@/i18n";
 
@@ -91,6 +92,7 @@ const t = useTranslations(locale).compass;
     <ServicesSection locale={locale} variant="phone" />
     <BlogSection locale={locale} variant="phone" posts={posts} />
     <AboutSection locale={locale} variant="phone" />
+    <PortfolioStream locale={locale} />
     <Compass locale={locale} variant="phone" />
     <button
       class="cp-sticker cp-close-ph"
