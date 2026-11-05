@@ -4,6 +4,7 @@ import {
   dialAngle,
   dragStep,
   keyStep,
+  rangeLabel,
   stepForCell,
   visibleProjects,
   wheelStep,
@@ -83,4 +84,14 @@ describe("keyStep", () => {
     expect(keyStep("ArrowUp", true)).toBe(-1);
     expect(keyStep("Enter", false)).toBe(0);
   });
+});
+
+describe("rangeLabel", () => {
+  it("joins consecutive numbers", () =>
+    expect(rangeLabel([3, 4, 5, 6])).toBe("3–6"));
+  it("splits where the dial wraps", () => {
+    expect(rangeLabel([9, 10, 1])).toBe("9–10, 1");
+    expect(rangeLabel([10, 1, 2])).toBe("10, 1–2");
+  });
+  it("handles a single project", () => expect(rangeLabel([7])).toBe("7"));
 });

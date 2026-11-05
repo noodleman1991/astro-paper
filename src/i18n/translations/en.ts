@@ -133,7 +133,8 @@ const en = {
       media: "[project image or short screen recording]",
     },
     dial: {
-      status: "projects {from}–{to} of 10",
+      status: "projects {range} of 10",
+      year: "year",
       end: "that's the lot",
       endSub: "ten projects · something like this?",
       sayHi: "say hi →",

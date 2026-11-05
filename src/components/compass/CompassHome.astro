@@ -5,6 +5,7 @@ import Compass from "./Compass.astro";
 import ServicesSection from "./ServicesSection.astro";
 import BlogSection from "./BlogSection.astro";
 import AboutSection from "./AboutSection.astro";
+import PortfolioDial from "./PortfolioDial.astro";
 import DetailWindows from "./DetailWindows.astro";
 import { localeDir, useTranslations, type Locale } from "@/i18n";
 
@@ -59,6 +60,7 @@ const t = useTranslations(locale).compass;
     <ServicesSection locale={locale} variant="desktop" />
     <BlogSection locale={locale} variant="desktop" posts={posts} />
     <AboutSection locale={locale} variant="desktop" />
+    <PortfolioDial locale={locale} />
     <Compass locale={locale} variant="desktop" />
   </div>
   <DetailWindows locale={locale} />

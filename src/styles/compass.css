@@ -348,12 +348,12 @@
   transition: opacity 0.4s 1.1s;
 }
 .pf-ring {
-  transform: rotate(var(--rot));
+  transform: rotate(var(--ring));
   transform-origin: 640px 432px;
   transition: transform 0.85s var(--e);
 }
 .r-pf:not(.is-pinned) .pf-ring {
-  transform: rotate(calc(var(--rot) + 48deg));
+  transform: rotate(calc(var(--ring) + 48deg));
   transition: transform 0.7s var(--e);
 }
 .pf-lbls {
@@ -366,12 +366,12 @@
 .pf-turn {
   position: absolute;
   inset: 0;
-  transform: rotate(var(--rot));
+  transform: rotate(var(--turn));
   transform-origin: 640px 432px;
   transition: transform 0.85s var(--e);
 }
 .pf-turn .cp-lbl {
-  transform: rotate(calc(-1 * var(--rot)));
+  transform: rotate(calc(-1 * var(--turn)));
   transition:
     transform 0.85s var(--e),
     opacity 0.3s;
@@ -397,6 +397,7 @@
 }
 .r-pf.is-pinned {
   cursor: grab;
+  touch-action: pan-y;
 }
 .pf-ring .tl.is-peek {
   cursor: pointer;

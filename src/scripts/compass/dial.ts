@@ -47,3 +47,16 @@ export function keyStep(key: string, rtl: boolean): Step {
   if (key === "ArrowLeft") return rtl ? 1 : -1;
   return 0;
 }
+
+/** "3–6", or "9–10, 1" where the window wraps past the end cell. */
+export function rangeLabel(nums: number[]): string {
+  const runs: number[][] = [];
+  for (const n of nums) {
+    const run = runs[runs.length - 1];
+    if (run && n === run[run.length - 1] + 1) run.push(n);
+    else runs.push([n]);
+  }
+  return runs
+    .map(r => (r.length > 1 ? `${r[0]}–${r[r.length - 1]}` : `${r[0]}`))
+    .join(", ");
+}

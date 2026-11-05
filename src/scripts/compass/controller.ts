@@ -1,4 +1,14 @@
 import { navigate } from "astro:transitions/client";
+import { fmt } from "@/i18n/format";
+import {
+  cellRole,
+  dialAngle,
+  dragStep,
+  keyStep,
+  rangeLabel,
+  visibleProjects,
+  wheelStep,
+} from "./dial";
 import { formatHash, parseHash, type SectionId } from "./route";
 import { fitScale, layoutFor } from "./stage";
 import { INITIAL, reduce, toRoute, type Action, type State } from "./state";
@@ -35,8 +45,10 @@ export function initCompass(root: HTMLElement): () => void {
   let state: State = INITIAL;
   let peekTimer = 0;
   let opener: HTMLElement | null = null;
+  const rtl = root.dataset.dir === "rtl";
 
   const dialogs = qsa<HTMLDialogElement>(root, "dialog[data-item]");
+  const dial = root.querySelector<HTMLElement>("[data-dial]");
 
   function render() {
     const { open, peek, item } = state;
@@ -64,6 +76,29 @@ export function initCompass(root: HTMLElement): () => void {
       if (d.dataset.item === want && !d.open) d.showModal();
       else if (d.dataset.item !== want && d.open) d.close();
     }
+    if (dial) renderDial(dial);
+  }
+
+  /** Ring angle, which cells sit in the window, and the spoken range. */
+  function renderDial(el: HTMLElement) {
+    const { step } = state;
+    const angle = dialAngle(step);
+    el.style.setProperty("--ring", `${angle}deg`);
+    el.style.setProperty("--turn", `${rtl ? -angle : angle}deg`);
+    for (const c of qsa<HTMLElement | SVGElement>(el, "[data-cell]")) {
+      const role = cellRole(Number(c.dataset.cell), step);
+      if (c instanceof SVGElement)
+        c.classList.toggle("is-peek", role === "next" || role === "prev");
+      else {
+        c.classList.toggle("is-out", role !== "visible");
+        c.inert = role !== "visible";
+      }
+    }
+    const status = el.querySelector<HTMLElement>("[data-dial-status]");
+    const text = fmt(status?.dataset.template ?? "", {
+      range: rangeLabel(visibleProjects(step)),
+    });
+    if (status && status.textContent !== text) status.textContent = text;
   }
 
   // Hashes of the entries this page pushed, so closing steps back to the
@@ -151,6 +186,20 @@ export function initCompass(root: HTMLElement): () => void {
         ev.target.close(); // a click on the backdrop
         return;
       }
+      const target = ev.target as Element;
+      if (dial?.contains(target)) {
+        if (performance.now() - draggedAt < 300) {
+          ev.preventDefault(); // the end of a drag, not a pick
+          return;
+        }
+        const cell = target.closest<SVGElement>("svg [data-cell]");
+        const role = cell && cellRole(Number(cell.dataset.cell), state.step);
+        if (role === "next" || role === "prev") {
+          ev.preventDefault();
+          dispatch({ type: "turn", by: role === "next" ? 1 : -1 }, false);
+          return;
+        }
+      }
       const el = (ev.target as Element).closest<HTMLElement>(
         "[data-toggle], [data-win], [data-close], [data-release], [data-href]"
       );
@@ -168,12 +217,11 @@ export function initCompass(root: HTMLElement): () => void {
         const [section, ...rest] = el.dataset.win.split("/");
         const id = rest.join("/");
         opener = el instanceof HTMLButtonElement ? el : opener;
-        if (state.open === section) dispatch({ type: "item", id });
-        else
-          dispatch({
-            type: "route",
-            route: { open: section as SectionId, item: id },
-          });
+        // a route, not a bare item, so a project also turns into the window
+        dispatch({
+          type: "route",
+          route: { open: section as SectionId, item: id },
+        });
       } else {
         dispatch({ type: "close" });
       }
@@ -239,6 +287,69 @@ export function initCompass(root: HTMLElement): () => void {
       else if (trail[trail.length - 1] !== location.hash)
         trail = [location.hash];
       routeFromUrl();
+    },
+    { signal }
+  );
+
+  // The dial turns by wheel, drag and arrow keys while portfolio is open.
+  let wheelAt = -Infinity;
+  let downX: number | null = null;
+  let draggedAt = -Infinity;
+  const dialOpen = () => state.open === "portfolio" && !state.item;
+
+  dial?.addEventListener(
+    "wheel",
+    ev => {
+      if (!dialOpen()) return;
+      ev.preventDefault();
+      const delta =
+        Math.abs(ev.deltaY) >= Math.abs(ev.deltaX) ? ev.deltaY : ev.deltaX;
+      const now = performance.now();
+      const by = wheelStep(delta, now, wheelAt);
+      // a step, and every event of the momentum tail behind it, holds the lock
+      if (by || now - wheelAt < 420) wheelAt = now;
+      if (by) dispatch({ type: "turn", by }, false);
+    },
+    { passive: false, signal }
+  );
+  dial?.addEventListener(
+    "pointerdown",
+    ev => {
+      if (dialOpen() && ev.button === 0) downX = ev.clientX;
+    },
+    { signal }
+  );
+  window.addEventListener(
+    "pointerup",
+    ev => {
+      if (downX === null) return;
+      const by = dragStep(ev.clientX - downX, rtl);
+      downX = null;
+      if (!by) return;
+      draggedAt = performance.now();
+      dispatch({ type: "turn", by }, false);
+    },
+    { signal }
+  );
+  window.addEventListener("pointercancel", () => (downX = null), { signal });
+  dial?.addEventListener(
+    "keydown",
+    ev => {
+      const by = dialOpen() ? keyStep(ev.key, rtl) : 0;
+      if (!by) return;
+      ev.preventDefault();
+      dispatch({ type: "turn", by }, false);
+      // focus stays in the window: the label that just turned in takes it
+      if (
+        document.activeElement?.closest("[inert]") ||
+        !dial.contains(document.activeElement)
+      ) {
+        const shown = qsa(
+          dial,
+          ".pf-turn button[data-cell]:not([inert]), .pf-turn [data-cell]:not([inert]) a"
+        );
+        (by > 0 ? shown[0] : shown[shown.length - 1])?.focus();
+      }
     },
     { signal }
   );
