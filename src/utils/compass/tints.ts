@@ -9,9 +9,12 @@ export const SPOTS: Record<SpotId, string> = {
   about: "#f4a0b5",
 };
 
-export const THEME: Record<Theme, { bg: string; fg: string; soft: string }> = {
-  light: { bg: "#fdfdfd", fg: "#282728", soft: "#4a494a" },
-  dark: { bg: "#212737", fg: "#eaedf3", soft: "#c3c8d4" },
+export const THEME: Record<
+  Theme,
+  { bg: string; fg: string; soft: string; accent: string }
+> = {
+  light: { bg: "#fdfdfd", fg: "#282728", soft: "#4a494a", accent: "#006cac" },
+  dark: { bg: "#212737", fg: "#eaedf3", soft: "#c3c8d4", accent: "#ff6b01" },
 };
 
 /** Spot percentage in `color-mix(in srgb, spot P%, bg)` per tile tier. */

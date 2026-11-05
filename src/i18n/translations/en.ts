@@ -67,7 +67,12 @@ const en = {
       "I build websites and apps, set up hubs and knowledge management with and without AI.",
   },
   compass: {
-    titles: { blog: "blog", services: "services", portfolio: "portfolio" },
+    titles: {
+      blog: "blog",
+      services: "services",
+      portfolio: "portfolio",
+      about: "about",
+    },
     logoAria: "about — spiro spero",
     close: "close section",
     closeAbout: "close about",

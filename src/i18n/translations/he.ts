@@ -67,7 +67,12 @@ const he: Dict = {
       "אני בונה אתרים ואפליקציות, ומקים האבים וניהול ידע — עם ובלי AI.",
   },
   compass: {
-    titles: { blog: "בלוג", services: "שירותים", portfolio: "תיק עבודות" },
+    titles: {
+      blog: "בלוג",
+      services: "שירותים",
+      portfolio: "תיק עבודות",
+      about: "אודות",
+    },
     logoAria: "אודות — spiro spero",
     close: "סגירת המדור",
     closeAbout: "סגירת אודות",

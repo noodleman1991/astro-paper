@@ -3,11 +3,13 @@ import "@/styles/compass.css";
 import type { CollectionEntry } from "astro:content";
 import Compass from "./Compass.astro";
 import ServicesSection from "./ServicesSection.astro";
+import BlogSection from "./BlogSection.astro";
+import AboutSection from "./AboutSection.astro";
 import DetailWindows from "./DetailWindows.astro";
 import { localeDir, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale; posts: CollectionEntry<"blog">[] };
-const { locale } = Astro.props;
+const { locale, posts } = Astro.props;
 const t = useTranslations(locale).compass;
 ---
 
@@ -55,6 +57,8 @@ const t = useTranslations(locale).compass;
     <div class="cp-release" data-release></div>
     <p class="cp-hint">{t.hint.desktop}</p>
     <ServicesSection locale={locale} variant="desktop" />
+    <BlogSection locale={locale} variant="desktop" posts={posts} />
+    <AboutSection locale={locale} variant="desktop" />
     <Compass locale={locale} variant="desktop" />
   </div>
   <DetailWindows locale={locale} />

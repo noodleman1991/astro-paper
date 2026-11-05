@@ -795,3 +795,51 @@ dialog.cp-win::backdrop {
   inset: 0;
   z-index: 0;
 }
+
+/* still tiles (no window), blog side note, about tiles */
+.cp-still {
+  cursor: default;
+}
+.cp-side-end {
+  align-items: flex-end;
+  text-align: right;
+}
+.cp-intro {
+  gap: 10px;
+}
+.cp-intro .t {
+  font-size: 32px;
+}
+.cp-intro-p {
+  font-size: 13.5px;
+  line-height: 1.55;
+}
+.cp-motto {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--soft);
+}
+/* 24px keeps the accent on the about tint at large-text AA in dark mode */
+.cp-motto-logo {
+  font:
+    24px/1 var(--font-chicle),
+    cursive;
+  color: var(--accent);
+  text-shadow: 2px 2px 0 var(--logo-sh);
+}
+.cp-photo {
+  padding: 0;
+  border: 2px dashed var(--foreground);
+  border-radius: 48% 52% 44% 56% / 40% 38% 62% 60%;
+  font-size: 12px;
+  color: var(--soft);
+}
+.cp-say {
+  display: flex;
+  gap: 6px;
+}
+/* post titles join the lowercase decoration on the blog tiles */
+.r-bl .cp-lbl .t {
+  text-transform: lowercase;
+}

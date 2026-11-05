@@ -32,6 +32,18 @@ describe("tile tints meet AA", () => {
       }
 });
 
+describe("the accent motto on the still about tile", () => {
+  // set at 24px, so it is large text: AA is 3:1
+  it.each(themes)("%s ≥ 3", theme =>
+    expect(
+      contrastRatio(
+        mixHex(SPOTS.about, THEME[theme].bg, TINTS[theme].k2),
+        THEME[theme].accent
+      )
+    ).toBeGreaterThanOrEqual(3)
+  );
+});
+
 describe("global.css carries the same ladder", () => {
   const css = readFileSync(
     new URL("../../styles/global.css", import.meta.url),
