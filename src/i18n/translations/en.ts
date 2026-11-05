@@ -90,6 +90,7 @@ const en = {
         "scroll, drag or tap an edge",
       ],
     },
+    svHero: "fast, accessible sites →",
     blog: {
       read: "read →",
       allPosts: "all posts",

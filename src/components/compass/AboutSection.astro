@@ -10,12 +10,21 @@ const { locale, variant } = Astro.props;
 const t = useTranslations(locale).compass;
 const rtl = localeDir(locale) === "rtl";
 const stage = STAGE[variant];
-const shape = SHAPES.ab;
+const phone = variant === "phone";
+const shape = phone ? SHAPES.pab : SHAPES.ab;
 const link = (name: string) => SOCIALS.find(s => s.name === name)?.href ?? "";
 
-// pads as on the approved board
-const place = (key: string, pad: number) =>
-  placeBox(shape.tiles[key].box, { rtl, stageWidth: stage.w, minW: 112, pad });
+// pads as on each approved board
+const PAD = phone
+  ? { intro: 0, photo: -10, how: 12, say: 45 }
+  : { intro: 44, photo: -24, how: 18, say: 18 };
+const place = (key: keyof typeof PAD) =>
+  placeBox(
+    shape.tiles[key].box,
+    phone
+      ? { rtl, stageWidth: stage.w, minW: 96, pad: PAD[key], maxW: 360 }
+      : { rtl, stageWidth: stage.w, minW: 112, pad: PAD[key] }
+  );
 const px = (p: { left: number; top: number; width: number; height: number }) =>
   `left: ${p.left}px; top: ${p.top}px; width: ${p.width}px; height: ${p.height}px`;
 ---
@@ -29,8 +38,9 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
   <SpillArt
     shape={shape}
     stage={stage}
-    neck={[640, 432]}
+    neck={phone ? shape.origin : [640, 432]}
     rtl={rtl}
+    variant={variant}
     tiles={[
       { key: "intro", tint: "k2", still: true },
       { key: "photo", tint: "k4", hero: true, still: true },
@@ -38,10 +48,7 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
       { key: "say", tint: "k2", still: true },
     ]}
   />
-  <div
-    class="cp-lbl cp-still cp-intro"
-    style={`--i: 0; ${px(place("intro", 44))}`}
-  >
+  <div class="cp-lbl cp-still cp-intro" style={`--i: 0; ${px(place("intro"))}`}>
     <span class="t">{t.about.hi}</span>
     <span class="cp-intro-p">{t.about.intro}</span>
     <span class="cp-motto">
@@ -49,10 +56,7 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
       {t.about.mottoSub}
     </span>
   </div>
-  <div
-    class="cp-lbl cp-still cp-photo"
-    style={`--i: 1; ${px(place("photo", -24))}`}
-  >
+  <div class="cp-lbl cp-still cp-photo" style={`--i: 1; ${px(place("photo"))}`}>
     {t.about.photo}
   </div>
   <button
@@ -60,17 +64,17 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
     type="button"
     data-win="about/how"
     data-tile-label="how"
-    style={`--i: 2; ${px(place("how", 18))}`}
+    style={`--i: 2; ${px(place("how"))}`}
   >
-    <span class="t" style="font-size: 21px">
+    <span class="t" style={`font-size: ${phone ? 20 : 21}px`}>
       {t.about.how}<span class="go" aria-hidden="true">{rtl ? "←" : "→"}</span>
     </span>
+    {phone && <span class="s">{t.about.howSub}</span>}
   </button>
-  <div
-    class="cp-lbl cp-still"
-    style={`--i: 3; ${px(place("say", 18))}; gap: 6px`}
-  >
-    <span class="t" style="font-size: 19px">{t.about.sayHi}</span>
+  <div class="cp-lbl cp-still" style={`--i: 3; ${px(place("say"))}; gap: 6px`}>
+    <span class="t" style={`font-size: ${phone ? 18 : 19}px`}>
+      {t.about.sayHi}
+    </span>
     <span class="cp-say">
       <a class="cp-sticker sm" href={link("Mail")}>{t.about.mail}</a>
       <a class="cp-sticker sm" href={link("LinkedIn")}>{t.about.linkedin}</a>

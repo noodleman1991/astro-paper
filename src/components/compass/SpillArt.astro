@@ -17,9 +17,13 @@ type Props = {
   /** Where the pour grows from (the slice's neck). */
   neck: [number, number];
   rtl: boolean;
+  variant: "desktop" | "phone";
 };
 
-const { shape, tiles, stage, neck } = Astro.props;
+const { shape, tiles, stage, neck, variant } = Astro.props;
+// the phone board roughens at a finer grain and offsets the ants less
+const rough = variant === "phone" ? "cp-rough-ph" : "cp-rough";
+const ants = variant === "phone" ? "translate(4 3)" : "translate(5 4)";
 // one path per sparkle, so each can turn in place
 const sparks = shape.sparks.split(/(?<=Z)/).filter(Boolean);
 ---
@@ -31,7 +35,7 @@ const sparks = shape.sparks.split(/(?<=Z)/).filter(Boolean);
   height={stage.h}
   aria-hidden="true"
 >
-  <g filter="url(#cp-rough)">
+  <g filter={`url(#${rough})`}>
     <g class="cp-pour" style={`transform-origin: ${neck[0]}px ${neck[1]}px`}>
       <path class="pour cp-hit" d={shape.pour}></path>
       <g class="cp-tiles">
@@ -50,7 +54,7 @@ const sparks = shape.sparks.split(/(?<=Z)/).filter(Boolean);
           ))
         }
       </g>
-      <path class="cp-ants" transform="translate(5 4)" d={shape.pour}></path>
+      <path class="cp-ants" transform={ants} d={shape.pour}></path>
       {sparks.map(d => <path class="cp-spark" d={d} />)}
     </g>
   </g>

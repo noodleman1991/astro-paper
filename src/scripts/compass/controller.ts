@@ -9,7 +9,7 @@ import {
   visibleProjects,
   wheelStep,
 } from "./dial";
-import { formatHash, parseHash, type SectionId } from "./route";
+import { SECTIONS, formatHash, parseHash, type SectionId } from "./route";
 import { fitScale, layoutFor } from "./stage";
 import { INITIAL, reduce, toRoute, type Action, type State } from "./state";
 
@@ -27,8 +27,8 @@ const qsa = <T extends Element = HTMLElement>(root: ParentNode, sel: string) =>
 /** Per-visit decoration: rough-edge seed, sparkle turn, ants phase, stagger order. */
 function vary(root: HTMLElement) {
   root
-    .querySelector("#cp-rough feTurbulence")
-    ?.setAttribute("seed", String(Math.ceil(rand(0, 999))));
+    .querySelectorAll("#cp-rough feTurbulence, #cp-rough-ph feTurbulence")
+    .forEach(f => f.setAttribute("seed", String(Math.ceil(rand(0, 999)))));
   for (const spark of qsa<SVGElement>(root, ".cp-spark"))
     spark.style.transform = `translate(${rand(-8, 8).toFixed(1)}px, ${rand(-8, 8).toFixed(1)}px) rotate(${rand(-12, 12).toFixed(1)}deg)`;
   for (const ants of qsa<SVGElement>(root, ".cp-ants"))
@@ -54,7 +54,8 @@ export function initCompass(root: HTMLElement): () => void {
 
   function render() {
     const { open, peek, item } = state;
-    root.classList.toggle("st-about", open === "about");
+    // st-<section> docks the phone compass opposite the open spill
+    for (const id of SECTIONS) root.classList.toggle(`st-${id}`, open === id);
     for (const r of qsa(root, "[data-region]")) {
       r.classList.toggle("is-pinned", open === r.dataset.region);
       r.classList.toggle("is-peek", !open && peek === r.dataset.region);

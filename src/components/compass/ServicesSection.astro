@@ -10,26 +10,54 @@ const { locale, variant } = Astro.props;
 const t = useTranslations(locale).compass;
 const rtl = localeDir(locale) === "rtl";
 const stage = STAGE[variant];
+const phone = variant === "phone";
+const shape = phone ? SHAPES.psv : SHAPES.sv;
 
-// Board order; it is also the label stagger order.
-const TILES: { id: ServiceId; tint: SpillTile["tint"]; hero?: boolean }[] = [
-  { id: "web", tint: "k4", hero: true },
-  { id: "hubs", tint: "k3" },
-  { id: "ai", tint: "k3" },
-  { id: "data", tint: "k2" },
-  { id: "app", tint: "k2" },
-  { id: "db", tint: "k2" },
+// Reading order (web first). Tints follow each board; the phone one shades
+// data darker and AI lighter than the desktop one.
+const TILES: {
+  id: ServiceId;
+  tint: SpillTile["tint"];
+  phoneTint: SpillTile["tint"];
+  hero?: boolean;
+}[] = [
+  { id: "web", tint: "k4", phoneTint: "k4", hero: true },
+  { id: "hubs", tint: "k3", phoneTint: "k3" },
+  { id: "ai", tint: "k3", phoneTint: "k2" },
+  { id: "data", tint: "k2", phoneTint: "k3" },
+  { id: "app", tint: "k2", phoneTint: "k2" },
+  { id: "db", tint: "k2", phoneTint: "k2" },
 ];
-const shape = SHAPES.sv;
 const items = TILES.map(tile => {
   const service = serviceById(locale, tile.id);
   const box = shape.tiles[tile.id].box;
   return {
     ...tile,
+    tint: phone ? tile.phoneTint : tile.tint,
     service,
     win: `services/${service.slug}`,
-    place: placeBox(box, { rtl, stageWidth: stage.w, minW: 112 }),
-    size: box.w < 96 ? 18 : box.w < 150 ? 20 : 23,
+    place: phone
+      ? placeBox(box, {
+          rtl,
+          stageWidth: stage.w,
+          minW: 96,
+          pad: 12,
+          maxW: 360,
+        })
+      : placeBox(box, { rtl, stageWidth: stage.w, minW: 112 }),
+    size: phone
+      ? tile.hero
+        ? 23
+        : box.w < 80
+          ? 16
+          : box.w < 130
+            ? 18
+            : 21
+      : box.w < 96
+        ? 18
+        : box.w < 150
+          ? 20
+          : 23,
   };
 });
 const px = (p: { left: number; top: number; width: number; height: number }) =>
@@ -45,8 +73,9 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
   <SpillArt
     shape={shape}
     stage={stage}
-    neck={[770, 357]}
+    neck={phone ? shape.origin : [770, 357]}
     rtl={rtl}
+    variant={variant}
     tiles={items.map(i => ({
       key: i.id,
       tint: i.tint,
@@ -65,16 +94,23 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
       >
         <span class="t" style={`font-size: ${item.size}px`}>
           {item.service.title}
-          <span class="go" aria-hidden="true">
-            {rtl ? "←" : "→"}
-          </span>
+          {!phone && (
+            <span class="go" aria-hidden="true">
+              {rtl ? "←" : "→"}
+            </span>
+          )}
         </span>
+        {phone && item.hero && <span class="s">{t.svHero}</span>}
       </button>
     ))
   }
-  <p class="cp-side" style="left: 56px; top: 600px; margin: 0">
-    <b>{t.side.services[0]}</b>
-    <span>{t.side.services[1]}</span>
-    <span>{t.side.services[2]}</span>
-  </p>
+  {
+    !phone && (
+      <p class="cp-side" style="left: 56px; top: 600px; margin: 0">
+        <b>{t.side.services[0]}</b>
+        <span>{t.side.services[1]}</span>
+        <span>{t.side.services[2]}</span>
+      </p>
+    )
+  }
 </section>

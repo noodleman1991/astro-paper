@@ -8,8 +8,9 @@ const t = useTranslations(locale).compass;
 const rtl = localeDir(locale) === "rtl";
 const v = variant[0];
 
-// Wedges as on the approved board (math degrees: services −28…88,
-// blog 92…208, portfolio 212…328; outer r 150, inner r 66, hub r 62).
+// Wedges as on the approved boards (math degrees: services −28…88,
+// blog 92…208, portfolio 212…328). Desktop: outer r 150, inner r 66,
+// hub r 62. Phone: outer r 130, inner r 56, hub r 53.
 const GEO = {
   desktop: {
     size: 360,
@@ -25,7 +26,22 @@ const GEO = {
         "M52.8 259.5 A150 150 0 0 0 307.2 259.5 L236 215 A66 66 0 0 1 124 215 Z",
     },
   },
-}.desktop;
+  phone: {
+    size: 300,
+    c: 150,
+    orbit: 144,
+    paper: 133,
+    hub: 53,
+    wedges: {
+      blog: "M145 20.1 A130 130 0 0 0 35 210.6 L100.5 176.1 A56 56 0 0 1 147.9 94 Z",
+      services:
+        "M265 210.6 A130 130 0 0 0 155 20.1 L152.1 94 A56 56 0 0 1 199.5 176.1 Z",
+      portfolio:
+        "M40 219.3 A130 130 0 0 0 260 219.3 L197.4 179.8 A56 56 0 0 1 102.6 179.8 Z",
+    },
+  },
+}[variant];
+const phone = variant === "phone";
 const arcs = compassArcs(variant, rtl);
 const slices = [
   { id: "blog", cls: "w-bl", lb: "lb-bl" },
@@ -45,7 +61,7 @@ const ctl = (id: string) => `cp-${v}-${id}`;
   >
     <g class="cp-breathe">
       <circle
-        class="cp-orbit ink"
+        class:list={["ink", { "cp-orbit": !phone }]}
         cx={GEO.c}
         cy={GEO.c}
         r={GEO.orbit}
@@ -120,7 +136,11 @@ const ctl = (id: string) => `cp-${v}-${id}`;
       </button>
     ))
   }
-  <button class="cp-x" type="button" data-close aria-label={t.closeAbout}
-    >×</button
-  >
+  {
+    !phone && (
+      <button class="cp-x" type="button" data-close aria-label={t.closeAbout}>
+        ×
+      </button>
+    )
+  }
 </div>

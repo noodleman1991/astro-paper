@@ -34,6 +34,20 @@ const t = useTranslations(locale).compass;
           xChannelSelector="R"
           yChannelSelector="G"></feDisplacementMap>
       </filter>
+      <filter id="cp-rough-ph" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.022"
+          numOctaves="3"
+          seed="7"
+          result="n"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="n"
+          scale="7"
+          xChannelSelector="R"
+          yChannelSelector="G"></feDisplacementMap>
+      </filter>
       <filter id="cp-wobble" x="-10%" y="-10%" width="120%" height="120%">
         <feTurbulence
           type="fractalNoise"
@@ -51,6 +65,14 @@ const t = useTranslations(locale).compass;
       <pattern id="cp-dots" width="9" height="9" patternUnits="userSpaceOnUse">
         <circle class="cp-dot" cx="4.5" cy="4.5" r="1.35"></circle>
       </pattern>
+      <pattern
+        id="cp-dots-ph"
+        width="8"
+        height="8"
+        patternUnits="userSpaceOnUse"
+      >
+        <circle class="cp-dot" cx="4" cy="4" r="1.2"></circle>
+      </pattern>
     </defs>
   </svg>
 
@@ -62,6 +84,20 @@ const t = useTranslations(locale).compass;
     <AboutSection locale={locale} variant="desktop" />
     <PortfolioDial locale={locale} />
     <Compass locale={locale} variant="desktop" />
+  </div>
+
+  <div class="stage" data-stage="phone">
+    <p class="cp-hint">{t.hint.phone}</p>
+    <ServicesSection locale={locale} variant="phone" />
+    <BlogSection locale={locale} variant="phone" posts={posts} />
+    <AboutSection locale={locale} variant="phone" />
+    <Compass locale={locale} variant="phone" />
+    <button
+      class="cp-sticker cp-close-ph"
+      type="button"
+      data-close
+      aria-label={t.close}>×</button
+    >
   </div>
   <DetailWindows locale={locale} />
 </div>
