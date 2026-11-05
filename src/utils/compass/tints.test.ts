@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { contrastRatio, mixHex } from "./contrast";
-import { SPOTS, THEME, TINTS, type Theme, type Tint } from "./tints";
+import { RING, SPOTS, THEME, TINTS, type Theme, type Tint } from "./tints";
 
 const themes: Theme[] = ["light", "dark"];
 const tints: Tint[] = ["k1", "k2", "k3", "k4", "khot"];
@@ -42,6 +42,38 @@ describe("the accent motto on the still about tile", () => {
       )
     ).toBeGreaterThanOrEqual(3)
   );
+});
+
+// WCAG 1.4.11: a focus ring needs 3:1 against the paper it sits on
+describe("focus rings keep 3:1 on spot paper", () => {
+  for (const theme of themes)
+    for (const [spot, hex] of Object.entries(SPOTS)) {
+      it(`${theme} ${spot} window bar`, () =>
+        expect(contrastRatio(hex, RING[theme].bar)).toBeGreaterThanOrEqual(3));
+      for (const tint of tints)
+        it(`${theme} ${spot} ${tint} tile`, () =>
+          expect(
+            contrastRatio(
+              mixHex(hex, THEME[theme].bg, TINTS[theme][tint]),
+              RING[theme].tile
+            )
+          ).toBeGreaterThanOrEqual(3));
+    }
+});
+
+describe("compass.css carries the rings", () => {
+  const css = readFileSync(
+    new URL("../../styles/compass.css", import.meta.url),
+    "utf8"
+  );
+  it("window bars use the bar ink", () =>
+    expect(css).toContain(
+      `.cp-win-bar .cp-sticker:focus-visible {\n  outline-color: ${RING.light.bar};`
+    ));
+  it("tiles use the foreground", () =>
+    expect(css).toContain(
+      ".compass-home .cp-lbl:focus-visible {\n  outline-color: var(--foreground);"
+    ));
 });
 
 describe("global.css carries the same ladder", () => {

@@ -1,4 +1,7 @@
-import { navigate } from "astro:transitions/client";
+import {
+  navigate,
+  type TransitionBeforePreparationEvent,
+} from "astro:transitions/client";
 import { fmt } from "@/i18n/format";
 import {
   cellRole,
@@ -10,6 +13,7 @@ import {
   visibleProjects,
   wheelStep,
 } from "./dial";
+import { routeSteps, stepTo, trailAfterPop } from "./history";
 import { SECTIONS, formatHash, parseHash, type SectionId } from "./route";
 import { fitScale, layoutFor } from "./stage";
 import {
@@ -71,7 +75,8 @@ function saveNav(nav: Nav) {
   }
 }
 
-export function initCompass(root: HTMLElement): () => void {
+/** `fresh`: reached by a link or a load, not by Back/Forward or a reload. */
+export function initCompass(root: HTMLElement, fresh = false): () => void {
   const ac = new AbortController();
   const { signal } = ac;
   const home = location.pathname + location.search;
@@ -178,28 +183,56 @@ export function initCompass(root: HTMLElement): () => void {
     if (status && status.textContent !== text) status.textContent = text;
   }
 
-  // Hashes of the entries this page pushed, so closing steps back to the
-  // entry it came from instead of piling up a new one.
+  // The no-JS index and windows carry route-named ids for plain anchors.
+  // With JS every push would become a fragment jump that pulls focus to them.
+  for (const el of qsa(root, ".cp-nojs [id], dialog.cp-win[id]"))
+    el.removeAttribute("id");
+
+  // Hashes of the entries this page made (history.ts), so closing steps back
+  // to an entry instead of piling up new ones.
   let trail = [location.hash];
+  let recording = false;
 
   /**
-   * User-initiated changes get a history entry. Hash entries go through the
-   * router so it treats them as in-page moves (no re-fetch on Back/Forward);
-   * a bare path can't, so fully closing either steps back or replaces.
+   * Pushes a hash entry through the router, so it treats Back/Forward over it
+   * as an in-page move. The router fires a popstate of its own inside
+   * navigate(); the flag keeps that from rewriting the trail.
    */
+  function record(hash: string) {
+    trail.push(hash);
+    recording = true;
+    void navigate(hash);
+    recording = false;
+  }
+
+  /** User-initiated changes get a history entry, or step back to one. */
   function push() {
     const hash = formatHash(toRoute(state));
     if (hash === location.hash) return;
-    if (trail.length > 1 && trail[trail.length - 2] === hash) {
-      trail.pop();
-      history.back();
-    } else if (hash) {
-      void navigate(hash);
-      trail.push(hash);
-    } else {
+    const step = stepTo(trail, hash);
+    if ("go" in step) {
+      trail = trail.slice(0, trail.length + step.go);
+      history.go(step.go);
+    } else if ("push" in step) record(hash);
+    else {
       history.replaceState(history.state, "", home);
       trail = [""];
     }
+  }
+
+  /** After a window closes: its opener, else that item's label, else the title. */
+  function focusBack(item: string) {
+    const usable = (el: HTMLElement | null) =>
+      el?.isConnected &&
+      el.checkVisibility({ visibilityProperty: true }) &&
+      !el.closest("[inert]");
+    [
+      opener,
+      ...qsa(root, `:is(button, a)[data-win="${item}"]`),
+      ...qsa(root, `button[data-toggle="${item.split("/")[0]}"]`),
+    ]
+      .find(usable)
+      ?.focus();
   }
 
   function dispatch(action: Action, record = true) {
@@ -368,8 +401,8 @@ export function initCompass(root: HTMLElement): () => void {
       () => {
         if (state.item && d.dataset.item === `${state.open}/${state.item}`)
           dispatch({ type: "item", id: null });
-        if (opener?.isConnected && !document.querySelector("dialog[open]"))
-          opener.focus();
+        if (!document.querySelector("dialog[open]"))
+          focusBack(d.dataset.item ?? "");
       },
       { signal }
     );
@@ -386,10 +419,8 @@ export function initCompass(root: HTMLElement): () => void {
   window.addEventListener(
     "popstate",
     () => {
-      if (location.pathname + location.search !== home) return;
-      if (trail[trail.length - 2] === location.hash) trail.pop();
-      else if (trail[trail.length - 1] !== location.hash)
-        trail = [location.hash];
+      if (recording || location.pathname + location.search !== home) return;
+      trail = trailAfterPop(trail, location.hash);
       routeFromUrl();
     },
     { signal }
@@ -568,10 +599,19 @@ export function initCompass(root: HTMLElement): () => void {
   fit();
   routeFromUrl();
   render();
-  const canonical = formatHash(toRoute(state));
-  if (canonical !== location.hash) {
-    history.replaceState(history.state, "", canonical || home);
-    trail = [location.hash];
+  const steps = routeSteps(toRoute(state));
+  const canonical = steps[steps.length - 1];
+  if (fresh) {
+    // seed the entries a deep link stands for, so Back closes the window,
+    // then the section, then leaves
+    history.replaceState(history.state, "", home);
+    trail = [""];
+    for (const hash of steps.slice(1)) record(hash);
+  } else {
+    // Back/Forward or a reload: the entries behind are already there
+    if (canonical !== location.hash)
+      history.replaceState(history.state, "", canonical || home);
+    trail = [canonical];
   }
 
   return () => {
@@ -587,10 +627,19 @@ let cleanup: (() => void) | null = null;
 
 /** Wires the controller to the router's page lifecycle (once per document). */
 export function mountCompass() {
+  // only a fresh arrival seeds deep-link history (see initCompass)
+  const load = performance.getEntriesByType("navigation")[0] as
+    | PerformanceNavigationTiming
+    | undefined;
+  let fresh = load?.type !== "reload" && load?.type !== "back_forward";
+  document.addEventListener("astro:before-preparation", ev => {
+    fresh =
+      (ev as TransitionBeforePreparationEvent).navigationType !== "traverse";
+  });
   document.addEventListener("astro:page-load", () => {
     cleanup?.();
     const root = document.querySelector<HTMLElement>("[data-compass]");
-    cleanup = root ? initCompass(root) : null;
+    cleanup = root ? initCompass(root, fresh) : null;
   });
   document.addEventListener("astro:before-swap", () => {
     cleanup?.();

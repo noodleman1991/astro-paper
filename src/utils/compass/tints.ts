@@ -17,6 +17,15 @@ export const THEME: Record<
   dark: { bg: "#212737", fg: "#eaedf3", soft: "#c3c8d4", accent: "#ff6b01" },
 };
 
+/**
+ * Focus-ring colours (compass.css) where the page accent would drop under
+ * 3:1: the window bar's ink on its spot paper, and the foreground on tiles.
+ */
+export const RING: Record<Theme, { bar: string; tile: string }> = {
+  light: { bar: "#282728", tile: THEME.light.fg },
+  dark: { bar: "#282728", tile: THEME.dark.fg },
+};
+
 /** Spot percentage in `color-mix(in srgb, spot P%, bg)` per tile tier. */
 export const TINTS: Record<Theme, Record<Tint, number>> = {
   light: { k1: 20, k2: 30, k3: 40, k4: 52, khot: 72 },

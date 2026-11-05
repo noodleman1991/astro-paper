@@ -699,6 +699,13 @@ dialog.cp-win::backdrop {
   outline: 2px dashed var(--accent);
   outline-offset: 3px;
 }
+/* on spot paper the accent drops under 3:1 (RING in utils/compass/tints.ts) */
+.cp-win-bar .cp-sticker:focus-visible {
+  outline-color: #282728;
+}
+.compass-home .cp-lbl:focus-visible {
+  outline-color: var(--foreground);
+}
 @media (prefers-reduced-motion: reduce) {
   .cp-breathe,
   .cp-orbit,
@@ -1558,27 +1565,47 @@ dialog.cp-drawer[open]::backdrop {
 }
 
 /* no JS: the stages need the controller, so a plain index stands in and the
-   windows read inline as articles. data-js is set by CompassHome's inline
-   script before first paint. */
+   windows read inline as articles. A media query rather than a class the
+   page's script sets, so a router return (which skips scripts it has run)
+   can't fall back by mistake. */
 .cp-nojs {
   display: none;
 }
-.compass-home:not([data-js]) {
-  height: auto;
-  overflow: visible;
-  padding-bottom: 32px;
-}
-.compass-home:not([data-js]) .stage {
-  display: none;
-}
-.compass-home:not([data-js]) .cp-nojs {
-  display: grid;
-  gap: 28px;
-  width: min(660px, 100% - 32px);
-  margin: 0 auto;
-  padding: 32px 0;
-  font-size: 15px;
-  line-height: 1.55;
+@media (scripting: none) {
+  .compass-home {
+    height: auto;
+    overflow: visible;
+    padding-bottom: 32px;
+  }
+  .compass-home .stage {
+    display: none;
+  }
+  .compass-home .cp-nojs {
+    display: grid;
+    gap: 28px;
+    width: min(660px, 100% - 32px);
+    margin: 0 auto;
+    padding: 32px 0;
+    font-size: 15px;
+    line-height: 1.55;
+  }
+  .compass-home dialog.cp-win {
+    position: static;
+    display: flex;
+    width: min(660px, 100% - 32px);
+    height: auto;
+    margin: 0 auto 28px;
+    border: 2px solid var(--foreground);
+    border-radius: 30px 18px 34px 16px / 22px 30px 18px 32px;
+    opacity: 1;
+    transform: none;
+  }
+  .compass-home .cp-win-body {
+    overflow: visible;
+  }
+  .compass-home .cp-win-bar form {
+    display: none; /* closing needs the controller */
+  }
 }
 .cp-nojs-nav {
   display: flex;
@@ -1605,23 +1632,6 @@ dialog.cp-drawer[open]::backdrop {
 .cp-nojs li a {
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-.compass-home:not([data-js]) dialog.cp-win {
-  position: static;
-  display: flex;
-  width: min(660px, 100% - 32px);
-  height: auto;
-  margin: 0 auto 28px;
-  border: 2px solid var(--foreground);
-  border-radius: 30px 18px 34px 16px / 22px 30px 18px 32px;
-  opacity: 1;
-  transform: none;
-}
-.compass-home:not([data-js]) .cp-win-body {
-  overflow: visible;
-}
-.compass-home:not([data-js]) .cp-win-bar form {
-  display: none; /* closing needs the controller */
 }
 /* the drawer opener, theme switch and copy buttons need JS too */
 @media (scripting: none) {

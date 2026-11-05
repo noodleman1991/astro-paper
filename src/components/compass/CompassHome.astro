@@ -23,9 +23,9 @@ const link = (name: string) => SOCIALS.find(s => s.name === name)?.href ?? "";
 ---
 
 <div class="compass-home" data-compass data-dir={localeDir(locale)}>
-  <script is:inline>
+  <!-- rerun: the router skips inline scripts it has run once per document -->
+  <script is:inline data-astro-rerun>
     (function (root) {
-      root.setAttribute("data-js", "");
       // scale the stage before first paint with fit()'s sum (controller.ts),
       // so nothing shifts when the controller takes over
       const phone = innerWidth < 768;
@@ -106,21 +106,22 @@ const link = (name: string) => SOCIALS.find(s => s.name === name)?.href ?? "";
   <div class="stage" data-stage="desktop">
     <div class="cp-release" data-release></div>
     <p class="cp-hint">{t.hint.desktop}</p>
+    <!-- the compass leads, so Tab goes from a title into what it opened -->
+    <Compass locale={locale} variant="desktop" />
     <ServicesSection locale={locale} variant="desktop" />
     <BlogSection locale={locale} variant="desktop" posts={posts} />
     <AboutSection locale={locale} variant="desktop" />
     <PortfolioDial locale={locale} />
-    <Compass locale={locale} variant="desktop" />
   </div>
 
   <div class="stage" data-stage="phone">
     <p class="cp-hint">{t.hint.phone}<br />{t.hint.phonePlain}</p>
     <PlainMenu locale={locale} />
+    <Compass locale={locale} variant="phone" />
     <ServicesSection locale={locale} variant="phone" />
     <BlogSection locale={locale} variant="phone" posts={posts} />
     <AboutSection locale={locale} variant="phone" />
     <PortfolioStream locale={locale} />
-    <Compass locale={locale} variant="phone" />
     <button
       class="cp-sticker cp-close-ph"
       type="button"
