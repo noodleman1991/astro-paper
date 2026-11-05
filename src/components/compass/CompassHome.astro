@@ -7,6 +7,7 @@ import BlogSection from "./BlogSection.astro";
 import AboutSection from "./AboutSection.astro";
 import PortfolioDial from "./PortfolioDial.astro";
 import PortfolioStream from "./PortfolioStream.astro";
+import PlainMenu from "./PlainMenu.astro";
 import DetailWindows from "./DetailWindows.astro";
 import { localeDir, useTranslations, type Locale } from "@/i18n";
 
@@ -17,7 +18,16 @@ const t = useTranslations(locale).compass;
 
 <div class="compass-home" data-compass data-dir={localeDir(locale)}>
   <script is:inline>
-    document.currentScript.parentElement.setAttribute("data-js", "");
+    (function (root) {
+      root.setAttribute("data-js", "");
+      // restore the plain menu before first paint; storage may be blocked
+      try {
+        if (localStorage.getItem("compass-nav") === "bar")
+          root.classList.add("nav-bar");
+      } catch {
+        // blocked storage: stay on the compass
+      }
+    })(document.currentScript.parentElement);
   </script>
   <svg width="0" height="0" style="position: absolute" aria-hidden="true">
     <defs>
@@ -88,7 +98,8 @@ const t = useTranslations(locale).compass;
   </div>
 
   <div class="stage" data-stage="phone">
-    <p class="cp-hint">{t.hint.phone}</p>
+    <p class="cp-hint">{t.hint.phone}<br />{t.hint.phonePlain}</p>
+    <PlainMenu locale={locale} />
     <ServicesSection locale={locale} variant="phone" />
     <BlogSection locale={locale} variant="phone" posts={posts} />
     <AboutSection locale={locale} variant="phone" />

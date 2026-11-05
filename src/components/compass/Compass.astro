@@ -137,7 +137,16 @@ const ctl = (id: string) => `cp-${v}-${id}`;
     ))
   }
   {
-    !phone && (
+    phone ? (
+      <button
+        class="cp-hide"
+        type="button"
+        data-nav-toggle
+        aria-label={t.plain.hide}
+      >
+        ×
+      </button>
+    ) : (
       <button class="cp-x" type="button" data-close aria-label={t.closeAbout}>
         ×
       </button>

@@ -63,7 +63,13 @@ const home = new URL(localePath(locale, "/"), Astro.site).href;
         <span class="cp-when-light">{t.drawer.dark}</span>
         <span class="cp-when-dark">{t.drawer.light}</span>
       </button>
-      <button class="cp-sticker" type="button" data-nav-toggle>
+      <button
+        class="cp-sticker"
+        type="button"
+        data-nav-toggle
+        data-plain={t.drawer.plain}
+        data-compass={t.drawer.compass}
+      >
         {t.drawer.plain}
       </button>
     </div>

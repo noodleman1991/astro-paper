@@ -80,6 +80,7 @@ const en = {
       desktop:
         "hover a slice to peek · click it and it pours out · the logo is about",
       phone: "tap a slice · tap the logo for about",
+      phonePlain: "× on the ring swaps it for a plain menu",
     },
     side: {
       services: ["services", "six ways i can help", "open one for the details"],

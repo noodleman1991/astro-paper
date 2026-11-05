@@ -17,7 +17,14 @@ import {
   streamGeometry,
   type StreamId,
 } from "./stream";
-import { INITIAL, reduce, toRoute, type Action, type State } from "./state";
+import {
+  INITIAL,
+  reduce,
+  toRoute,
+  type Action,
+  type Nav,
+  type State,
+} from "./state";
 
 // `crop` is the band the board kept for its top bar; the real bar sits
 // above the stage, so that band is cut rather than doubled.
@@ -46,11 +53,28 @@ function vary(root: HTMLElement) {
   }
 }
 
+// The phone's plain-menu choice; storage may be blocked (private windows).
+const NAV_KEY = "compass-nav";
+function savedNav(): Nav {
+  try {
+    return localStorage.getItem(NAV_KEY) === "bar" ? "bar" : "compass";
+  } catch {
+    return "compass";
+  }
+}
+function saveNav(nav: Nav) {
+  try {
+    localStorage.setItem(NAV_KEY, nav);
+  } catch {
+    // the choice then lasts for this visit only
+  }
+}
+
 export function initCompass(root: HTMLElement): () => void {
   const ac = new AbortController();
   const { signal } = ac;
   const home = location.pathname + location.search;
-  let state: State = INITIAL;
+  let state: State = { ...INITIAL, nav: savedNav() };
   let peekTimer = 0;
   let opener: HTMLElement | null = null;
   const rtl = root.dataset.dir === "rtl";
@@ -66,6 +90,10 @@ export function initCompass(root: HTMLElement): () => void {
 
   function render() {
     const { open, peek, item } = state;
+    root.classList.toggle("nav-bar", state.nav === "bar");
+    for (const b of qsa(document, "[data-nav-toggle][data-plain]"))
+      b.textContent =
+        (state.nav === "bar" ? b.dataset.compass : b.dataset.plain) ?? "";
     // st-<section> docks the phone compass opposite the open spill
     for (const id of SECTIONS) root.classList.toggle(`st-${id}`, open === id);
     for (const r of qsa(root, "[data-region]")) {
@@ -182,6 +210,7 @@ export function initCompass(root: HTMLElement): () => void {
       return;
     }
     render();
+    if (action.type === "nav") saveNav(state.nav);
     if (record) push();
   }
 
@@ -287,6 +316,18 @@ export function initCompass(root: HTMLElement): () => void {
       } else {
         dispatch({ type: "close" });
       }
+    },
+    { signal }
+  );
+
+  // ring ×, the bar's ring icon and the drawer button swap the menu
+  document.addEventListener(
+    "click",
+    ev => {
+      const el = (ev.target as Element).closest("[data-nav-toggle]");
+      if (!el) return;
+      el.closest("dialog")?.close();
+      dispatch({ type: "nav", nav: state.nav === "bar" ? "compass" : "bar" });
     },
     { signal }
   );
