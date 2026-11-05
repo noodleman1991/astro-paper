@@ -64,6 +64,7 @@ const mailFor = (title: string) =>
   wins.map(w => (
     <dialog
       class:list={["cp-win", w.spot]}
+      id={w.item}
       data-item={w.item}
       aria-labelledby={idFor(w.item)}
     >

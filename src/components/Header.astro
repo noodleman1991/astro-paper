@@ -93,10 +93,7 @@ const isActive = (path: string) => {
           </a>
         </li>
         <li class="col-span-2">
-          <a
-            href={localePath(locale, "/about")}
-            class:list={{ "active-nav": isActive("/about") }}
-          >
+          <a href={localePath(locale, "/#about")}>
             {t.nav.about}
           </a>
         </li>

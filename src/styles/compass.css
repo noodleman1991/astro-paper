@@ -1429,16 +1429,23 @@ dialog.cp-drawer[open]::backdrop {
   z-index: 3;
   pointer-events: none;
 }
+/* hidden plugs stay unpainted, so their text can't pose as the largest paint */
 .cp-plug {
   opacity: 0;
-  transition: opacity 0.25s;
+  visibility: hidden;
+  transition:
+    opacity 0.25s,
+    visibility 0s linear 0.25s;
 }
 .nav-bar.st-services .pl-services,
 .nav-bar.st-blog .pl-blog,
 .nav-bar.st-portfolio .pl-portfolio,
 .nav-bar.st-about .pl-about {
   opacity: 1;
-  transition: opacity 0.3s 0.15s;
+  visibility: visible;
+  transition:
+    opacity 0.3s 0.15s,
+    visibility 0s 0.15s;
 }
 .cp-plug text {
   font:
@@ -1548,4 +1555,79 @@ dialog.cp-drawer[open]::backdrop {
 }
 [data-dir="rtl"].st-blog [data-stage="phone"] .cp-compass {
   transform: translate(-137px, 356px) scale(0.72);
+}
+
+/* no JS: the stages need the controller, so a plain index stands in and the
+   windows read inline as articles. data-js is set by CompassHome's inline
+   script before first paint. */
+.cp-nojs {
+  display: none;
+}
+.compass-home:not([data-js]) {
+  height: auto;
+  overflow: visible;
+  padding-bottom: 32px;
+}
+.compass-home:not([data-js]) .stage {
+  display: none;
+}
+.compass-home:not([data-js]) .cp-nojs {
+  display: grid;
+  gap: 28px;
+  width: min(660px, 100% - 32px);
+  margin: 0 auto;
+  padding: 32px 0;
+  font-size: 15px;
+  line-height: 1.55;
+}
+.cp-nojs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.cp-nojs h2 {
+  margin: 0 0 8px;
+  font:
+    400 28px/1.1 var(--font-mclaren),
+    var(--font-fredoka),
+    cursive;
+}
+.cp-nojs p {
+  margin: 0 0 8px;
+}
+.cp-nojs ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-inline-start: 20px;
+  list-style: disc;
+}
+.cp-nojs li a {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.compass-home:not([data-js]) dialog.cp-win {
+  position: static;
+  display: flex;
+  width: min(660px, 100% - 32px);
+  height: auto;
+  margin: 0 auto 28px;
+  border: 2px solid var(--foreground);
+  border-radius: 30px 18px 34px 16px / 22px 30px 18px 32px;
+  opacity: 1;
+  transform: none;
+}
+.compass-home:not([data-js]) .cp-win-body {
+  overflow: visible;
+}
+.compass-home:not([data-js]) .cp-win-bar form {
+  display: none; /* closing needs the controller */
+}
+/* the drawer opener, theme switch and copy buttons need JS too */
+@media (scripting: none) {
+  .cp-say-open,
+  .cp-theme,
+  button[data-copy] {
+    display: none;
+  }
 }

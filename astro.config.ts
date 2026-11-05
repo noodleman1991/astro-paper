@@ -17,6 +17,11 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
+  // about lives on the compass now
+  redirects: {
+    "/about": "/#about",
+    "/he/about": "/he/#about",
+  },
   i18n: {
     defaultLocale: "en",
     locales: ["en", "he"],
