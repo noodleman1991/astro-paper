@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>compass nav — desktop</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chicle&amp;family=Google+Sans+Code:wght@400;600&amp;family=McLaren&amp;display=swap">
+<style>
+body{margin:0}
+.cp{--e:cubic-bezier(.22,.61,.36,1);--bg:#fdfdfd;--fg:#282728;--soft:#4a494a;--accent:#006cac;--logo-sh:#e8837c;--pf-s:#e8837c;--sv-s:#a0c4f4;--bl-s:#a0e8b4;--ab-s:#f4a0b5;--wmix:16%;--k1:20%;--k2:30%;--k3:40%;--k4:52%;--khot:72%}
+.cp.is-dark{--bg:#212737;--fg:#eaedf3;--soft:#c3c8d4;--accent:#ff6b01;--logo-sh:#a0c4f4;--wmix:14%;--k1:12%;--k2:18%;--k3:24%;--k4:32%;--khot:46%}
+.cp{--pf-w:color-mix(in srgb,var(--pf-s) var(--wmix),var(--bg));--sv-w:color-mix(in srgb,var(--sv-s) var(--wmix),var(--bg));--bl-w:color-mix(in srgb,var(--bl-s) var(--wmix),var(--bg));--ab-w:color-mix(in srgb,var(--ab-s) var(--wmix),var(--bg))}
+.cp a{color:var(--fg)}
+.ink{stroke:var(--fg)}
+.paper{fill:var(--bg)}
+.r-pf{--spot:var(--pf-s)}.r-sv{--spot:var(--sv-s)}.r-bl{--spot:var(--bl-s)}.r-ab{--spot:var(--ab-s)}
+
+/* compass */
+.cp-compass{position:absolute;left:460px;top:252px;width:360px;height:360px;z-index:7;pointer-events:none;transform-origin:180px 180px;transition:transform .8s var(--e)}
+.cp-breathe{transform-origin:180px 180px;animation:cp-breathe 7s ease-in-out infinite}
+@keyframes cp-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.022)}}
+.cp-orbit{transform-origin:180px 180px;animation:cp-spin 90s linear infinite}
+@keyframes cp-spin{to{transform:rotate(360deg)}}
+.cp-wedge{stroke:var(--fg);stroke-width:2;stroke-linejoin:round;cursor:pointer;pointer-events:auto;transition:fill .35s var(--e)}
+.w-pf{fill:var(--pf-w)}.w-pf.is-on{fill:color-mix(in srgb,var(--pf-s) var(--k3),var(--bg))}
+.w-sv{fill:var(--sv-w)}.w-sv.is-on{fill:color-mix(in srgb,var(--sv-s) var(--k3),var(--bg))}
+.w-bl{fill:var(--bl-w)}.w-bl.is-on{fill:color-mix(in srgb,var(--bl-s) var(--k3),var(--bg))}
+.cp-hub{fill:var(--bg);transition:fill .35s var(--e)}.cp-hub.is-on{fill:color-mix(in srgb,var(--ab-s) var(--k3),var(--bg))}
+.cp-logo{position:absolute;left:180px;top:180px;width:124px;height:124px;transform:translate(-50%,-50%) rotate(-4deg);border:0;border-radius:50%;background:transparent;color:var(--accent);font:35px/.9 'Chicle',cursive;text-shadow:3px 3px 0 var(--logo-sh);cursor:pointer;pointer-events:auto;transition:transform .45s var(--e)}
+.cp-logo:hover{transform:translate(-50%,-50%) rotate(-10deg) scale(1.05)}
+.cp-label{position:absolute;transform:translate(-50%,-50%);background:transparent;border:2px solid transparent;border-radius:0;padding:10px 12px;font:17px/1 'McLaren',cursive;color:var(--fg);white-space:nowrap;cursor:pointer;pointer-events:auto;transition:left .8s var(--e),top .8s var(--e),background .3s}
+.cp-label{width:118px;height:56px;padding:0;border:0;border-radius:40px;color:transparent;transform:translate(-50%,-50%) rotate(var(--r,0deg))}
+.lb-bl{--r:-32deg;width:96px;height:46px}.lb-sv{--r:32deg}
+.cp-label .x{display:none}
+.cp-arc{font:19px 'McLaren',cursive;fill:var(--fg);letter-spacing:.3px;pointer-events:none}
+.cp-arc .x{display:none;font:600 14px 'Google Sans Code',monospace;fill:var(--soft)}
+.cp-arc.is-pinned .x{display:inline}
+.lb-bl{left:125px;top:92px}.lb-sv{left:235px;top:92px}.lb-pf{left:180px;top:288px}
+.cp-x{position:absolute;left:180px;top:110px;width:34px;height:34px;transform:translate(-50%,-50%);border:2px solid var(--fg);border-radius:50%;background:var(--bg);color:var(--fg);font:600 15px/1 'Google Sans Code',monospace;cursor:pointer;pointer-events:auto;opacity:0;visibility:hidden;transition:opacity .3s .5s}
+.st-about .cp-x{opacity:1;visibility:visible}
+
+/* spills: each section pours out of its slice, the compass stays where it is */
+.cp-region{position:absolute;left:0;top:0;width:1280px;height:800px;z-index:2;pointer-events:none;visibility:hidden;transition:visibility 0s linear 1s}
+.cp-region.is-peek,.cp-region.is-pinned{visibility:visible;transition:visibility 0s}
+.cp-pour{transform:scale(.04);opacity:0;transition:transform .7s cubic-bezier(.55,0,.8,.25),opacity .25s linear .45s}
+.is-peek .cp-pour{transform:scale(.32);opacity:.55;transition:transform .9s var(--e),opacity .25s}
+.is-pinned .cp-pour{transform:none;opacity:1;transition:transform 1.15s cubic-bezier(.2,.9,.28,1),opacity .15s}
+.cp-tiles{opacity:0;transition:opacity .25s}
+.is-pinned .cp-tiles{opacity:1;transition:opacity .35s .12s}
+.is-pinned .cp-hit{pointer-events:auto}
+.pour{fill:color-mix(in srgb,var(--spot) var(--k1),var(--bg));stroke:var(--fg);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+.tl{stroke:var(--fg);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke;cursor:pointer;transition:fill .3s var(--e)}
+.tl.still{cursor:default}
+.k2{fill:color-mix(in srgb,var(--spot) var(--k2),var(--bg))}.k3{fill:color-mix(in srgb,var(--spot) var(--k3),var(--bg))}.k4{fill:color-mix(in srgb,var(--spot) var(--k4),var(--bg))}
+.tl.is-hot{fill:color-mix(in srgb,var(--spot) var(--khot),var(--bg))}
+.tdots{fill:url(#cp-dots);stroke:none;pointer-events:none}
+.cp-dot{fill:var(--fg);opacity:.22}
+.cp-ants{fill:none;stroke:var(--fg);stroke-width:2;stroke-dasharray:9 7;vector-effect:non-scaling-stroke;opacity:0;transition:opacity .3s}
+.is-pinned .cp-ants{opacity:.9;animation:cp-ants 5s linear infinite;transition:opacity .4s 1s}
+@keyframes cp-ants{to{stroke-dashoffset:-64}}
+.cp-spark{fill:var(--bg);stroke:var(--fg);stroke-width:2;stroke-linejoin:round;vector-effect:non-scaling-stroke;opacity:0;transition:opacity .2s}
+.is-pinned .cp-spark{opacity:1;transition:opacity .4s 1.1s}
+.pf-ring{transform:rotate(var(--rot));transform-origin:640px 432px;transition:transform .85s var(--e)}
+.r-pf:not(.is-pinned) .pf-ring{transform:rotate(calc(var(--rot) + 48deg));transition:transform .7s var(--e)}
+.pf-lbls{position:absolute;left:0;top:0;width:1280px;height:800px}
+.pf-turn{position:absolute;inset:0;transform:rotate(var(--rot));transform-origin:640px 432px;transition:transform .85s var(--e)}
+.pf-turn .cp-lbl{transform:rotate(calc(-1 * var(--rot)));transition:transform .85s var(--e),opacity .3s;animation:none}
+.is-pinned .pf-turn .cp-lbl{transition:transform .85s var(--e),opacity .4s .9s}
+.pf-turn .cp-lbl.is-out{opacity:0;visibility:hidden;pointer-events:none;transition:transform .85s var(--e),opacity .2s,visibility 0s linear .2s}
+.r-pf{user-select:none;-webkit-user-select:none}
+.r-pf.is-pinned{cursor:grab}
+.pf-ring .tl.is-peek{cursor:pointer}
+.cp-lbl{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;margin:0;padding:4px 6px;border:0;background:transparent;color:var(--fg);font:inherit;font-size:12.5px;line-height:1.45;text-align:center;text-decoration:none;cursor:pointer;opacity:0;visibility:hidden}
+.is-pinned .cp-lbl{opacity:1;visibility:visible;pointer-events:auto;animation:cp-in .6s var(--e) backwards;animation-delay:calc(var(--i,0) * 70ms + .8s)}
+@keyframes cp-in{from{opacity:0;transform:translateY(10px)}}
+.cp-lbl .t{display:block;font:21px/1.12 'McLaren',cursive}
+.cp-lbl .s{display:block;color:var(--soft)}
+.cp-lbl .go{display:inline-block;margin-left:5px;opacity:0;transform:translateX(-4px);transition:opacity .25s,transform .3s var(--e)}
+.cp-lbl:hover .go,.cp-lbl:focus-visible .go{opacity:1;transform:none}
+.cp-side{position:absolute;display:flex;flex-direction:column;gap:6px;opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s linear .3s}
+.is-pinned .cp-side{opacity:1;visibility:visible;transition:opacity .4s .9s,visibility 0s}
+.cp-side b{font:28px/1.05 'McLaren',cursive;font-weight:400}
+.cp-side span{font-size:12.5px;color:var(--soft)}
+/* chrome: stickers */
+.cp-sticker{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:0 12px;box-sizing:border-box;border:2px solid var(--fg);background:var(--bg);color:var(--fg);font:600 12px/1 'Google Sans Code',ui-monospace,monospace;text-decoration:none;white-space:nowrap;cursor:pointer}
+.cp-sticker:hover{background:var(--fg);color:var(--bg)}
+.cp-sticker:disabled{opacity:.35;cursor:default;background:var(--bg);color:var(--fg)}
+.cp-sticker.sm{min-height:28px;padding:0 8px;font-size:11px}
+.cp-sticker.ink{background:var(--fg);color:var(--bg)}
+.cp-date{display:inline-block;padding:4px 8px;background:var(--fg);color:var(--bg);font:600 11px/1.1 'Google Sans Code',ui-monospace,monospace}
+.cp-link{color:var(--fg);font-weight:600;text-decoration:underline wavy 1.5px;text-underline-offset:5px}
+.cp-bar{position:absolute;left:0;top:0;width:1280px;height:64px;z-index:6;background:var(--bg)}
+.cp-hint{position:absolute;left:0;top:670px;width:1280px;margin:0;z-index:1;text-align:center;font-size:12.5px;color:var(--soft);transition:opacity .3s}
+.cp-hint.is-hidden{opacity:0}
+.cp-pop{position:absolute;z-index:9;opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .25s var(--e),transform .3s var(--e),visibility 0s linear .3s}
+.cp-pop.is-open{opacity:1;visibility:visible;transform:none;transition:opacity .25s var(--e),transform .3s var(--e),visibility 0s}
+.cp-scrim{position:absolute;inset:0;z-index:10;background:color-mix(in srgb,var(--fg) 26%,transparent);opacity:0;visibility:hidden;transition:opacity .3s,visibility 0s linear .3s}
+.cp-scrim.is-open{opacity:1;visibility:visible;transition:opacity .3s,visibility 0s}
+.cp-win{position:absolute;left:310px;top:130px;width:660px;height:540px;z-index:11;box-sizing:border-box;display:flex;flex-direction:column;border:2px solid var(--fg);background:var(--bg);color:var(--fg);box-shadow:8px 8px 0 var(--fg);border-radius:30px 18px 34px 16px / 22px 30px 18px 32px;overflow:hidden;opacity:0;visibility:hidden;transform:translateY(18px) rotate(.6deg);transition:opacity .35s var(--e),transform .45s var(--e),visibility 0s linear .45s}
+.cp-win.is-open{opacity:1;visibility:visible;transform:none;transition:opacity .35s var(--e),transform .45s var(--e),visibility 0s}
+.cp-win-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 12px 10px 18px;border-bottom:2px solid var(--fg);background:var(--spot);color:#282728;background-image:radial-gradient(color-mix(in srgb,#282728 18%,transparent) 1.2px,transparent 1.4px);background-size:9px 9px}
+.cp-win-bar .cp-sticker{border-color:#282728;background:#fdfdfd;color:#282728}
+.cp button:focus-visible,.cp a:focus-visible{outline:2px dashed var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.cp-breathe,.cp-orbit,.is-pinned .cp-ants{animation:none}.cp-compass,.cp-label,.cp-region,.cp-pour,.pf-ring,.pf-turn,.pf-turn .cp-lbl,.cp-tiles,.cp-spark,.cp-side{transition-duration:.01ms;transition-delay:0s}.is-pinned .cp-lbl{animation:none}.cp-win{transform:none}}
+</style>
+</helmet>
+<div class="{{rootCls}}" style="position: relative; width: 1280px; height: 800px; overflow: hidden; background: var(--bg); color: var(--fg); font-family: 'Google Sans Code', ui-monospace, monospace;">
+
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+      <filter id="cp-rough" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.016" numOctaves="3" seed="7" result="n"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="8" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <filter id="cp-wobble" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="n"></feTurbulence>
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="3.5" xChannelSelector="R" yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <pattern id="cp-dots" width="9" height="9" patternUnits="userSpaceOnUse"><circle class="cp-dot" cx="4.5" cy="4.5" r="1.35"></circle></pattern>
+    </defs>
+  </svg>
+
+  <div onClick="{{release}}" style="position: absolute; left: 0; top: 0; width: 1280px; height: 800px; z-index: 0"></div>
+
+  <p class="cp-hint {{hintCls}}">hover a slice to peek · click it and it pours out · the logo is about</p>
+
+  <!-- top bar: always there -->
+  <header class="cp-bar">
+    <svg viewBox="0 0 1280 64" width="1280" height="64" aria-hidden="true" style="position: absolute; left: 0; top: 0"><path class="ink" filter="url(#cp-wobble)" d="M0 62 C200 60 420 64 640 62 C860 60 1080 64 1280 62" fill="none" stroke-width="1.5"></path></svg>
+    <div style="position: absolute; left: 32px; top: 14px; display: flex; align-items: center; gap: 14px">
+      <span style="font: 18px/1 'McLaren', cursive">amit lockshinski</span>
+      <a class="cp-sticker" href="mailto:hello@spiro-spero.zone"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14"></rect><path d="M3 7l9 6 9-6"></path></svg>hello@spiro-spero.zone</a>
+    </div>
+    <div style="position: absolute; right: 32px; top: 14px; display: flex; align-items: center; gap: 8px">
+      <a class="cp-sticker" href="https://www.linkedin.com/in/amit-lo/">linkedin ↗</a>
+      <button class="cp-sticker" type="button" onClick="{{toggleShare}}" aria-expanded="{{shareExp}}" aria-controls="cp-share">share</button>
+      <button class="cp-sticker" type="button" aria-label="switch language">en · עב</button>
+      <button class="cp-sticker" type="button" onClick="{{toggleDark}}" aria-label="toggle dark mode" style="width: 36px; padding: 0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></button>
+    </div>
+  </header>
+
+  <!-- share popover -->
+  <div id="cp-share" class="cp-pop {{shareCls}}" role="dialog" aria-label="share this site" style="right: 32px; top: 72px; width: 290px; box-sizing: border-box; padding: 14px; display: flex; flex-direction: column; gap: 10px; border: 2px solid var(--fg); background: var(--bg); box-shadow: 6px 6px 0 var(--fg); border-radius: 22px 12px 26px 12px / 14px 22px 12px 24px">
+    <div aria-hidden="true" style="position: relative; height: 130px; overflow: hidden; border: 2px solid var(--fg); background: #fdfdfd; color: #282728">
+      <svg viewBox="0 0 258 130" width="258" height="130" style="position: absolute; left: 0; top: 0"><g transform="translate(204 66)" stroke="#282728" stroke-width="1.4"><path d="M27 15.6 A31 31 0 0 0 1.4 -31 L.6 -14 A14 14 0 0 1 12.4 6.5 Z" fill="#a0c4f4"></path><path d="M-1.4 -31 A31 31 0 0 0 -27 15.6 L-12.4 6.5 A14 14 0 0 1 -.6 -14 Z" fill="#a0e8b4"></path><path d="M-25.6 17.6 A31 31 0 0 0 25.6 17.6 L11.8 7.5 A14 14 0 0 1 -11.8 7.5 Z" fill="#e8837c"></path></g></svg>
+      <span style="position: absolute; left: 14px; top: 16px; font: 26px/.9 'Chicle', cursive; color: #006cac; text-shadow: 2px 2px 0 #e8837c">spiro<br>spero</span>
+      <span style="position: absolute; left: 14px; top: 82px; width: 140px; font: 10px/1.35 'Google Sans Code', monospace">websites, apps and knowledge hubs</span>
+    </div>
+    <span style="font-size: 11px; color: var(--soft)">the card people will see</span>
+    <button class="cp-sticker ink" type="button" onClick="{{copy}}">{{copyLabel}}</button>
+    <div style="display: flex; flex-wrap: wrap; gap: 6px"><a class="cp-sticker sm" href="#">whatsapp</a><a class="cp-sticker sm" href="#">linkedin</a><a class="cp-sticker sm" href="#">telegram</a><a class="cp-sticker sm" href="#">x</a><a class="cp-sticker sm" href="#">email</a></div>
+  </div>
+
+  <!-- SERVICES: the upper-right slice grown out, lopsided to the right -->
+  <section id="r-services" class="cp-region r-sv {{svCls}}" aria-label="services">
+    <svg viewBox="0 0 1280 800" width="1280" height="800" aria-hidden="true" style="position: absolute; left: 0; top: 0; overflow: visible">
+      <g filter="url(#cp-rough)"><g class="cp-pour" style="transform-origin: 770px 357px">
+        <path class="pour cp-hit" d="M654 315C649 310 650 299 650 290C650 281 652 271 652 261C653 252 654 242 655 233C656 223 657 214 658 205C660 195 661 186 662 176C664 167 665 157 667 148C669 139 669 129 672 120C676 111 680 102 687 96C694 90 704 87 713 86C722 84 732 86 741 87C751 88 760 89 770 91C779 92 788 93 798 95C807 96 817 98 826 100C835 102 845 104 854 106C863 108 872 110 882 113C891 115 900 118 909 121C918 123 927 126 936 129C945 132 954 136 963 139C972 143 981 146 989 150C998 154 1007 158 1015 162C1024 166 1032 171 1041 175C1049 180 1057 184 1065 189C1073 194 1081 200 1089 205C1097 211 1105 216 1112 222C1120 228 1127 234 1134 241C1141 247 1148 254 1154 261C1161 267 1167 275 1173 282C1179 289 1185 297 1190 305C1195 313 1200 321 1204 330C1209 338 1212 347 1216 356C1219 365 1222 374 1224 383C1226 392 1228 402 1229 411C1230 421 1230 430 1230 440C1229 449 1228 459 1227 468C1225 477 1223 487 1220 496C1217 505 1214 514 1210 522C1206 531 1202 540 1197 548C1192 556 1187 564 1181 572C1175 579 1169 587 1163 594C1157 601 1150 608 1143 614C1137 621 1130 627 1122 634C1115 640 1108 646 1100 651C1092 656 1083 661 1074 663C1065 664 1055 663 1046 661C1037 658 1029 651 1021 646C1013 641 1006 635 998 630C990 624 982 619 974 614C966 608 959 603 951 598C943 593 935 587 927 582C919 577 910 572 902 567C894 562 886 558 878 553C870 548 861 543 853 539C845 534 836 530 828 525C819 521 811 516 803 512C794 508 786 503 777 499C769 495 755 493 751 486C748 480 753 470 754 461C755 452 758 442 758 432C758 423 757 413 754 404C752 395 749 386 744 377C740 369 734 361 728 354C722 347 715 341 707 335C699 330 691 325 682 322C673 319 659 321 654 315Z"></path>
+        <g class="cp-tiles"><path class="tl k4 cp-hit {{cells.web.cls}}" d="M949 280C945 290 960 303 967 316C973 328 984 342 990 356C996 370 994 390 1004 400C1013 410 1032 411 1046 415C1061 420 1076 424 1091 429C1105 435 1119 442 1133 449C1147 456 1160 469 1174 472C1187 475 1207 475 1215 467C1223 459 1222 437 1221 421C1221 406 1218 390 1214 376C1210 361 1203 346 1196 332C1189 319 1181 306 1171 293C1162 281 1152 269 1141 258C1130 247 1118 236 1106 227C1093 218 1079 204 1066 205C1053 205 1041 222 1028 231C1015 240 1003 249 990 257C976 266 953 271 949 280Z" onClick="{{cells.web.open}}" onMouseEnter="{{cells.web.on}}" onMouseLeave="{{cells.web.off}}"></path><path class="tdots" d="M949 280C945 290 960 303 967 316C973 328 984 342 990 356C996 370 994 390 1004 400C1013 410 1032 411 1046 415C1061 420 1076 424 1091 429C1105 435 1119 442 1133 449C1147 456 1160 469 1174 472C1187 475 1207 475 1215 467C1223 459 1222 437 1221 421C1221 406 1218 390 1214 376C1210 361 1203 346 1196 332C1189 319 1181 306 1171 293C1162 281 1152 269 1141 258C1130 247 1118 236 1106 227C1093 218 1079 204 1066 205C1053 205 1041 222 1028 231C1015 240 1003 249 990 257C976 266 953 271 949 280Z"></path><path class="tl k3 cp-hit {{cells.hubs.cls}}" d="M1031 428C1019 430 1006 438 998 447C990 457 990 474 984 486C978 499 970 511 962 522C953 533 937 542 934 552C930 562 933 573 940 581C946 590 963 596 975 604C986 612 997 620 1009 628C1020 636 1031 648 1043 652C1055 657 1069 658 1081 655C1093 651 1104 638 1115 629C1125 621 1136 611 1145 601C1155 591 1165 581 1173 569C1181 558 1192 546 1194 534C1195 521 1190 506 1183 496C1175 486 1159 481 1147 475C1135 468 1122 461 1110 455C1097 449 1084 444 1071 439C1058 435 1043 427 1031 428Z" onClick="{{cells.hubs.open}}" onMouseEnter="{{cells.hubs.on}}" onMouseLeave="{{cells.hubs.off}}"></path><path class="tl k3 cp-hit {{cells.ai.cls}}" d="M778 398C770 405 769 417 766 428C763 439 760 453 762 463C764 473 768 482 775 489C783 496 797 500 807 505C818 511 828 516 839 522C849 527 859 534 870 539C880 544 892 552 903 550C913 549 923 539 932 532C941 524 948 514 955 504C961 495 968 484 972 474C977 463 982 451 983 440C985 428 986 414 981 405C976 396 963 390 952 387C942 383 929 384 917 383C905 381 894 380 882 379C870 379 858 378 846 380C834 381 823 383 811 386C800 389 785 391 778 398Z" onClick="{{cells.ai.open}}" onMouseEnter="{{cells.ai.on}}" onMouseLeave="{{cells.ai.off}}"></path><path class="tl k2 cp-hit {{cells.data.cls}}" d="M829 197C828 205 832 215 838 221C844 227 856 229 866 234C875 239 883 244 892 249C901 254 910 261 919 263C929 265 940 264 949 261C959 258 968 252 976 247C985 242 994 236 1002 230C1010 224 1019 219 1026 212C1034 205 1046 196 1045 190C1044 183 1028 178 1020 173C1011 168 1001 164 992 160C983 156 973 152 964 148C954 144 945 141 935 137C926 134 916 131 906 128C896 125 885 118 876 121C868 123 863 135 857 143C852 151 848 161 844 170C839 179 830 189 829 197Z" onClick="{{cells.data.open}}" onMouseEnter="{{cells.data.on}}" onMouseLeave="{{cells.data.off}}"></path><path class="tl k2 cp-hit {{cells.app.cls}}" d="M727 325C725 334 733 343 737 352C742 362 747 377 756 382C764 386 776 380 787 378C798 375 809 370 821 367C832 365 844 364 855 363C867 362 878 363 890 364C902 364 913 367 925 368C936 368 953 373 959 368C966 363 965 348 962 338C959 328 949 319 941 310C934 301 925 294 916 286C907 279 898 272 888 265C878 259 868 253 858 248C847 243 836 234 826 234C816 233 805 240 796 246C788 253 782 264 774 273C766 282 759 290 751 299C743 308 729 316 727 325Z" onClick="{{cells.app.open}}" onMouseEnter="{{cells.app.on}}" onMouseLeave="{{cells.app.off}}"></path><path class="tl k2 cp-hit {{cells.db.cls}}" d="M658 297C661 306 674 312 684 314C695 316 709 315 719 309C729 304 736 292 744 282C753 273 761 264 769 255C777 245 785 235 792 225C799 215 806 205 812 194C819 184 825 173 830 161C835 150 845 136 843 127C840 118 826 111 816 106C805 102 791 102 779 100C767 98 754 97 742 95C730 94 715 89 705 92C695 95 687 103 682 113C677 122 677 137 675 149C673 161 671 174 669 186C667 198 666 211 664 223C663 235 662 248 661 260C659 272 654 288 658 297Z" onClick="{{cells.db.open}}" onMouseEnter="{{cells.db.on}}" onMouseLeave="{{cells.db.off}}"></path></g>
+        <path class="cp-ants" transform="translate(5 4)" d="M654 315C649 310 650 299 650 290C650 281 652 271 652 261C653 252 654 242 655 233C656 223 657 214 658 205C660 195 661 186 662 176C664 167 665 157 667 148C669 139 669 129 672 120C676 111 680 102 687 96C694 90 704 87 713 86C722 84 732 86 741 87C751 88 760 89 770 91C779 92 788 93 798 95C807 96 817 98 826 100C835 102 845 104 854 106C863 108 872 110 882 113C891 115 900 118 909 121C918 123 927 126 936 129C945 132 954 136 963 139C972 143 981 146 989 150C998 154 1007 158 1015 162C1024 166 1032 171 1041 175C1049 180 1057 184 1065 189C1073 194 1081 200 1089 205C1097 211 1105 216 1112 222C1120 228 1127 234 1134 241C1141 247 1148 254 1154 261C1161 267 1167 275 1173 282C1179 289 1185 297 1190 305C1195 313 1200 321 1204 330C1209 338 1212 347 1216 356C1219 365 1222 374 1224 383C1226 392 1228 402 1229 411C1230 421 1230 430 1230 440C1229 449 1228 459 1227 468C1225 477 1223 487 1220 496C1217 505 1214 514 1210 522C1206 531 1202 540 1197 548C1192 556 1187 564 1181 572C1175 579 1169 587 1163 594C1157 601 1150 608 1143 614C1137 621 1130 627 1122 634C1115 640 1108 646 1100 651C1092 656 1083 661 1074 663C1065 664 1055 663 1046 661C1037 658 1029 651 1021 646C1013 641 1006 635 998 630C990 624 982 619 974 614C966 608 959 603 951 598C943 593 935 587 927 582C919 577 910 572 902 567C894 562 886 558 878 553C870 548 861 543 853 539C845 534 836 530 828 525C819 521 811 516 803 512C794 508 786 503 777 499C769 495 755 493 751 486C748 480 753 470 754 461C755 452 758 442 758 432C758 423 757 413 754 404C752 395 749 386 744 377C740 369 734 361 728 354C722 347 715 341 707 335C699 330 691 325 682 322C673 319 659 321 654 315Z"></path><path class="cp-spark" d="M825 66Q825 75 834 75Q825 75 825 84Q825 75 816 75Q825 75 825 66ZM1219 560Q1219 567 1226 567Q1219 567 1219 574Q1219 567 1212 567Q1219 567 1219 560Z"></path>
+      </g></g>
+    </svg>
+    <button class="cp-lbl" type="button" onClick="{{cells.web.open}}" onMouseEnter="{{cells.web.on}}" onMouseLeave="{{cells.web.off}}" onFocus="{{cells.web.on}}" onBlur="{{cells.web.off}}" style="--i: 0; left: 999px; top: 266px; width: 156px; height: 138px"><span class="t" style="font-size: 20px">web development<span class="go">→</span></span></button>
+    <button class="cp-lbl" type="button" onClick="{{cells.hubs.open}}" onMouseEnter="{{cells.hubs.on}}" onMouseLeave="{{cells.hubs.off}}" onFocus="{{cells.hubs.on}}" onBlur="{{cells.hubs.off}}" style="--i: 1; left: 990px; top: 474px; width: 154px; height: 136px"><span class="t" style="font-size: 20px">knowledge hubs<span class="go">→</span></span></button>
+    <button class="cp-lbl" type="button" onClick="{{cells.ai.open}}" onMouseEnter="{{cells.ai.on}}" onMouseLeave="{{cells.ai.off}}" onFocus="{{cells.ai.on}}" onBlur="{{cells.ai.off}}" style="--i: 2; left: 807px; top: 393px; width: 158px; height: 108px"><span class="t" style="font-size: 20px">AI integration<span class="go">→</span></span></button>
+    <button class="cp-lbl" type="button" onClick="{{cells.data.open}}" onMouseEnter="{{cells.data.on}}" onMouseLeave="{{cells.data.off}}" onFocus="{{cells.data.on}}" onBlur="{{cells.data.off}}" style="--i: 3; left: 851px; top: 168px; width: 154px; height: 62px"><span class="t" style="font-size: 20px">data tools<span class="go">→</span></span></button>
+    <button class="cp-lbl" type="button" onClick="{{cells.app.open}}" onMouseEnter="{{cells.app.on}}" onMouseLeave="{{cells.app.off}}" onFocus="{{cells.app.on}}" onBlur="{{cells.app.off}}" style="--i: 4; left: 785px; top: 268px; width: 114px; height: 74px"><span class="t" style="font-size: 20px">app development<span class="go">→</span></span></button>
+    <button class="cp-lbl" type="button" onClick="{{cells.db.open}}" onMouseEnter="{{cells.db.on}}" onMouseLeave="{{cells.db.off}}" onFocus="{{cells.db.on}}" onBlur="{{cells.db.off}}" style="--i: 5; left: 679px; top: 112px; width: 126px; height: 108px"><span class="t" style="font-size: 20px">databases<span class="go">→</span></span></button>
+    <p class="cp-side" style="left: 56px; top: 600px; margin: 0"><b>services</b><span>six ways i can help</span><span>open one for the details</span></p>
+  </section>
+
+  <!-- BLOG: the upper-left slice grown out and cut like a pie -->
+  <section id="r-blog" class="cp-region r-bl {{blCls}}" aria-label="blog">
+    <svg viewBox="0 0 1280 800" width="1280" height="800" aria-hidden="true" style="position: absolute; left: 0; top: 0; overflow: visible">
+      <g filter="url(#cp-rough)"><g class="cp-pour" style="transform-origin: 510px 357px">
+        <path class="pour cp-hit" d="M626 315C631 310 630 300 630 291C630 283 629 273 628 264C627 255 626 246 625 237C625 228 624 219 623 210C622 201 621 192 619 183C618 174 617 165 616 156C614 148 614 138 611 130C609 121 608 111 603 104C598 97 589 91 582 88C574 85 564 86 555 86C546 87 537 88 528 90C519 91 510 92 501 94C492 95 483 97 474 99C466 101 457 103 448 105C439 107 430 109 422 112C413 114 404 117 396 120C387 123 379 126 370 129C362 132 353 135 345 139C337 142 329 146 320 150C312 154 304 158 296 162C288 166 280 171 273 175C265 180 257 185 250 190C242 195 235 200 228 206C221 211 214 217 207 223C200 229 193 235 187 242C181 248 174 255 169 261C163 268 157 275 152 283C146 290 141 297 137 305C132 313 128 321 124 329C120 337 117 346 114 354C111 363 108 371 106 380C104 389 102 398 101 407C100 416 100 425 100 434C100 443 101 452 102 461C103 470 105 479 107 487C109 496 112 505 115 513C118 522 122 530 126 538C129 546 134 554 139 562C143 570 148 577 154 584C159 592 165 599 171 605C177 612 183 619 190 625C196 631 202 638 210 643C217 648 226 652 235 653C243 654 253 652 261 649C269 646 276 639 284 634C291 629 298 623 305 618C313 613 320 607 327 602C335 597 342 592 350 587C357 582 365 577 373 572C380 567 388 563 396 558C403 553 411 549 419 544C427 540 435 535 442 531C450 526 458 522 466 518C474 514 482 510 490 505C498 501 508 498 515 493C521 488 530 484 531 477C533 470 525 459 524 451C522 442 522 433 523 424C523 415 525 406 528 397C530 389 534 380 538 372C543 365 549 357 555 351C561 344 568 338 575 333C583 329 591 325 600 321C608 318 621 320 626 315Z"></path>
+        <g class="cp-tiles"><path class="tl k4 cp-hit {{cells.k1.cls}}" d="M540 340C544 355 533 385 520 393C508 401 483 391 463 389C443 387 422 382 401 381C380 381 360 382 339 385C319 388 298 393 278 399C258 404 239 411 219 417C199 422 176 433 158 431C141 428 118 416 112 402C107 387 119 361 127 342C135 323 146 305 158 288C170 271 184 255 199 241C214 227 230 214 247 202C264 190 282 174 300 169C318 165 338 166 354 175C370 183 381 206 396 221C411 235 427 249 443 262C459 275 475 288 491 301C508 314 535 325 540 340Z" onClick="{{cells.k1.open}}" onMouseEnter="{{cells.k1.on}}" onMouseLeave="{{cells.k1.off}}"></path><path class="tdots" d="M540 340C544 355 533 385 520 393C508 401 483 391 463 389C443 387 422 382 401 381C380 381 360 382 339 385C319 388 298 393 278 399C258 404 239 411 219 417C199 422 176 433 158 431C141 428 118 416 112 402C107 387 119 361 127 342C135 323 146 305 158 288C170 271 184 255 199 241C214 227 230 214 247 202C264 190 282 174 300 169C318 165 338 166 354 175C370 183 381 206 396 221C411 235 427 249 443 262C459 275 475 288 491 301C508 314 535 325 540 340Z"></path><path class="tl k3 cp-hit {{cells.w1.cls}}" d="M623 299C617 310 600 314 587 318C574 322 558 325 545 322C532 318 521 304 510 295C498 285 486 276 474 267C463 258 451 248 440 239C429 229 418 219 407 209C396 199 384 188 376 177C369 165 359 149 363 141C368 132 391 130 405 125C419 121 434 117 448 113C463 109 477 106 492 104C506 101 521 99 536 97C550 95 569 88 580 92C591 96 597 110 602 122C607 134 607 151 609 166C611 181 613 196 615 210C616 225 618 240 619 255C620 269 628 289 623 299Z" onClick="{{cells.w1.open}}" onMouseEnter="{{cells.w1.on}}" onMouseLeave="{{cells.w1.off}}"></path><path class="tl k2 cp-hit {{cells.all.cls}}" d="M503 414C515 424 521 450 518 465C515 479 499 489 484 499C470 510 450 517 434 527C417 536 400 546 384 556C367 566 351 576 335 587C319 598 304 610 288 621C272 631 255 650 239 649C224 649 207 630 193 617C179 604 167 589 156 573C145 558 134 541 127 523C121 506 110 481 116 468C122 455 147 452 165 446C182 440 202 438 221 433C239 428 257 421 276 416C295 411 313 406 332 403C351 399 370 397 389 397C408 397 428 399 447 402C466 405 491 403 503 414Z" onClick="{{cells.all.open}}" onMouseEnter="{{cells.all.on}}" onMouseLeave="{{cells.all.off}}"></path></g>
+        <path class="cp-ants" transform="translate(5 4)" d="M626 315C631 310 630 300 630 291C630 283 629 273 628 264C627 255 626 246 625 237C625 228 624 219 623 210C622 201 621 192 619 183C618 174 617 165 616 156C614 148 614 138 611 130C609 121 608 111 603 104C598 97 589 91 582 88C574 85 564 86 555 86C546 87 537 88 528 90C519 91 510 92 501 94C492 95 483 97 474 99C466 101 457 103 448 105C439 107 430 109 422 112C413 114 404 117 396 120C387 123 379 126 370 129C362 132 353 135 345 139C337 142 329 146 320 150C312 154 304 158 296 162C288 166 280 171 273 175C265 180 257 185 250 190C242 195 235 200 228 206C221 211 214 217 207 223C200 229 193 235 187 242C181 248 174 255 169 261C163 268 157 275 152 283C146 290 141 297 137 305C132 313 128 321 124 329C120 337 117 346 114 354C111 363 108 371 106 380C104 389 102 398 101 407C100 416 100 425 100 434C100 443 101 452 102 461C103 470 105 479 107 487C109 496 112 505 115 513C118 522 122 530 126 538C129 546 134 554 139 562C143 570 148 577 154 584C159 592 165 599 171 605C177 612 183 619 190 625C196 631 202 638 210 643C217 648 226 652 235 653C243 654 253 652 261 649C269 646 276 639 284 634C291 629 298 623 305 618C313 613 320 607 327 602C335 597 342 592 350 587C357 582 365 577 373 572C380 567 388 563 396 558C403 553 411 549 419 544C427 540 435 535 442 531C450 526 458 522 466 518C474 514 482 510 490 505C498 501 508 498 515 493C521 488 530 484 531 477C533 470 525 459 524 451C522 442 522 433 523 424C523 415 525 406 528 397C530 389 534 380 538 372C543 365 549 357 555 351C561 344 568 338 575 333C583 329 591 325 600 321C608 318 621 320 626 315Z"></path><path class="cp-spark" d="M507 62Q507 69 514 69Q507 69 507 76Q507 69 500 69Q507 69 507 62ZM131 255Q131 264 140 264Q131 264 131 273Q131 264 122 264Q131 264 131 255Z"></path>
+      </g></g>
+    </svg>
+    <a class="cp-lbl" href="Blog.dc.html" onClick="{{cells.k1.open}}" onMouseEnter="{{cells.k1.on}}" onMouseLeave="{{cells.k1.off}}" onFocus="{{cells.k1.on}}" onBlur="{{cells.k1.off}}" style="--i: 0; left: 209px; top: 222px; width: 203px; height: 144px; gap: 7px"><span class="cp-date">24 mar 2026</span><span class="t">knowledge trees</span><span class="s">read →</span></a>
+    <a class="cp-lbl" href="Blog.dc.html" onClick="{{cells.w1.open}}" onMouseEnter="{{cells.w1.on}}" onMouseLeave="{{cells.w1.off}}" onFocus="{{cells.w1.on}}" onBlur="{{cells.w1.off}}" style="--i: 1; left: 448px; top: 115px; width: 171px; height: 146px; gap: 4px"><span class="t" style="font-size: 19px">what i work with</span><span class="s">23 mar · read →</span></a>
+    <a class="cp-lbl" href="Blog.dc.html" onClick="{{cells.all.open}}" onMouseEnter="{{cells.all.on}}" onMouseLeave="{{cells.all.off}}" onFocus="{{cells.all.on}}" onBlur="{{cells.all.off}}" style="--i: 2; left: 158px; top: 452px; width: 179px; height: 134px; gap: 8px"><span class="t" style="font-size: 20px">all posts<span class="go">→</span></span><span class="s">tags · search</span></a>
+    <p class="cp-side" style="right: 56px; top: 600px; margin: 0; align-items: flex-end; text-align: right"><b>blog</b><span>notes as i go</span><span>the whole list lives on its own page</span></p>
+  </section>
+
+  <!-- PORTFOLIO: the bottom slice grown out is a window onto a dial of projects; scroll, drag or click an edge to turn it -->
+  <section id="r-portfolio" class="cp-region r-pf {{pfCls}}" aria-label="portfolio" style="--rot: {{pfRot}}" onWheel="{{pfWheel}}" onPointerDown="{{pfDown}}" onPointerUp="{{pfUp}}" onKeyDown="{{pfKey}}">
+    <svg viewBox="0 0 1280 800" width="1280" height="800" aria-hidden="true" style="position: absolute; left: 0; top: 0; overflow: visible">
+      <defs><clipPath id="pf-win"><path d="M536 486C530 483 521 488 513 490C506 492 498 496 490 498C482 501 474 503 465 505C457 507 449 509 441 510C432 512 424 513 416 514C407 515 399 515 391 516C382 517 374 517 366 518C357 519 348 518 340 520C333 522 323 525 318 531C313 536 312 546 312 554C313 562 318 570 321 578C324 586 328 593 332 600C336 608 340 615 345 622C350 629 354 636 359 643C364 649 370 656 375 662C381 669 386 675 392 681C398 687 405 692 411 698C417 703 424 709 431 714C437 719 444 723 451 728C458 732 466 737 473 741C480 745 488 748 496 752C503 755 511 759 519 761C527 764 535 767 543 769C551 772 559 774 567 775C576 777 584 779 592 780C601 781 609 782 617 782C626 783 634 783 642 783C651 783 659 783 668 782C676 781 684 780 693 779C701 778 709 776 717 774C726 772 734 770 742 768C750 765 758 763 766 760C773 757 781 753 789 750C796 746 804 742 811 738C819 734 826 730 833 725C840 721 847 716 853 711C860 706 866 700 873 695C879 689 885 683 891 677C897 671 903 665 908 659C913 652 919 646 924 639C929 632 933 625 938 618C942 611 946 604 950 596C954 589 958 581 961 573C964 566 969 557 968 549C968 542 964 532 958 527C953 523 943 521 935 520C927 518 918 518 910 518C901 517 893 516 884 516C876 515 868 514 859 513C851 512 843 511 834 510C826 508 818 506 810 504C802 502 794 499 786 497C778 494 770 489 762 488C755 487 748 487 742 491C736 494 733 505 727 511C722 517 715 523 708 528C702 533 694 537 687 540C679 543 671 546 663 548C654 549 646 550 638 550C629 550 621 548 613 546C605 544 597 542 589 538C582 534 574 530 568 525C561 519 555 514 550 507C544 501 542 489 536 486Z"></path></clipPath></defs>
+      <g filter="url(#cp-rough)"><g class="cp-pour" style="transform-origin: 640px 582px">
+        <path class="pour cp-hit" d="M534 483C528 480 519 484 511 486C503 488 494 492 486 495C478 497 469 499 461 501C452 503 444 504 435 505C426 506 418 507 409 508C400 509 392 509 383 509C374 510 365 510 357 511C348 511 339 510 331 513C322 515 312 518 308 524C303 530 302 540 303 549C303 557 308 565 311 573C314 581 318 589 322 597C326 605 331 612 335 620C340 627 345 634 350 641C355 648 360 655 366 662C371 669 377 675 383 681C389 688 395 694 402 699C408 705 415 711 422 716C429 721 436 726 443 731C451 736 458 740 466 745C473 749 481 753 489 757C497 760 505 764 513 767C521 770 530 773 538 775C546 778 555 780 563 782C572 783 580 785 589 786C598 788 606 788 615 789C624 790 632 790 641 790C650 790 658 790 667 789C676 788 685 787 693 786C702 785 710 783 719 781C727 779 736 777 744 775C752 772 761 769 769 766C777 763 785 759 793 756C801 752 808 748 816 744C824 739 831 735 838 730C846 725 853 720 860 715C866 709 873 704 880 698C886 692 892 686 898 680C904 673 910 667 916 660C921 654 927 647 932 640C937 632 942 625 946 618C951 610 955 603 959 595C963 587 967 579 970 571C973 563 978 555 978 546C978 538 976 528 971 522C966 517 956 514 947 512C939 510 930 511 921 510C913 510 904 510 895 509C886 509 878 508 869 508C860 507 852 506 843 505C834 504 826 502 817 501C809 499 800 497 792 494C784 492 775 487 767 486C759 484 751 482 745 485C739 489 736 500 730 507C725 514 719 520 712 525C705 530 697 535 690 539C682 542 673 545 665 547C656 549 648 550 639 550C630 550 621 549 613 547C605 545 596 541 589 538C581 534 573 529 567 524C560 518 554 512 548 505C543 499 540 487 534 483Z"></path>
+        <g clip-path="url(#pf-win)"><g class="pf-ring cp-tiles"><path class="tl k3 cp-hit {{cells.p1.cls}} {{dial.c0.tcls}}" d="M817 423C809 420 807 408 804 399C800 390 798 379 794 369C791 359 781 348 783 339C785 331 797 325 806 319C814 312 824 308 833 303C843 298 852 293 862 289C872 285 882 280 892 277C902 274 913 267 922 269C931 271 939 281 945 289C951 297 954 309 957 319C961 329 964 339 967 349C969 359 972 370 973 380C974 391 978 406 973 411C968 417 954 415 943 415C933 416 922 413 912 413C901 413 890 414 880 414C869 415 859 417 848 418C838 420 824 426 817 423Z" onClick="{{dial.c0.click}}" onMouseEnter="{{cells.p1.on}}" onMouseLeave="{{cells.p1.off}}"></path><path class="tl k2 cp-hit {{cells.p2.cls}} {{dial.c1.tcls}}" d="M779 320C771 321 762 315 754 310C746 305 734 298 729 291C724 284 721 276 723 267C725 259 735 250 741 241C747 232 753 224 759 215C764 206 770 197 775 188C780 179 784 168 789 159C795 151 800 137 807 136C815 134 826 144 835 150C844 156 852 162 860 169C868 176 876 183 884 191C891 198 899 205 905 214C910 223 918 235 916 243C913 251 901 257 892 262C883 267 872 270 862 274C853 278 843 282 834 287C824 291 815 297 806 302C797 308 788 318 779 320Z" onClick="{{dial.c1.click}}" onMouseEnter="{{cells.p2.on}}" onMouseLeave="{{cells.p2.off}}"></path><path class="tl k4 cp-hit {{cells.p3.cls}} {{dial.c2.tcls}}" d="M708 265C701 270 690 270 679 270C669 270 656 268 647 265C637 262 627 260 623 252C618 244 621 230 619 219C618 208 616 197 613 186C610 176 607 165 603 155C600 144 592 133 592 124C593 114 600 104 608 99C617 95 630 97 641 97C652 96 663 97 674 98C685 99 696 101 707 103C718 106 729 108 739 112C750 115 764 116 770 123C776 130 778 142 777 152C776 162 768 172 763 182C757 191 751 200 745 210C739 219 733 228 727 237C721 246 716 259 708 265Z" onClick="{{dial.c2.click}}" onMouseEnter="{{cells.p3.on}}" onMouseLeave="{{cells.p3.off}}"></path><path class="tdots" d="M708 265C701 270 690 270 679 270C669 270 656 268 647 265C637 262 627 260 623 252C618 244 621 230 619 219C618 208 616 197 613 186C610 176 607 165 603 155C600 144 592 133 592 124C593 114 600 104 608 99C617 95 630 97 641 97C652 96 663 97 674 98C685 99 696 101 707 103C718 106 729 108 739 112C750 115 764 116 770 123C776 130 778 142 777 152C776 162 768 172 763 182C757 191 751 200 745 210C739 219 733 228 727 237C721 246 716 259 708 265Z"></path><path class="tl k2 cp-hit {{cells.p4.cls}} {{dial.c3.tcls}}" d="M609 258C606 265 596 269 587 274C579 278 569 284 560 286C551 288 541 289 533 285C525 282 519 271 511 264C504 257 496 251 488 245C481 238 473 232 465 225C457 219 448 213 442 205C436 197 429 187 431 179C433 171 445 165 453 158C461 152 470 147 479 142C488 138 497 133 506 129C515 125 525 120 534 118C544 116 556 113 564 117C572 120 578 131 583 140C587 148 590 159 593 168C596 178 599 188 601 198C603 207 605 217 606 227C608 238 612 250 609 258Z" onClick="{{dial.c3.click}}" onMouseEnter="{{cells.p4.on}}" onMouseLeave="{{cells.p4.off}}"></path><path class="tl k3 cp-hit {{cells.p5.cls}} {{dial.c4.tcls}}" d="M524 296C526 304 519 313 514 322C510 331 501 339 495 349C490 358 488 372 480 377C472 382 458 378 448 377C437 376 426 373 416 371C405 369 394 366 384 363C374 360 363 356 354 351C344 346 332 340 328 332C323 323 324 310 327 300C329 290 336 280 341 271C346 261 351 252 358 243C364 234 370 225 377 217C384 208 392 195 400 194C408 192 418 203 426 209C434 215 442 224 450 231C458 238 467 245 475 252C484 259 492 266 500 273C508 280 522 288 524 296Z" onClick="{{dial.c4.click}}" onMouseEnter="{{cells.p5.on}}" onMouseLeave="{{cells.p5.off}}"></path><path class="tl k2 cp-hit {{cells.p6.cls}} {{dial.c5.tcls}}" d="M467 394C473 399 472 410 473 420C475 430 474 441 474 452C475 462 480 476 475 482C471 489 455 489 445 492C435 494 424 496 414 498C403 499 393 500 382 502C372 503 361 504 351 504C340 505 327 509 319 505C311 501 305 490 302 481C298 471 299 460 299 449C298 439 298 428 299 417C299 407 299 395 301 386C304 376 307 362 314 358C322 354 334 359 344 362C354 365 364 371 374 374C384 378 394 381 404 383C415 386 425 387 436 389C446 391 461 389 467 394Z" onClick="{{dial.c5.click}}" onMouseEnter="{{cells.p6.on}}" onMouseLeave="{{cells.p6.off}}"></path><path class="tl k4 cp-hit {{cells.p7.cls}} {{dial.c6.tcls}}" d="M472 499C480 500 487 506 494 513C500 519 508 530 511 538C514 546 517 555 513 562C510 569 498 575 490 581C482 587 474 594 467 600C459 607 451 613 444 621C437 628 431 637 424 643C417 650 409 661 401 660C394 660 386 647 380 640C373 632 368 623 362 615C357 607 351 598 347 589C342 580 337 571 334 562C330 552 325 540 328 533C331 525 343 521 352 518C362 515 373 517 383 516C393 515 403 514 413 512C423 511 433 509 443 507C452 505 463 498 472 499Z" onClick="{{dial.c6.click}}" onMouseEnter="{{cells.p7.on}}" onMouseLeave="{{cells.p7.off}}"></path><path class="tl k3 cp-hit {{cells.p8.cls}} {{dial.c7.tcls}}" d="M526 570C535 567 545 572 555 576C565 579 576 584 585 590C593 595 601 600 603 609C606 617 599 630 598 641C597 652 596 663 596 674C595 685 596 696 596 707C597 718 602 731 598 740C595 748 585 756 576 758C567 760 554 754 544 751C533 748 523 744 513 740C503 736 493 731 483 726C473 721 464 715 455 709C446 703 433 697 429 689C424 681 426 668 429 659C433 650 443 642 451 634C458 626 467 619 475 611C483 604 492 598 500 591C509 584 517 572 526 570Z" onClick="{{dial.c7.click}}" onMouseEnter="{{cells.p8.on}}" onMouseLeave="{{cells.p8.off}}"></path><path class="tdots" d="M526 570C535 567 545 572 555 576C565 579 576 584 585 590C593 595 601 600 603 609C606 617 599 630 598 641C597 652 596 663 596 674C595 685 596 696 596 707C597 718 602 731 598 740C595 748 585 756 576 758C567 760 554 754 544 751C533 748 523 744 513 740C503 736 493 731 483 726C473 721 464 715 455 709C446 703 433 697 429 689C424 681 426 668 429 659C433 650 443 642 451 634C458 626 467 619 475 611C483 604 492 598 500 591C509 584 517 572 526 570Z"></path><path class="tl k2 cp-hit {{cells.p9.cls}} {{dial.c8.tcls}}" d="M618 608C623 601 635 601 645 599C655 597 668 594 678 595C688 595 699 595 706 600C714 606 718 619 724 628C730 637 736 645 742 654C748 663 755 672 761 681C766 690 774 699 777 709C780 719 784 732 779 740C775 748 761 751 751 756C742 760 731 762 720 765C710 767 699 769 688 771C678 772 666 774 656 774C645 773 632 772 625 766C618 760 616 747 613 737C611 727 611 715 610 705C610 694 609 683 610 672C610 661 611 650 612 640C614 629 612 614 618 608Z" onClick="{{dial.c8.click}}" onMouseEnter="{{cells.p9.on}}" onMouseLeave="{{cells.p9.off}}"></path><path class="tl k4 cp-hit {{cells.p10.cls}} {{dial.c9.tcls}}" d="M718 593C718 585 726 578 732 571C738 565 748 559 756 552C764 546 770 535 779 534C787 533 797 542 806 547C815 552 824 557 832 563C841 568 849 574 857 580C865 587 873 594 880 601C887 608 896 616 899 624C902 633 900 645 896 654C892 662 883 669 876 676C868 683 861 690 853 696C845 703 837 710 828 714C819 719 808 725 801 721C793 718 791 704 785 695C780 686 775 678 769 669C764 661 758 652 752 644C746 636 740 627 734 619C729 610 719 601 718 593Z" onClick="{{dial.c9.click}}" onMouseEnter="{{cells.p10.on}}" onMouseLeave="{{cells.p10.off}}"></path><path class="tl k2 cp-hit {{cells.end.cls}} {{dial.c10.tcls}}" d="M795 525C790 518 792 508 793 498C795 489 800 478 803 468C806 458 805 444 812 438C819 432 833 434 844 433C854 431 865 430 876 429C886 428 897 427 908 427C918 427 930 426 940 429C950 432 962 435 967 443C972 450 969 464 968 474C968 485 965 496 963 506C960 516 957 527 954 537C951 547 947 557 943 567C938 577 934 590 927 595C920 600 908 602 899 599C891 597 884 585 876 578C867 571 859 564 850 558C842 552 833 546 823 541C814 535 800 532 795 525Z" onClick="{{dial.c10.click}}" onMouseEnter="{{cells.end.on}}" onMouseLeave="{{cells.end.off}}"></path></g></g>
+        <path class="cp-ants" transform="translate(5 4)" d="M534 483C528 480 519 484 511 486C503 488 494 492 486 495C478 497 469 499 461 501C452 503 444 504 435 505C426 506 418 507 409 508C400 509 392 509 383 509C374 510 365 510 357 511C348 511 339 510 331 513C322 515 312 518 308 524C303 530 302 540 303 549C303 557 308 565 311 573C314 581 318 589 322 597C326 605 331 612 335 620C340 627 345 634 350 641C355 648 360 655 366 662C371 669 377 675 383 681C389 688 395 694 402 699C408 705 415 711 422 716C429 721 436 726 443 731C451 736 458 740 466 745C473 749 481 753 489 757C497 760 505 764 513 767C521 770 530 773 538 775C546 778 555 780 563 782C572 783 580 785 589 786C598 788 606 788 615 789C624 790 632 790 641 790C650 790 658 790 667 789C676 788 685 787 693 786C702 785 710 783 719 781C727 779 736 777 744 775C752 772 761 769 769 766C777 763 785 759 793 756C801 752 808 748 816 744C824 739 831 735 838 730C846 725 853 720 860 715C866 709 873 704 880 698C886 692 892 686 898 680C904 673 910 667 916 660C921 654 927 647 932 640C937 632 942 625 946 618C951 610 955 603 959 595C963 587 967 579 970 571C973 563 978 555 978 546C978 538 976 528 971 522C966 517 956 514 947 512C939 510 930 511 921 510C913 510 904 510 895 509C886 509 878 508 869 508C860 507 852 506 843 505C834 504 826 502 817 501C809 499 800 497 792 494C784 492 775 487 767 486C759 484 751 482 745 485C739 489 736 500 730 507C725 514 719 520 712 525C705 530 697 535 690 539C682 542 673 545 665 547C656 549 648 550 639 550C630 550 621 549 613 547C605 545 596 541 589 538C581 534 573 529 567 524C560 518 554 512 548 505C543 499 540 487 534 483Z"></path><path class="cp-spark" d="M275 536Q275 544 283 544Q275 544 275 552Q275 544 267 544Q275 544 275 536ZM1007 537Q1007 544 1014 544Q1007 544 1007 551Q1007 544 1000 544Q1007 544 1007 537Z"></path>
+      </g></g>
+    </svg>
+    <div class="pf-lbls" style="clip-path: path('M536 486C530 483 521 488 513 490C506 492 498 496 490 498C482 501 474 503 465 505C457 507 449 509 441 510C432 512 424 513 416 514C407 515 399 515 391 516C382 517 374 517 366 518C357 519 348 518 340 520C333 522 323 525 318 531C313 536 312 546 312 554C313 562 318 570 321 578C324 586 328 593 332 600C336 608 340 615 345 622C350 629 354 636 359 643C364 649 370 656 375 662C381 669 386 675 392 681C398 687 405 692 411 698C417 703 424 709 431 714C437 719 444 723 451 728C458 732 466 737 473 741C480 745 488 748 496 752C503 755 511 759 519 761C527 764 535 767 543 769C551 772 559 774 567 775C576 777 584 779 592 780C601 781 609 782 617 782C626 783 634 783 642 783C651 783 659 783 668 782C676 781 684 780 693 779C701 778 709 776 717 774C726 772 734 770 742 768C750 765 758 763 766 760C773 757 781 753 789 750C796 746 804 742 811 738C819 734 826 730 833 725C840 721 847 716 853 711C860 706 866 700 873 695C879 689 885 683 891 677C897 671 903 665 908 659C913 652 919 646 924 639C929 632 933 625 938 618C942 611 946 604 950 596C954 589 958 581 961 573C964 566 969 557 968 549C968 542 964 532 958 527C953 523 943 521 935 520C927 518 918 518 910 518C901 517 893 516 884 516C876 515 868 514 859 513C851 512 843 511 834 510C826 508 818 506 810 504C802 502 794 499 786 497C778 494 770 489 762 488C755 487 748 487 742 491C736 494 733 505 727 511C722 517 715 523 708 528C702 533 694 537 687 540C679 543 671 546 663 548C654 549 646 550 638 550C629 550 621 548 613 546C605 544 597 542 589 538C582 534 574 530 568 525C561 519 555 514 550 507C544 501 542 489 536 486Z')"><div class="pf-turn">
+      <button class="cp-lbl {{dial.c0.lcls}}" type="button" onClick="{{dial.c0.click}}" onFocus="{{cells.p1.on}}" onBlur="{{cells.p1.off}}" style="left: 837px; top: 307px; width: 140px; height: 81px; gap: 5px"><span class="cp-date">01</span><span class="t" style="font-size: 17px; white-space: nowrap">project one</span><span class="s">[web · year]</span></button>
+      <button class="cp-lbl {{dial.c1.lcls}}" type="button" onClick="{{dial.c1.click}}" onFocus="{{cells.p2.on}}" onBlur="{{cells.p2.off}}" style="left: 760px; top: 179px; width: 140px; height: 74px; gap: 5px"><span class="cp-date">02</span><span class="t" style="font-size: 17px; white-space: nowrap">project two</span><span class="s">[hubs · year]</span></button>
+      <button class="cp-lbl {{dial.c2.lcls}}" type="button" onClick="{{dial.c2.click}}" onFocus="{{cells.p3.on}}" onBlur="{{cells.p3.off}}" style="left: 616px; top: 125px; width: 140px; height: 83px; gap: 5px"><span class="cp-date">03</span><span class="t" style="font-size: 17px; white-space: nowrap">project three</span><span class="s">[apps · year]</span></button>
+      <button class="cp-lbl {{dial.c3.lcls}}" type="button" onClick="{{dial.c3.click}}" onFocus="{{cells.p4.on}}" onBlur="{{cells.p4.off}}" style="left: 453px; top: 143px; width: 140px; height: 79px; gap: 5px"><span class="cp-date">04</span><span class="t" style="font-size: 17px; white-space: nowrap">project four</span><span class="s">[data · year]</span></button>
+      <button class="cp-lbl {{dial.c4.lcls}}" type="button" onClick="{{dial.c4.click}}" onFocus="{{cells.p5.on}}" onBlur="{{cells.p5.off}}" style="left: 334px; top: 247px; width: 141px; height: 88px; gap: 5px"><span class="cp-date">05</span><span class="t" style="font-size: 17px; white-space: nowrap">project five</span><span class="s">[AI · year]</span></button>
+      <button class="cp-lbl {{dial.c5.lcls}}" type="button" onClick="{{dial.c5.click}}" onFocus="{{cells.p6.on}}" onBlur="{{cells.p6.off}}" style="left: 284px; top: 399px; width: 140px; height: 81px; gap: 5px"><span class="cp-date">06</span><span class="t" style="font-size: 17px; white-space: nowrap">project six</span><span class="s">[web · year]</span></button>
+      <button class="cp-lbl {{dial.c6.lcls}}" type="button" onClick="{{dial.c6.click}}" onFocus="{{cells.p7.on}}" onBlur="{{cells.p7.off}}" style="left: 327px; top: 542px; width: 140px; height: 69px; gap: 5px"><span class="cp-date">07</span><span class="t" style="font-size: 17px; white-space: nowrap">project seven</span><span class="s">[databases · year]</span></button>
+      <button class="cp-lbl {{dial.c7.lcls}}" type="button" onClick="{{dial.c7.click}}" onFocus="{{cells.p8.on}}" onBlur="{{cells.p8.off}}" style="left: 451px; top: 631px; width: 140px; height: 86px; gap: 5px"><span class="cp-date">08</span><span class="t" style="font-size: 17px; white-space: nowrap">project eight</span><span class="s">[hubs · year]</span></button>
+      <button class="cp-lbl {{dial.c8.lcls}}" type="button" onClick="{{dial.c8.click}}" onFocus="{{cells.p9.on}}" onBlur="{{cells.p9.off}}" style="left: 618px; top: 666px; width: 140px; height: 86px; gap: 5px"><span class="cp-date">09</span><span class="t" style="font-size: 17px; white-space: nowrap">project nine</span><span class="s">[apps · year]</span></button>
+      <button class="cp-lbl {{dial.c9.lcls}}" type="button" onClick="{{dial.c9.click}}" onFocus="{{cells.p10.on}}" onBlur="{{cells.p10.off}}" style="left: 752px; top: 596px; width: 140px; height: 79px; gap: 5px"><span class="cp-date">10</span><span class="t" style="font-size: 17px; white-space: nowrap">project ten</span><span class="s">[data · year]</span></button>
+      <div class="cp-lbl {{dial.c10.lcls}}" style="left: 830px; top: 458px; width: 140px; height: 84px; cursor: default; gap: 7px"><span class="t" style="font-size: 18px">that's the lot</span><a class="cp-sticker sm" href="mailto:hello@spiro-spero.zone">say hi →</a></div>
+    </div></div>
+    <p class="cp-side" style="left: 56px; top: 600px; margin: 0"><b>selected work</b><span>ten projects on a dial</span><span>scroll, drag or tap an edge</span></p>
+  </section>
+
+  <!-- ABOUT: the logo breathes out a halo around the compass -->
+  <section id="r-about" class="cp-region r-ab {{abCls}}" aria-label="about">
+    <svg viewBox="0 0 1280 800" width="1280" height="800" aria-hidden="true" style="position: absolute; left: 0; top: 0; overflow: visible">
+      <g filter="url(#cp-rough)"><g class="cp-pour" style="transform-origin: 640px 432px">
+        <path class="pour cp-hit" d="M1073 432C1073 421 1072 409 1071 398C1069 386 1067 375 1065 364C1062 353 1059 342 1055 331C1051 320 1046 310 1041 299C1036 289 1030 279 1024 270C1018 260 1011 251 1004 242C997 233 990 224 982 216C974 207 966 199 957 192C949 184 940 177 930 170C921 163 912 157 902 151C892 145 882 139 872 134C862 129 851 124 841 119C830 115 820 111 809 107C798 103 787 100 776 97C765 94 754 91 742 89C731 87 720 85 709 83C697 82 686 81 674 80C663 79 651 79 640 79C629 79 617 79 606 80C594 81 583 82 571 83C560 85 549 87 538 89C526 91 515 94 504 97C493 100 482 103 471 107C460 111 450 115 439 119C429 124 418 129 408 134C398 139 388 145 378 151C368 157 359 163 350 170C340 177 331 184 323 192C314 199 306 207 298 216C290 224 283 233 276 242C269 251 262 260 256 270C250 279 244 289 239 299C234 310 229 320 225 331C221 342 218 353 215 364C213 375 211 386 209 398C208 409 207 421 207 432C207 443 208 455 209 466C211 478 213 489 215 500C218 511 221 522 225 533C229 544 234 554 239 565C244 575 250 585 256 594C262 604 269 613 276 622C283 631 290 640 298 648C306 657 314 665 323 672C331 680 340 687 350 694C359 701 368 707 378 713C388 719 398 725 408 730C418 735 429 740 439 745C450 749 460 753 471 757C482 761 493 764 504 767C515 770 526 773 538 775C549 777 560 779 571 781C583 782 594 783 606 784C617 785 629 785 640 785C651 785 663 785 674 784C686 783 697 782 709 781C720 779 731 777 742 775C754 773 765 770 776 767C787 764 798 761 809 757C820 753 830 749 841 745C851 740 862 735 872 730C882 725 892 719 902 713C912 707 921 701 930 694C940 687 949 680 957 672C966 665 974 657 982 648C990 640 997 631 1004 622C1011 613 1018 604 1024 594C1030 585 1036 575 1041 565C1046 554 1051 544 1055 533C1059 522 1062 511 1065 500C1067 489 1069 478 1071 466C1072 455 1073 443 1073 432Z"></path>
+        <g class="cp-tiles"><path class="tl k2 still cp-hit" d="M559 323C560 345 529 364 522 388C515 411 515 440 519 465C522 489 549 514 543 534C538 555 506 571 486 588C467 606 447 624 426 639C405 654 383 681 362 680C341 679 318 652 300 634C282 616 267 593 255 570C243 547 233 522 227 497C221 472 217 445 218 419C220 394 226 367 234 343C242 318 254 294 268 272C282 250 299 230 318 212C336 194 358 178 380 164C401 150 431 124 449 128C467 131 476 162 488 183C500 204 508 232 520 255C532 278 559 301 559 323Z"></path><path class="tl k4 still cp-hit" d="M741 523C735 501 763 475 764 450C766 425 760 396 751 373C742 349 712 333 710 310C708 287 729 260 741 236C752 212 760 182 777 164C794 147 819 131 841 132C863 133 889 155 911 170C933 186 954 203 972 222C990 241 1008 262 1021 285C1034 308 1044 334 1051 359C1058 385 1062 412 1062 438C1061 464 1056 492 1048 517C1040 542 1028 567 1014 589C1000 612 982 633 963 651C944 669 919 700 899 698C880 696 865 662 848 642C831 622 816 599 798 579C780 560 747 544 741 523Z"></path><path class="tdots" d="M741 523C735 501 763 475 764 450C766 425 760 396 751 373C742 349 712 333 710 310C708 287 729 260 741 236C752 212 760 182 777 164C794 147 819 131 841 132C863 133 889 155 911 170C933 186 954 203 972 222C990 241 1008 262 1021 285C1034 308 1044 334 1051 359C1058 385 1062 412 1062 438C1061 464 1056 492 1048 517C1040 542 1028 567 1014 589C1000 612 982 633 963 651C944 669 919 700 899 698C880 696 865 662 848 642C831 622 816 599 798 579C780 560 747 544 741 523Z"></path><path class="tl k3 cp-hit {{cells.how.cls}}" d="M693 309C682 316 664 306 648 306C633 307 616 314 601 312C587 311 572 305 561 295C550 285 545 268 537 254C530 239 523 225 517 210C510 196 503 181 499 166C494 151 484 131 489 120C495 109 517 106 532 102C547 97 563 96 579 94C595 92 611 91 627 90C643 90 659 90 675 91C690 92 706 94 722 97C738 99 760 100 769 106C778 113 779 125 776 137C773 148 759 164 751 178C743 192 737 206 730 220C723 235 717 250 711 265C705 279 703 302 693 309Z" onClick="{{cells.how.open}}" onMouseEnter="{{cells.how.on}}" onMouseLeave="{{cells.how.off}}"></path><path class="tl k2 still cp-hit" d="M558 543C575 537 596 554 616 556C637 557 660 554 679 552C699 549 718 534 735 539C752 544 766 568 780 584C795 600 809 616 821 633C834 650 854 669 857 686C860 703 851 722 838 734C825 745 798 749 778 755C757 761 736 765 716 768C695 771 673 773 652 774C631 774 609 773 588 771C567 769 546 766 525 761C505 756 484 750 464 743C444 735 414 729 406 716C398 704 405 684 415 670C424 655 447 642 464 629C480 615 496 602 512 587C528 573 540 548 558 543Z"></path></g>
+        <path class="cp-ants" transform="translate(5 4)" d="M1073 432C1073 421 1072 409 1071 398C1069 386 1067 375 1065 364C1062 353 1059 342 1055 331C1051 320 1046 310 1041 299C1036 289 1030 279 1024 270C1018 260 1011 251 1004 242C997 233 990 224 982 216C974 207 966 199 957 192C949 184 940 177 930 170C921 163 912 157 902 151C892 145 882 139 872 134C862 129 851 124 841 119C830 115 820 111 809 107C798 103 787 100 776 97C765 94 754 91 742 89C731 87 720 85 709 83C697 82 686 81 674 80C663 79 651 79 640 79C629 79 617 79 606 80C594 81 583 82 571 83C560 85 549 87 538 89C526 91 515 94 504 97C493 100 482 103 471 107C460 111 450 115 439 119C429 124 418 129 408 134C398 139 388 145 378 151C368 157 359 163 350 170C340 177 331 184 323 192C314 199 306 207 298 216C290 224 283 233 276 242C269 251 262 260 256 270C250 279 244 289 239 299C234 310 229 320 225 331C221 342 218 353 215 364C213 375 211 386 209 398C208 409 207 421 207 432C207 443 208 455 209 466C211 478 213 489 215 500C218 511 221 522 225 533C229 544 234 554 239 565C244 575 250 585 256 594C262 604 269 613 276 622C283 631 290 640 298 648C306 657 314 665 323 672C331 680 340 687 350 694C359 701 368 707 378 713C388 719 398 725 408 730C418 735 429 740 439 745C450 749 460 753 471 757C482 761 493 764 504 767C515 770 526 773 538 775C549 777 560 779 571 781C583 782 594 783 606 784C617 785 629 785 640 785C651 785 663 785 674 784C686 783 697 782 709 781C720 779 731 777 742 775C754 773 765 770 776 767C787 764 798 761 809 757C820 753 830 749 841 745C851 740 862 735 872 730C882 725 892 719 902 713C912 707 921 701 930 694C940 687 949 680 957 672C966 665 974 657 982 648C990 640 997 631 1004 622C1011 613 1018 604 1024 594C1030 585 1036 575 1041 565C1046 554 1051 544 1055 533C1059 522 1062 511 1065 500C1067 489 1069 478 1071 466C1072 455 1073 443 1073 432Z"></path><path class="cp-spark" d="M962 153Q962 161 970 161Q962 161 962 169Q962 161 954 161Q962 161 962 153ZM216 580Q216 587 223 587Q216 587 216 594Q216 587 209 587Q216 587 216 580ZM1055 591Q1055 600 1064 600Q1055 600 1055 609Q1055 600 1046 600Q1055 600 1055 591Z"></path>
+      </g></g>
+    </svg>
+    <div class="cp-lbl" style="--i: 0; left: 232px; top: 298px; width: 250px; height: 206px; cursor: default; gap: 10px"><span class="t" style="font-size: 32px">hi, i'm amit</span><span style="font-size: 13.5px; line-height: 1.55">I build websites and apps, set up hubs and knowledge management with and without AI.</span><span style="display: flex; align-items: baseline; gap: 8px; color: var(--soft)"><span style="font: 22px/1 'Chicle', cursive; color: var(--accent); text-shadow: 2px 2px 0 var(--logo-sh)">spiro spero</span>i breathe, i hope</span></div>
+    <div class="cp-lbl" style="--i: 1; left: 826px; top: 325px; width: 197px; height: 184px; padding: 0; border: 2px dashed var(--fg); border-radius: 48% 52% 44% 56% / 40% 38% 62% 60%; font-size: 12px; color: var(--soft); cursor: default">[your photo]</div>
+    <button class="cp-lbl" type="button" onClick="{{cells.how.open}}" onMouseEnter="{{cells.how.on}}" onMouseLeave="{{cells.how.off}}" onFocus="{{cells.how.on}}" onBlur="{{cells.how.off}}" style="--i: 2; left: 533px; top: 118px; width: 186px; height: 140px"><span class="t" style="font-size: 21px">how i work<span class="go">→</span></span></button>
+    <div class="cp-lbl" style="--i: 3; left: 483px; top: 605px; width: 236px; height: 136px; cursor: default; gap: 6px"><span class="t" style="font-size: 19px">say hi</span><span style="display: flex; gap: 6px"><a class="cp-sticker sm" href="mailto:hello@spiro-spero.zone">mail</a><a class="cp-sticker sm" href="https://www.linkedin.com/in/amit-lo/">linkedin ↗</a></span></div>
+  </section>
+
+  <!-- the compass -->
+  <div class="cp-compass">
+    <svg viewBox="0 0 360 360" width="360" height="360" aria-hidden="true" style="position: absolute; left: 0; top: 0; overflow: visible">
+      <g class="cp-breathe">
+        <circle class="cp-orbit ink" cx="180" cy="180" r="166" fill="none" stroke-width="1.4" stroke-dasharray="2 9" stroke-linecap="round"></circle>
+        <circle class="paper" cx="180" cy="180" r="153"></circle>
+        <g filter="url(#cp-wobble)">
+          <path class="cp-wedge w-bl {{blOn}}" d="M174.8 30.1 A150 150 0 0 0 47.6 250.4 L121.7 211 A66 66 0 0 1 177.7 114 Z" onMouseEnter="{{peekBl}}" onMouseLeave="{{leave}}" onClick="{{pinBl}}"></path>
+          <path class="cp-wedge w-sv {{svOn}}" d="M312.4 250.4 A150 150 0 0 0 185.2 30.1 L182.3 114 A66 66 0 0 1 238.3 211 Z" onMouseEnter="{{peekSv}}" onMouseLeave="{{leave}}" onClick="{{pinSv}}"></path>
+          <path class="cp-wedge w-pf {{pfOn}}" d="M52.8 259.5 A150 150 0 0 0 307.2 259.5 L236 215 A66 66 0 0 1 124 215 Z" onMouseEnter="{{peekPf}}" onMouseLeave="{{leave}}" onClick="{{pinPf}}"></path>
+          <circle class="cp-hub ink {{abOn}}" cx="180" cy="180" r="62" stroke-width="2"></circle>
+        </g>
+        <defs><path id="arc-bl" d="M85.9 156.5 A97 97 0 0 1 200.2 85.1"></path><path id="arc-sv" d="M159.8 85.1 A97 97 0 0 1 274.1 156.5"></path><path id="arc-pf" d="M105.4 268.9 A116 116 0 0 0 254.6 268.9"></path></defs>
+        <text class="cp-arc {{blLbl}}"><textPath href="#arc-bl" startOffset="50%" text-anchor="middle">blog<tspan class="x"> ×</tspan></textPath></text>
+        <text class="cp-arc {{svLbl}}"><textPath href="#arc-sv" startOffset="50%" text-anchor="middle">services<tspan class="x"> ×</tspan></textPath></text>
+        <text class="cp-arc {{pfLbl}}"><textPath href="#arc-pf" startOffset="50%" text-anchor="middle">portfolio<tspan class="x"> ×</tspan></textPath></text>
+      </g>
+    </svg>
+    <button class="cp-logo" type="button" onClick="{{pinAb}}" aria-expanded="{{abExp}}" aria-controls="r-about" aria-label="about — spiro spero"><span style="display: block">spiro</span><span style="display: block">spero</span></button>
+    <button class="cp-label lb-bl {{blLbl}}" type="button" onMouseEnter="{{peekBl}}" onMouseLeave="{{leave}}" onFocus="{{peekBl}}" onBlur="{{leave}}" onClick="{{pinBl}}" aria-expanded="{{blExp}}" aria-controls="r-blog">blog<span class="x" aria-hidden="true">×</span></button>
+    <button class="cp-label lb-sv {{svLbl}}" type="button" onMouseEnter="{{peekSv}}" onMouseLeave="{{leave}}" onFocus="{{peekSv}}" onBlur="{{leave}}" onClick="{{pinSv}}" aria-expanded="{{svExp}}" aria-controls="r-services">services<span class="x" aria-hidden="true">×</span></button>
+    <button class="cp-label lb-pf {{pfLbl}}" type="button" onMouseEnter="{{peekPf}}" onMouseLeave="{{leave}}" onFocus="{{peekPf}}" onBlur="{{leave}}" onClick="{{pinPf}}" aria-expanded="{{pfExp}}" aria-controls="r-portfolio">portfolio<span class="x" aria-hidden="true">×</span></button>
+    <button class="cp-x" type="button" onClick="{{release}}" aria-label="close about">×</button>
+  </div>
+
+  <!-- detail window -->
+  <div class="cp-scrim {{winCls}}" onClick="{{closeWin}}"></div>
+  <div class="cp-win {{winCls}} {{win.spot}}" role="dialog" aria-modal="true" aria-labelledby="cp-win-t">
+    <div class="cp-win-bar">
+      <span style="font: 600 12px/1 'Google Sans Code', monospace">{{win.kicker}}</span>
+      <button class="cp-sticker" type="button" onClick="{{closeWin}}" aria-label="close window">× close</button>
+    </div>
+    <div style="flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 26px 32px 28px; display: flex; flex-direction: column; gap: 14px">
+      <h3 id="cp-win-t" style="margin: 0; font: 36px/1.08 'McLaren', cursive; font-weight: 400">{{win.title}}</h3>
+      <p style="margin: 0; font-size: 15px; line-height: 1.55">{{win.lead}}</p>
+      <sc-if value="{{win.isProject}}" hint-placeholder-val="{{false}}">
+        <span style="flex: 0 0 150px; display: flex; align-items: center; justify-content: center; border: 2px dashed var(--fg); border-radius: 28px 16px 32px 18px; font-size: 12px; color: var(--soft)">[project image or short screen recording]</span>
+      </sc-if>
+      <sc-for list="{{win.paras}}" as="p" hint-placeholder-count="2">
+        <p style="margin: 0; font-size: 13.5px; line-height: 1.65; color: var(--soft)">{{p.t}}</p>
+      </sc-for>
+      <div style="display: flex; flex-wrap: wrap; gap: 6px">
+        <sc-for list="{{win.links}}" as="l" hint-placeholder-count="3">
+          <a class="cp-sticker sm" href="#">{{l.label}}</a>
+        </sc-for>
+      </div>
+      <div style="margin-top: auto; display: flex; gap: 8px; padding-top: 6px">
+        <a class="cp-sticker ink" href="#">{{win.cta}}</a>
+        <button class="cp-sticker" type="button" onClick="{{nextWin}}">next →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"idle","options":["idle","peek-services","services","blog","portfolio","portfolio-next","about","window","share"]},"dark":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":800}}'>
+class Component extends DCLogic {
+  SERVICES = [
+    { id: 'web', title: 'web development', lead: 'Fast, accessible websites built to last.', paras: ['websites and web apps are usually Next.js and React. when the priority is getting content out clearly — research outputs, resource libraries, documentation — I reach for Astro. already on WordPress? happy to work with that too.', 'whatever the stack, the bar is the same: fast on a weak phone, readable by a screen reader, still maintainable in three years.'], links: ['Astro ↗', 'Next.js ↗', 'what i work with →'] },
+    { id: 'app', title: 'app development', lead: 'Tools and apps that do the job simply.', paras: ['mobile apps I build with Flutter — one codebase for Android and iOS. small internal tools often don’t need an app store at all; a focused web app does the job.', 'the interesting question is rarely the framework. it’s which twenty percent of the features do eighty percent of the work.'], links: ['Flutter ↗', 'Material 3 guidelines ↗'] },
+    { id: 'hubs', title: 'knowledge hubs', lead: 'Structure a team’s accumulated knowledge.', paras: ['teams accumulate knowledge faster than they organize it. I set up hubs — wikis, resource libraries, internal handbooks — where structure follows how people actually search, not how departments are drawn.', 'the tooling varies: Notion, Obsidian, a static site, sometimes a database with a thin interface. the constant is caring about the second year, when the hub either lives or rots.'], links: ['Obsidian ↗', 'Notion ↗', 'knowledge trees →'] },
+    { id: 'db', title: 'databases', lead: 'Model and store data so it stays usable.', paras: ['databases and access control usually sit on Supabase or Firebase: private team spaces, members-only content, forms that go somewhere useful, different access for different people.', 'most of the value is in the modeling — naming things honestly and deciding what’s a table, what’s a field, and what’s actually two different questions.'], links: ['Supabase ↗', 'Firebase ↗'] },
+    { id: 'data', title: 'data tools', lead: 'Pipelines and dashboards that surface what matters.', paras: ['Python is where the more specific work happens: searching across hundreds of documents by meaning rather than keywords, making field data readable, automating something repetitive.', 'Streamlit puts a browser interface on all of this — nothing technical needed on your end.'], links: ['Streamlit ↗', 'pandas ↗'] },
+    { id: 'ai', title: 'AI integration', lead: 'AI where it actually helps — not for its own sake.', paras: ['most of what I build now involves AI in some form. the question I find useful isn’t what AI can do in general, but what it can do with your content, your workflows, your constraints.', 'connecting a language model to your own reports so your team can ask questions and get answers from your material — not the internet — is the shape this usually takes.'], links: ['[provider docs ↗]', 'what i work with →'] },
+  ];
+  PROJECTS = ['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten'].map((n, i) => ({ id: 'p' + (i + 1), title: 'project ' + n, lead: '[one line: what it is and who it’s for]', paras: ['[the problem, in two sentences]', '[what you built, and what changed for them after]'], links: ['[service]', '[year]', '[stack]', '[visit ↗]'] }));
+  ABOUT = { how: { title: 'how i work', lead: '[the short version, in one sentence]', paras: ['[how a project usually starts — the first conversation, what you ask about]', '[how you keep it small and useful — what you build first, what you leave out]', '[how you hand it over, so it’s still alive in the second year]'], links: ['what i work with →', 'knowledge trees →'] } };
+  EMPTY = { kicker: '', title: '', lead: '', paras: [], links: [], cta: '', spot: '', isProject: false };
+  CELL_IDS = ['web', 'app', 'hubs', 'db', 'data', 'ai', 'k1', 'w1', 'all', 'intro', 'photo', 'how', 'say', 'p1', 'p2', 'p3', 'p4', 'p5', 'p6', 'p7', 'p8', 'p9', 'p10'];
+  state = { touched: false, hover: null, pinned: null, win: null, share: false, copied: false, hot: null, dn: null, darkSet: false, dark: false };
+  componentWillUnmount() { clearTimeout(this._t); }
+  cur() {
+    const s = this.state;
+    if (s.touched) return { hover: s.hover, pinned: s.pinned, win: s.win, share: s.share };
+    const st = this.props.start ?? 'idle';
+    const c = { hover: null, pinned: null, win: null, share: false };
+    if (st === 'peek-services') c.hover = 'services';
+    else if (st === 'window') { c.pinned = 'services'; c.win = 'web'; }
+    else if (st === 'share') c.share = true;
+    else if (st === 'portfolio-next') c.pinned = 'portfolio';
+    else if (st !== 'idle') c.pinned = st;
+    return c;
+  }
+  move(patch) { this.setState(Object.assign({ touched: true }, this.cur(), patch)); }
+  winData(id) {
+    if (!id) return this.EMPTY;
+    const sv = this.SERVICES.find(x => x.id === id);
+    if (sv) return { kicker: 'services', title: sv.title, lead: sv.lead, paras: sv.paras.map(t => ({ t })), links: sv.links.map(label => ({ label })), cta: 'start something like this →', spot: 'r-sv', isProject: false };
+    const p = this.PROJECTS.find(x => x.id === id);
+    if (p) return { kicker: 'portfolio · ' + id.slice(1).padStart(2, '0') + ' / 10', title: p.title, lead: p.lead, paras: p.paras.map(t => ({ t })), links: p.links.map(label => ({ label })), cta: 'something like this? say hi →', spot: 'r-pf', isProject: true };
+    const a = this.ABOUT[id];
+    return { kicker: 'about', title: a.title, lead: a.lead, paras: a.paras.map(t => ({ t })), links: a.links.map(label => ({ label })), cta: 'say hi →', spot: 'r-ab', isProject: false };
+  }
+  renderVals() {
+    const s = this.state;
+    const dark = s.darkSet ? s.dark : !!(this.props.dark ?? false);
+    const c = this.cur();
+    const keep = () => clearTimeout(this._t);
+    const leave = () => { keep(); this._t = setTimeout(() => this.move({ hover: null }), 200); };
+    const peek = id => () => { keep(); if (!this.cur().pinned) this.move({ hover: id }); };
+    const pin = id => () => { keep(); this.move({ pinned: this.cur().pinned === id ? null : id, hover: null, win: null }); this.setState({ hot: null, dn: 0 }); };
+    const release = () => { keep(); this.move({ pinned: null, hover: null, win: null, share: false }); };
+    const winnable = { web: 1, app: 1, hubs: 1, db: 1, data: 1, ai: 1, how: 1, p1: 1, p2: 1, p3: 1, p4: 1, p5: 1, p6: 1, p7: 1, p8: 1, p9: 1, p10: 1 };
+    const cells = {};
+    this.CELL_IDS.forEach(id => {
+      cells[id] = {
+        cls: s.hot === id ? 'is-hot' : '',
+        on: () => this.setState({ hot: id }),
+        off: () => this.setState({ hot: null }),
+        open: winnable[id] ? () => this.move({ win: id }) : () => {},
+      };
+    });
+    const list = c.win && c.win[0] === 'p' ? this.PROJECTS : this.SERVICES;
+    const nextWin = () => { const i = list.findIndex(x => x.id === c.win); this.move({ win: list[(i + 1) % list.length].id }); };
+    const peeking = !c.pinned && c.hover;
+    const region = id => (c.pinned === id ? 'is-pinned' : peeking === id ? 'is-peek' : '');
+    const on = id => (c.pinned === id || peeking === id ? 'is-on' : '');
+    const lbl = id => (c.pinned === id ? 'is-pinned' : '');
+    const exp = id => (c.pinned === id ? 'true' : 'false');
+    const NC = 11, A = [0,34,65,100,130,164,197,228,263,295,325,360];
+    const Aat = k => A[((k % NC) + NC) % NC] + 360 * Math.floor(k / NC);
+    const dn = s.dn ?? (this.props.start === 'portfolio-next' ? 4 : 0);
+    const turn = d => { this._w = Date.now(); this.setState({ dn: dn + d, hot: null }); };
+    const dial = {};
+    for (let k = 0; k < NC; k++) {
+      const rel = (((k - dn) % NC) + NC) % NC;
+      const go = rel <= 3 ? (k < 10 ? () => { if (Date.now() - (this._drag || 0) > 300) this.move({ win: 'p' + (k + 1) }); } : () => {}) : rel === 4 ? () => turn(1) : rel === 10 ? () => turn(-1) : () => {};
+      dial['c' + k] = { lcls: rel <= 3 ? '' : 'is-out', tcls: rel === 4 || rel === 10 ? 'is-peek' : '', click: go };
+    }
+    return {
+      rootCls: 'cp st-' + (c.pinned || 'rest') + (dark ? ' is-dark' : ''),
+      hintCls: c.pinned || c.hover ? 'is-hidden' : '',
+      pfCls: region('portfolio'), svCls: region('services'), blCls: region('blog'), abCls: region('about'),
+      pfOn: on('portfolio'), svOn: on('services'), blOn: on('blog'), abOn: c.pinned === 'about' ? 'is-on' : '',
+      pfLbl: lbl('portfolio'), svLbl: lbl('services'), blLbl: lbl('blog'),
+      pfExp: exp('portfolio'), svExp: exp('services'), blExp: exp('blog'), abExp: exp('about'),
+      peekPf: peek('portfolio'), peekSv: peek('services'), peekBl: peek('blog'),
+      pinPf: pin('portfolio'), pinSv: pin('services'), pinBl: pin('blog'), pinAb: pin('about'),
+      leave, release, cells,
+      dial, pfRot: (-(270 - (Aat(dn) + Aat(dn + 4)) / 2)).toFixed(1) + 'deg',
+      pfWheel: e => { const d = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX; if (Date.now() - (this._w || 0) < 420 || Math.abs(d) < 8) return; turn(d > 0 ? 1 : -1); },
+      pfDown: e => { this._px = e.clientX; },
+      pfUp: e => { const dx = e.clientX - (this._px ?? e.clientX); this._px = null; if (Math.abs(dx) > 40) { this._drag = Date.now(); turn(dx < 0 ? 1 : -1); } },
+      pfKey: e => { if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); turn(1); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') { e.preventDefault(); turn(-1); } },
+      win: this.winData(c.win), winCls: c.win ? 'is-open' : '',
+      closeWin: () => this.move({ win: null }), nextWin,
+      shareCls: c.share ? 'is-open' : '', shareExp: c.share ? 'true' : 'false',
+      toggleShare: () => { this.move({ share: !c.share }); this.setState({ copied: false }); },
+      copy: () => this.setState({ copied: true }),
+      copyLabel: s.copied ? 'copied ✓' : 'copy link',
+      toggleDark: () => this.setState({ darkSet: true, dark: !dark }),
+    };
+  }
+}
+</script>
+</body>
+</html>

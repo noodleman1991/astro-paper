@@ -14,5 +14,13 @@ export default [
     },
   },
   { rules: { "no-console": "error" } },
-  { ignores: ["dist/**", ".astro", "public/pagefind/**", ".claude/**"] },
+  {
+    ignores: [
+      "dist/**",
+      ".astro",
+      "public/pagefind/**",
+      ".claude/**",
+      "docs/**",
+    ],
+  },
 ];

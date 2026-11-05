@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>blog page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chicle&amp;family=Google+Sans+Code:wght@400;600&amp;family=McLaren&amp;display=swap">
+<style>
+body{margin:0}
+.pg{--e:cubic-bezier(.22,.61,.36,1);--bg:#fdfdfd;--fg:#282728;--soft:#4a494a;--accent:#006cac;--logo-sh:#e8837c;--spot:#a0e8b4;--k1:20%;--k2:30%;--k3:40%;--wmix:16%}
+.pg.is-dark{--bg:#212737;--fg:#eaedf3;--soft:#c3c8d4;--accent:#ff6b01;--logo-sh:#a0c4f4;--k1:12%;--k2:18%;--k3:24%;--wmix:14%}
+.pg a{color:var(--fg)}
+.k1{fill:color-mix(in srgb,var(--spot) var(--k1),var(--bg))}.k2{fill:color-mix(in srgb,var(--spot) var(--k2),var(--bg))}.k3{fill:color-mix(in srgb,var(--spot) var(--k3),var(--bg))}
+.tink{fill:none;stroke:var(--fg);stroke-width:20;vector-effect:non-scaling-stroke}
+.gut{fill:none;stroke:var(--bg);stroke-width:16;vector-effect:non-scaling-stroke}
+.pg-bar{position:relative;z-index:5;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;padding:12px 32px;background:var(--bg);border-bottom:1.5px solid var(--fg)}
+.pg-home{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.pg-home b{font:30px/.85 'Chicle',cursive;font-weight:400;color:var(--accent);text-shadow:2px 2px 0 var(--logo-sh)}
+.pg-wrap{max-width:1160px;margin:0 auto;padding:0 32px;box-sizing:border-box}
+.st{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 13px;box-sizing:border-box;border:2px solid var(--fg);background:var(--bg);color:var(--fg);font:600 12.5px/1 'Google Sans Code',ui-monospace,monospace;text-decoration:none;white-space:nowrap;cursor:pointer}
+.st:hover{background:var(--fg);color:var(--bg)}
+.st.ink{background:var(--fg);color:var(--bg)}
+.st[aria-disabled="true"]{opacity:.4;cursor:default}
+.dt{display:inline-block;padding:4px 8px;background:var(--fg);color:var(--bg);font:600 11px/1.1 'Google Sans Code',ui-monospace,monospace}
+.pg-peek{position:absolute;width:220px;height:220px}
+.pg-peek .lb{position:absolute;transform:translate(-50%,-50%);padding:10px 8px;font:14px/1 'McLaren',cursive;text-decoration:none;white-space:nowrap}
+.pg-breathe{transform-origin:110px 110px;animation:pg-breathe 7s ease-in-out infinite}
+@keyframes pg-breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.025)}}
+.band{position:relative;height:410px}
+.post{position:absolute;top:0;display:flex;flex-direction:column;align-items:flex-start;gap:12px;box-sizing:border-box;padding:46px 0 0}
+.post h2{margin:0;font-family:'McLaren',cursive;font-weight:400;line-height:1.05}
+.post h2 a{text-decoration:none}
+.pg button:focus-visible,.pg a:focus-visible,.pg input:focus-visible{outline:2px dashed var(--accent);outline-offset:3px}
+@media (max-width:760px){.pg-bar{padding:10px 16px}.pg-wrap{padding:0 16px}.pg-sm-hide{display:none !important}.pg-peek{display:none}.band{height:auto;display:flex;flex-direction:column;gap:14px}.band svg{display:none}.post{position:static;width:auto !important;padding:22px 22px 24px;border:2px solid var(--fg);background:color-mix(in srgb,var(--spot) var(--k2),var(--bg));border-radius:40px 20px 36px 24px / 28px 38px 22px 34px}}
+@media (prefers-reduced-motion:reduce){.pg-breathe{animation:none}}
+</style>
+</helmet>
+<div class="{{rootCls}}" style="min-height: 1240px; background: var(--bg); color: var(--fg); font-family: 'Google Sans Code', ui-monospace, monospace; overflow-x: hidden">
+
+  <header class="pg-bar">
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 14px">
+      <a class="pg-home" href="Main.dc.html" aria-label="spiro spero — back to the compass">
+        <svg width="40" height="40" viewBox="0 0 40 40" aria-hidden="true"><g stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M36.4 27.3 A18 18 0 0 0 21.9 2.1 L20.7 13 A7 7 0 0 1 26.4 22.8 Z" fill="color-mix(in srgb, #a0c4f4 30%, var(--bg))"></path><path d="M18.1 2.1 A18 18 0 0 0 3.6 27.3 L13.6 22.8 A7 7 0 0 1 19.3 13 Z" fill="#a0e8b4"></path><path d="M5.4 30.6 A18 18 0 0 0 34.6 30.6 L25.7 24.1 A7 7 0 0 1 14.3 24.1 Z" fill="color-mix(in srgb, #e8837c 30%, var(--bg))"></path><circle cx="20" cy="20" r="6" fill="var(--bg)"></circle></g></svg>
+        <b>spiro spero</b>
+      </a>
+      <a class="st pg-sm-hide" href="mailto:hello@spiro-spero.zone">hello@spiro-spero.zone</a>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px">
+      <a class="st pg-sm-hide" href="https://www.linkedin.com/in/amit-lo/">linkedin ↗</a>
+      <button class="st" type="button">share</button>
+      <button class="st" type="button" aria-label="switch language">en · עב</button>
+      <button class="st" type="button" onClick="{{toggleDark}}" aria-label="toggle dark mode" style="width: 40px; padding: 0"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg></button>
+    </div>
+  </header>
+
+  <main>
+    <section style="position: relative; min-height: 420px" aria-labelledby="bl-h">
+      <!-- the blog spill: pours up and left out of the docked compass, as on the home page -->
+      <svg viewBox="0 0 1280 420" preserveAspectRatio="none" width="100%" height="420" aria-hidden="true" style="position: absolute; left: 0; top: 0; display: block"><path class="k1" stroke="var(--fg)" stroke-width="2" vector-effect="non-scaling-stroke" d="M1140 320 C1060 370 900 380 700 372 C480 364 220 400 -10 384 L-10 -10 H1010 C1040 60 1090 120 1130 190 C1160 240 1170 290 1140 320 Z"></path></svg>
+      <div class="pg-wrap" style="position: relative; padding-top: 56px; padding-bottom: 64px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px">
+        <span class="dt">blog</span>
+        <h1 id="bl-h" style="margin: 0; font: 64px/1 'McLaren', cursive; font-weight: 400">notes as i go</h1>
+        <p style="margin: 0; max-width: 520px; font-size: 15px; line-height: 1.6">[one line on what you write about]</p>
+        <div role="search" style="display: flex; gap: 8px; width: 100%; max-width: 520px">
+          <label for="bl-q" style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">search the blog</label>
+          <input id="bl-q" type="search" placeholder="search the blog" style="flex: 1 1 auto; min-width: 0; height: 42px; box-sizing: border-box; padding: 0 14px; border: 2px solid var(--fg); background: var(--bg); color: var(--fg); font: 14px 'Google Sans Code', monospace">
+          <button class="st ink" type="button" style="min-height: 42px">search</button>
+        </div>
+        <p style="margin: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12.5px"><a href="#">#ai</a><a href="#">#knowledge-management</a><a href="#">#services</a><a href="#">#work</a><span style="color: var(--soft)">·</span><a href="#">archive</a><a href="#">rss</a></p>
+      </div>
+      <nav class="pg-peek" aria-label="sections" style="right: 24px; top: 250px">
+        <svg viewBox="0 0 220 220" width="220" height="220" aria-hidden="true" style="position: absolute; left: 0; top: 0; overflow: visible">
+          <g class="pg-breathe" stroke="var(--fg)" stroke-width="2" stroke-linejoin="round">
+            <circle cx="110" cy="110" r="93" fill="var(--bg)" stroke="none"></circle>
+            <path d="M106 18.1 A92 92 0 0 0 28.4 152.5 L74.1 128.7 A40 40 0 0 1 108.3 70 Z" fill="color-mix(in srgb, var(--spot) var(--k3), var(--bg))"></path>
+            <path d="M191.6 152.5 A92 92 0 0 0 114 18.1 L111.7 70 A40 40 0 0 1 145.9 128.7 Z" fill="color-mix(in srgb, #a0c4f4 var(--wmix), var(--bg))"></path>
+            <path d="M32.6 159.6 A92 92 0 0 0 187.4 159.6 L144.4 131.7 A40 40 0 0 1 75.6 131.7 Z" fill="color-mix(in srgb, #e8837c var(--wmix), var(--bg))"></path>
+            <circle cx="110" cy="110" r="37" fill="var(--bg)"></circle>
+          </g>
+        </svg>
+        <a class="lb" href="Blog.dc.html" aria-current="page" style="left: 53px; top: 77px; text-decoration: underline wavy 2px; text-underline-offset: 5px">blog</a>
+        <a class="lb" href="Main.dc.html" style="left: 167px; top: 77px">services</a>
+        <a class="lb" href="Main.dc.html" style="left: 110px; top: 176px">portfolio</a>
+        <a href="Main.dc.html" aria-label="spiro spero — about, on the home page" style="position: absolute; left: 110px; top: 110px; transform: translate(-50%, -50%) rotate(-4deg); font: 20px/.88 'Chicle', cursive; color: var(--accent); text-shadow: 2px 2px 0 var(--logo-sh); text-decoration: none; text-align: center">spiro<br>spero</a>
+      </nav>
+    </section>
+
+    <div class="pg-wrap" style="padding-top: 48px; padding-bottom: 56px; display: flex; flex-direction: column; gap: 24px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between; gap: 12px">
+        <h2 style="margin: 0; font: 26px/1.1 'McLaren', cursive; font-weight: 400">latest</h2>
+        <span style="font-size: 12px; color: var(--soft)">2 posts · newest first</span>
+      </div>
+      <div class="band">
+        <svg viewBox="-10 -30 1180 470" preserveAspectRatio="none" width="100%" height="470" aria-hidden="true" style="position: absolute; left: 0; top: -30px; overflow: visible"><clipPath id="bp-k1"><path d="M0 10 C232.9 -23.3 467.1 33.3 700 0 C655.4 133.1 684.6 276.9 640 410 C426.4 438 213.6 376 0 404 C23.6 272.7 -23.6 141.3 0 10 Z"></path></clipPath><g clip-path="url(#bp-k1)"><path class="k3" d="M0 10 C232.9 -23.3 467.1 33.3 700 0 C655.4 133.1 684.6 276.9 640 410 C426.4 438 213.6 376 0 404 C23.6 272.7 -23.6 141.3 0 10 Z"></path><path class="tink" d="M0 10 C232.9 -23.3 467.1 33.3 700 0 C655.4 133.1 684.6 276.9 640 410 C426.4 438 213.6 376 0 404 C23.6 272.7 -23.6 141.3 0 10 Z"></path><path class="gut" d="M0 10 C232.9 -23.3 467.1 33.3 700 0 C655.4 133.1 684.6 276.9 640 410 C426.4 438 213.6 376 0 404 C23.6 272.7 -23.6 141.3 0 10 Z"></path></g><clipPath id="bp-w1"><path d="M700 0 C854.2 -22.9 1005.8 36.9 1160 14 C1137.1 141.3 1182.9 268.7 1160 396 C987.5 430.7 812.5 375.3 640 410 C684.6 276.9 655.4 133.1 700 0 Z"></path></clipPath><g clip-path="url(#bp-w1)"><path class="k2" d="M700 0 C854.2 -22.9 1005.8 36.9 1160 14 C1137.1 141.3 1182.9 268.7 1160 396 C987.5 430.7 812.5 375.3 640 410 C684.6 276.9 655.4 133.1 700 0 Z"></path><path class="tink" d="M700 0 C854.2 -22.9 1005.8 36.9 1160 14 C1137.1 141.3 1182.9 268.7 1160 396 C987.5 430.7 812.5 375.3 640 410 C684.6 276.9 655.4 133.1 700 0 Z"></path><path class="gut" d="M700 0 C854.2 -22.9 1005.8 36.9 1160 14 C1137.1 141.3 1182.9 268.7 1160 396 C987.5 430.7 812.5 375.3 640 410 C684.6 276.9 655.4 133.1 700 0 Z"></path></g></svg>
+        <article class="post" style="left: 5%; width: 46%">
+          <span class="dt">24 mar 2026</span>
+          <h2 style="font-size: 46px"><a href="#">knowledge trees</a></h2>
+          <p style="margin: 0; font-size: 16px; line-height: 1.55">Why research teams, NGOs and project groups should structure their accumulated knowledge — and how AI fits in.</p>
+          <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 12.5px"><a href="#">#knowledge-management</a><a href="#">#ai</a><a class="st" href="#">read more →</a></p>
+        </article>
+        <article class="post" style="left: 63%; width: 32%">
+          <span class="dt">23 mar 2026</span>
+          <h2 style="font-size: 34px"><a href="#">what i work with</a></h2>
+          <p style="margin: 0; font-size: 14px; line-height: 1.55; color: var(--soft)">Websites, apps, databases, data tools and AI — the stack changes but the approach doesn't.</p>
+          <p style="margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; font-size: 12.5px"><a href="#">#work</a><a href="#">#services</a><a class="st" href="#">read more →</a></p>
+        </article>
+      </div>
+      <p style="margin: 0; font-size: 12px; color: var(--soft)">newer posts join the band from the left and older ones wrap into the next row; the seams and corners re-roll per page.</p>
+      <nav aria-label="pages" style="display: flex; justify-content: center; align-items: center; gap: 10px">
+        <a class="st" aria-disabled="true">← newer</a>
+        <span style="font-size: 12px; color: var(--soft)">page 1 of 1</span>
+        <a class="st" aria-disabled="true">older →</a>
+      </nav>
+    </div>
+  </main>
+
+  <footer class="pg-wrap" style="display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; padding-top: 24px; padding-bottom: 40px; border-top: 2px dashed var(--fg); font-size: 12px; color: var(--soft)">
+    <span>© 2026 spiro spero studio</span>
+    <span style="display: flex; gap: 16px"><a href="#">rss</a><a href="Main.dc.html">back to the compass ↑</a></span>
+  </footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1280,"height":1240}}'>
+class Component extends DCLogic {
+  state = { darkSet: false, dark: false };
+  renderVals() {
+    const s = this.state;
+    const dark = s.darkSet ? s.dark : !!(this.props.dark ?? false);
+    return { rootCls: 'pg' + (dark ? ' is-dark' : ''), toggleDark: () => this.setState({ darkSet: true, dark: !dark }) };
+  }
+}
+</script>
+</body>
+</html>
