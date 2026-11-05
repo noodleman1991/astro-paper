@@ -1,0 +1,59 @@
+---
+import "@/styles/compass.css";
+import type { CollectionEntry } from "astro:content";
+import Compass from "./Compass.astro";
+import ServicesSection from "./ServicesSection.astro";
+import { localeDir, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale; posts: CollectionEntry<"blog">[] };
+const { locale } = Astro.props;
+const t = useTranslations(locale).compass;
+---
+
+<div class="compass-home" data-compass data-dir={localeDir(locale)}>
+  <script is:inline>
+    document.currentScript.parentElement.setAttribute("data-js", "");
+  </script>
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+      <filter id="cp-rough" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.016"
+          numOctaves="3"
+          seed="7"
+          result="n"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="n"
+          scale="8"
+          xChannelSelector="R"
+          yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <filter id="cp-wobble" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.035"
+          numOctaves="2"
+          seed="3"
+          result="n"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="n"
+          scale="3.5"
+          xChannelSelector="R"
+          yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <pattern id="cp-dots" width="9" height="9" patternUnits="userSpaceOnUse">
+        <circle class="cp-dot" cx="4.5" cy="4.5" r="1.35"></circle>
+      </pattern>
+    </defs>
+  </svg>
+
+  <div class="stage" data-stage="desktop">
+    <div class="cp-release" data-release></div>
+    <p class="cp-hint">{t.hint.desktop}</p>
+    <ServicesSection locale={locale} variant="desktop" />
+    <Compass locale={locale} variant="desktop" />
+  </div>
+</div>

@@ -1,0 +1,80 @@
+---
+import SpillArt, { type SpillTile } from "./SpillArt.astro";
+import { SHAPES, STAGE } from "@/data/compass/shapes";
+import { serviceById, type ServiceId } from "@/config/services";
+import { placeBox } from "@/utils/compass/place";
+import { localeDir, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale; variant: "desktop" | "phone" };
+const { locale, variant } = Astro.props;
+const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const stage = STAGE[variant];
+
+// Board order; it is also the label stagger order.
+const TILES: { id: ServiceId; tint: SpillTile["tint"]; hero?: boolean }[] = [
+  { id: "web", tint: "k4", hero: true },
+  { id: "hubs", tint: "k3" },
+  { id: "ai", tint: "k3" },
+  { id: "data", tint: "k2" },
+  { id: "app", tint: "k2" },
+  { id: "db", tint: "k2" },
+];
+const shape = SHAPES.sv;
+const items = TILES.map(tile => {
+  const service = serviceById(locale, tile.id);
+  const box = shape.tiles[tile.id].box;
+  return {
+    ...tile,
+    service,
+    win: `services/${service.slug}`,
+    place: placeBox(box, { rtl, stageWidth: stage.w, minW: 112 }),
+    size: box.w < 96 ? 18 : box.w < 150 ? 20 : 23,
+  };
+});
+const px = (p: { left: number; top: number; width: number; height: number }) =>
+  `left: ${p.left}px; top: ${p.top}px; width: ${p.width}px; height: ${p.height}px`;
+---
+
+<section
+  id={`cp-${variant[0]}-services`}
+  data-region="services"
+  class="cp-region r-sv"
+  aria-label={t.titles.services}
+>
+  <SpillArt
+    shape={shape}
+    stage={stage}
+    neck={[770, 357]}
+    rtl={rtl}
+    tiles={items.map(i => ({
+      key: i.id,
+      tint: i.tint,
+      hero: i.hero,
+      win: i.win,
+    }))}
+  />
+  {
+    items.map((item, i) => (
+      <button
+        class="cp-lbl"
+        type="button"
+        data-win={item.win}
+        data-tile-label={item.id}
+        style={`--i: ${i}; ${px(item.place)}`}
+      >
+        <span class="t" style={`font-size: ${item.size}px`}>
+          {item.service.title}
+          <span class="go" aria-hidden="true">
+            {rtl ? "←" : "→"}
+          </span>
+        </span>
+      </button>
+    ))
+  }
+  <p class="cp-side" style="left: 56px; top: 600px; margin: 0">
+    <b>{t.side.services[0]}</b>
+    <span>{t.side.services[1]}</span>
+    <span>{t.side.services[2]}</span>
+  </p>
+</section>

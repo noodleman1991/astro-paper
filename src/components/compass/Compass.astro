@@ -1,0 +1,126 @@
+---
+import { compassArcs } from "@/utils/compass/place";
+import { localeDir, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale; variant: "desktop" | "phone" };
+const { locale, variant } = Astro.props;
+const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const v = variant[0];
+
+// Wedges as on the approved board (math degrees: services −28…88,
+// blog 92…208, portfolio 212…328; outer r 150, inner r 66, hub r 62).
+const GEO = {
+  desktop: {
+    size: 360,
+    c: 180,
+    orbit: 166,
+    paper: 153,
+    hub: 62,
+    wedges: {
+      blog: "M174.8 30.1 A150 150 0 0 0 47.6 250.4 L121.7 211 A66 66 0 0 1 177.7 114 Z",
+      services:
+        "M312.4 250.4 A150 150 0 0 0 185.2 30.1 L182.3 114 A66 66 0 0 1 238.3 211 Z",
+      portfolio:
+        "M52.8 259.5 A150 150 0 0 0 307.2 259.5 L236 215 A66 66 0 0 1 124 215 Z",
+    },
+  },
+}.desktop;
+const arcs = compassArcs(variant, rtl);
+const slices = [
+  { id: "blog", cls: "w-bl", lb: "lb-bl" },
+  { id: "services", cls: "w-sv", lb: "lb-sv" },
+  { id: "portfolio", cls: "w-pf", lb: "lb-pf" },
+] as const;
+const ctl = (id: string) => `cp-${v}-${id}`;
+---
+
+<div class="cp-compass">
+  <svg
+    viewBox={`0 0 ${GEO.size} ${GEO.size}`}
+    width={GEO.size}
+    height={GEO.size}
+    aria-hidden="true"
+    style="position: absolute; left: 0; top: 0; overflow: visible"
+  >
+    <g class="cp-breathe">
+      <circle
+        class="cp-orbit ink"
+        cx={GEO.c}
+        cy={GEO.c}
+        r={GEO.orbit}
+        fill="none"
+        stroke-width="1.4"
+        stroke-dasharray="2 9"
+        stroke-linecap="round"></circle>
+      <circle class="paper" cx={GEO.c} cy={GEO.c} r={GEO.paper}></circle>
+      <g filter="url(#cp-wobble)">
+        {
+          slices.map(s => (
+            <path
+              class:list={["cp-wedge", s.cls]}
+              d={GEO.wedges[s.id]}
+              data-toggle={s.id}
+              data-wedge={s.id}
+            />
+          ))
+        }
+        <circle
+          class="cp-hub ink"
+          cx={GEO.c}
+          cy={GEO.c}
+          r={GEO.hub}
+          stroke-width="2"
+          data-wedge="about"></circle>
+      </g>
+      <defs>
+        {slices.map(s => <path id={`cp-arc-${v}-${s.id}`} d={arcs[s.id]} />)}
+      </defs>
+      {
+        slices.map(s => (
+          <text class="cp-arc" data-title={s.id}>
+            <textPath
+              href={`#cp-arc-${v}-${s.id}`}
+              startOffset="50%"
+              text-anchor="middle"
+            >
+              {t.titles[s.id]}
+              <tspan class="x"> ×</tspan>
+            </textPath>
+          </text>
+        ))
+      }
+    </g>
+  </svg>
+  <button
+    class="cp-logo"
+    type="button"
+    data-toggle="about"
+    aria-expanded="false"
+    aria-controls={ctl("about")}
+    aria-label={t.logoAria}
+  >
+    <span style="display: block">spiro</span>
+    <span style="display: block">spero</span>
+  </button>
+  {
+    slices.map(s => (
+      <button
+        class:list={["cp-label", s.lb]}
+        type="button"
+        data-toggle={s.id}
+        data-title={s.id}
+        aria-expanded="false"
+        aria-controls={ctl(s.id)}
+      >
+        {t.titles[s.id]}
+        <span class="x" aria-hidden="true">
+          ×
+        </span>
+      </button>
+    ))
+  }
+  <button class="cp-x" type="button" data-close aria-label={t.closeAbout}
+    >×</button
+  >
+</div>
