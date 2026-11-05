@@ -124,6 +124,7 @@ const he: Dict = {
       ctaService: "להתחיל משהו כזה ←",
       ctaProject: "משהו כזה? להגיד היי ←",
       ctaAbout: "להגיד היי ←",
+      media: "[תמונת הפרויקט או הקלטת מסך קצרה]",
     },
     dial: {
       status: "פרויקטים {from}–{to} מתוך 10",

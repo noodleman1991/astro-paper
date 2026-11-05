@@ -1,0 +1,111 @@
+---
+import { SERVICES, type LinkChip } from "@/config/services";
+import { PROJECTS, projectHash } from "@/config/projects";
+import { SOCIALS } from "@/constants";
+import { fmt, localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale).compass;
+const mail = SOCIALS.find(s => s.name === "Mail")?.href ?? "";
+
+type Win = {
+  item: string;
+  spot: string;
+  kicker: string;
+  title: string;
+  lead: string;
+  paras: string[];
+  links: LinkChip[];
+  cta: string;
+  media?: boolean;
+  next?: string;
+};
+
+const wins: Win[] = [
+  ...SERVICES[locale].map(s => ({
+    item: `services/${s.slug}`,
+    spot: "r-sv",
+    kicker: t.win.services,
+    title: s.title,
+    lead: s.lead,
+    paras: s.paras,
+    links: s.links,
+    cta: t.win.ctaService,
+  })),
+  ...PROJECTS[locale].map((p, i, all) => ({
+    item: `portfolio/${projectHash(p.n)}`,
+    spot: "r-pf",
+    kicker: fmt(t.win.portfolio, { n: projectHash(p.n) }),
+    title: p.title,
+    lead: p.lead,
+    paras: p.paras,
+    links: p.links,
+    cta: t.win.ctaProject,
+    media: true,
+    next: `portfolio/${projectHash(all[(i + 1) % all.length].n)}`,
+  })),
+  {
+    item: "about/how",
+    spot: "r-ab",
+    kicker: t.win.about,
+    ...t.how,
+    cta: t.win.ctaAbout,
+  },
+];
+const idFor = (item: string) => `cp-win-${item.replace("/", "-")}`;
+const href = (l: LinkChip) =>
+  l.href?.startsWith("/") ? localePath(locale, l.href) : l.href;
+const mailFor = (title: string) =>
+  `${mail}?subject=${encodeURIComponent(title)}`;
+---
+
+{
+  wins.map(w => (
+    <dialog
+      class:list={["cp-win", w.spot]}
+      data-item={w.item}
+      aria-labelledby={idFor(w.item)}
+    >
+      <div class="cp-win-bar">
+        <span class="cp-win-k">{w.kicker}</span>
+        <form method="dialog">
+          <button class="cp-sticker" aria-label={t.win.closeWin}>
+            {t.drawer.close}
+          </button>
+        </form>
+      </div>
+      <div class="cp-win-body">
+        <h2 id={idFor(w.item)} class="cp-win-t">
+          {w.title}
+        </h2>
+        <p class="cp-win-lead">{w.lead}</p>
+        {w.media && <span class="cp-win-media">{t.win.media}</span>}
+        {w.paras.map(p => (
+          <p class="cp-win-p">{p}</p>
+        ))}
+        <div class="cp-win-chips">
+          {w.links.map(l =>
+            l.href ? (
+              <a class="cp-sticker sm" href={href(l)}>
+                {l.label}
+              </a>
+            ) : (
+              <span class="cp-sticker sm is-plain">{l.label}</span>
+            )
+          )}
+        </div>
+        <div class="cp-win-foot">
+          <a class="cp-sticker ink" href={mailFor(w.title)}>
+            {w.cta}
+          </a>
+          {w.next && (
+            <a class="cp-sticker" href={`#${w.next}`} data-win={w.next}>
+              {t.win.next}
+            </a>
+          )}
+        </div>
+      </div>
+    </dialog>
+  ))
+}

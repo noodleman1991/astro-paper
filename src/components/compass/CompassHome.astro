@@ -3,6 +3,7 @@ import "@/styles/compass.css";
 import type { CollectionEntry } from "astro:content";
 import Compass from "./Compass.astro";
 import ServicesSection from "./ServicesSection.astro";
+import DetailWindows from "./DetailWindows.astro";
 import { localeDir, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale; posts: CollectionEntry<"blog">[] };
@@ -56,4 +57,10 @@ const t = useTranslations(locale).compass;
     <ServicesSection locale={locale} variant="desktop" />
     <Compass locale={locale} variant="desktop" />
   </div>
+  <DetailWindows locale={locale} />
 </div>
+
+<script>
+  import { mountCompass } from "@/scripts/compass/controller";
+  mountCompass();
+</script>

@@ -128,6 +128,13 @@ describe("route", () => {
       item: null,
       step: 0,
     }));
+  it("route normalises project numbers to two digits", () =>
+    expect(
+      reduce(INITIAL, {
+        type: "route",
+        route: { open: "portfolio", item: "7" },
+      }).item
+    ).toBe("07"));
   it("route keeps the dial when the section stays open", () => {
     const s = run([
       { type: "toggle", section: "portfolio" },

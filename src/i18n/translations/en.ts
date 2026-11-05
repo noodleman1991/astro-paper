@@ -125,6 +125,7 @@ const en = {
       ctaService: "start something like this →",
       ctaProject: "something like this? say hi →",
       ctaAbout: "say hi →",
+      media: "[project image or short screen recording]",
     },
     dial: {
       status: "projects {from}–{to} of 10",

@@ -45,6 +45,7 @@ function route(s: State, r: Route): State {
     return { ...next, item: null };
   return {
     ...next,
+    item: String(n).padStart(2, "0"),
     step:
       cellRole(n - 1, next.step) === "visible" ? next.step : stepForCell(n - 1),
     offset: offsetForTile(`p${n}` as StreamId),
