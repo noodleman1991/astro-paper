@@ -7,12 +7,14 @@ import {
   streamGeometry,
   type StreamTile,
 } from "@/scripts/compass/stream";
-import { useTranslations, type Locale } from "@/i18n";
+import { mirrorMatrix, mirrorPath } from "@/utils/compass/place";
+import { localeDir, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale };
 const { locale } = Astro.props;
 const t = useTranslations(locale).compass;
 const stage = STAGE.phone;
+const rtl = localeDir(locale) === "rtl";
 const envelope = SHAPES.ppf.pour;
 const projects = PROJECTS[locale];
 const mail = SOCIALS.find(s => s.name === "Mail")?.href ?? "";
@@ -33,8 +35,9 @@ const size = (g: StreamTile) => {
   const w = g.label.width + 8;
   return w < 135 ? 16 : w < 155 ? 17.5 : 19;
 };
+// labels are HTML outside the mirrored art, so they reflect their own x
 const place = ({ label: l }: StreamTile) =>
-  `left: ${l.x}px; top: ${l.y}px; width: ${l.width}px; ` +
+  `left: ${rtl ? stage.w - l.x : l.x}px; top: ${l.y}px; width: ${l.width}px; ` +
   `transform: translate(-50%, -50%) scale(${l.scale}); ` +
   `opacity: ${l.opacity}; pointer-events: ${l.opacity > 0.6 ? "auto" : "none"}`;
 ---
@@ -57,34 +60,39 @@ const place = ({ label: l }: StreamTile) =>
       <defs>
         <clipPath id="ppf-win"><path d={envelope}></path></clipPath>
       </defs>
-      <g filter="url(#cp-rough-ph)">
-        <path class="pour cp-hit" d={envelope}></path>
-        <g class="cp-tiles" clip-path="url(#ppf-win)">
-          {
-            tiles.map(c => (
-              <Fragment>
-                <path
-                  class:list={["tl", c.tint, "cp-hit", { still: !c.project }]}
-                  d={c.g.d}
-                  data-d={c.id}
-                  data-tile={c.id}
-                  data-win={
-                    c.project
-                      ? `portfolio/${projectHash(c.project.n)}`
-                      : undefined
-                  }
-                />
-                {DOTS.has(c.id) && (
-                  <path class="tdots" d={c.g.d} data-d={c.id} />
-                )}
-              </Fragment>
-            ))
-          }
+      <g transform={rtl ? mirrorMatrix(stage.w) : undefined}>
+        <g filter="url(#cp-rough-ph)">
+          <path class="pour cp-hit" d={envelope}></path>
+          <g class="cp-tiles" clip-path="url(#ppf-win)">
+            {
+              tiles.map(c => (
+                <Fragment>
+                  <path
+                    class:list={["tl", c.tint, "cp-hit", { still: !c.project }]}
+                    d={c.g.d}
+                    data-d={c.id}
+                    data-tile={c.id}
+                    data-win={
+                      c.project
+                        ? `portfolio/${projectHash(c.project.n)}`
+                        : undefined
+                    }
+                  />
+                  {DOTS.has(c.id) && (
+                    <path class="tdots" d={c.g.d} data-d={c.id} />
+                  )}
+                </Fragment>
+              ))
+            }
+          </g>
+          <path class="cp-ants" transform="translate(4 3)" d={envelope}></path>
         </g>
-        <path class="cp-ants" transform="translate(4 3)" d={envelope}></path>
       </g>
     </svg>
-    <div class="cp-stream-lbls" style={`clip-path: path('${envelope}')`}>
+    <div
+      class="cp-stream-lbls"
+      style={`clip-path: path('${rtl ? mirrorPath(envelope, stage.w) : envelope}')`}
+    >
       {
         tiles.map(c =>
           c.project ? (

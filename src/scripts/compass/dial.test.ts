@@ -4,6 +4,7 @@ import {
   dialAngle,
   dragStep,
   keyStep,
+  labelLayerAngle,
   rangeLabel,
   stepForCell,
   visibleProjects,
@@ -94,4 +95,11 @@ describe("rangeLabel", () => {
     expect(rangeLabel([10, 1, 2])).toBe("10, 1–2");
   });
   it("handles a single project", () => expect(rangeLabel([7])).toBe("7"));
+});
+
+describe("labelLayerAngle", () => {
+  it("ltr label layer turns with the ring", () =>
+    expect(labelLayerAngle(dialAngle(1), false)).toBeCloseTo(-171));
+  it("rtl label layer turns the other way", () =>
+    expect(labelLayerAngle(dialAngle(1), true)).toBeCloseTo(171));
 });

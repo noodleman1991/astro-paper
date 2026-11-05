@@ -64,3 +64,22 @@ export function compassArcs(
 /** Horizontal reflection about the centre line of a stage `stageWidth` wide. */
 export const mirrorMatrix = (stageWidth: number) =>
   `matrix(-1 0 0 1 ${stageWidth} 0)`;
+
+/**
+ * The same reflection applied to path data, for places a transform can't
+ * reach (CSS `clip-path: path()`). Absolute M/L/C/Q/S/T/Z only.
+ */
+export function mirrorPath(d: string, stageWidth: number): string {
+  return d.replace(
+    /([A-Za-z])([^A-Za-z]*)/g,
+    (_, cmd: string, args: string) => {
+      if (!/[MLCQSTZ]/.test(cmd))
+        throw new Error(`mirrorPath: ${cmd} unsupported`);
+      const nums = args.match(/-?\d*\.?\d+(?:e-?\d+)?/gi) ?? [];
+      const out = nums.map((n, i) =>
+        i % 2 ? n : String(+(stageWidth - Number(n)).toFixed(3))
+      );
+      return cmd + out.join(" ");
+    }
+  );
+}

@@ -1,9 +1,11 @@
 ---
-import { useTranslations, type Locale } from "@/i18n";
+import { localeDir, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale };
 const { locale } = Astro.props;
 const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const x = (cx: number) => (rtl ? 390 - cx : cx);
 
 // Docked centres from the phone board; a plug closes the hole each section
 // poured from while the compass is tucked away.
@@ -38,10 +40,16 @@ const TABS = [
   {
     PLUGS.map(p => (
       <g class={`cp-plug pl-${p.id}`} filter="url(#cp-wobble)">
-        <circle class="paper ink" cx={p.cx} cy={p.cy} r="96" stroke-width="2" />
+        <circle
+          class="paper ink"
+          cx={x(p.cx)}
+          cy={p.cy}
+          r="96"
+          stroke-width="2"
+        />
         <circle
           class="ink"
-          cx={p.cx}
+          cx={x(p.cx)}
           cy={p.cy}
           r="104"
           fill="none"
@@ -49,7 +57,7 @@ const TABS = [
           stroke-dasharray="2 9"
           stroke-linecap="round"
         />
-        <text x={p.cx} y={p.cy + p.dy} text-anchor="middle">
+        <text x={x(p.cx)} y={p.cy + p.dy} text-anchor="middle">
           {t.titles[p.id]}
         </text>
       </g>

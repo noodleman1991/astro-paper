@@ -106,7 +106,10 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
   }
   {
     !phone && (
-      <p class="cp-side" style="left: 56px; top: 600px; margin: 0">
+      <p
+        class="cp-side"
+        style="inset-inline-start: 56px; top: 600px; margin: 0"
+      >
         <b>{t.side.services[0]}</b>
         <span>{t.side.services[1]}</span>
         <span>{t.side.services[2]}</span>

@@ -12,6 +12,10 @@ const at = (k: number) => DIAL_A[wrap(k)] + 360 * Math.floor(k / NC);
 export const dialAngle = (step: number) =>
   -(270 - (at(step) + at(step + SHOWN)) / 2);
 
+/** The HTML label layer follows the ring; mirrored art turns it the other way. */
+export const labelLayerAngle = (ring: number, rtl: boolean) =>
+  rtl ? -ring : ring;
+
 export function cellRole(
   cell: number,
   step: number

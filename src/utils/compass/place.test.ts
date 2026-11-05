@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { compassArcs, mirrorMatrix, placeBox } from "./place";
+import { compassArcs, mirrorMatrix, mirrorPath, placeBox } from "./place";
 
 const web = { cx: 1077, cy: 335, w: 138, h: 138 };
 describe("placeBox", () => {
@@ -44,4 +44,15 @@ describe("compassArcs", () => {
 describe("mirrorMatrix", () => {
   it("reflects about the stage centre line", () =>
     expect(mirrorMatrix(1280)).toBe("matrix(-1 0 0 1 1280 0)"));
+});
+
+describe("mirrorPath", () => {
+  it("reflects every x of an absolute M/L/C path about the centre line", () =>
+    expect(mirrorPath("M10 20C30 40 50 60 70 80L5 5Z", 100)).toBe(
+      "M90 20C70 40 50 60 30 80L95 5Z"
+    ));
+  it("keeps decimals and negative coordinates", () =>
+    expect(mirrorPath("M-10 2.5L12.5 -3Z", 390)).toBe("M400 2.5L377.5 -3Z"));
+  it("refuses commands it cannot reflect pairwise", () =>
+    expect(() => mirrorPath("M0 0H10Z", 100)).toThrow());
 });

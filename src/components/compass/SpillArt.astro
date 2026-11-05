@@ -1,5 +1,6 @@
 ---
 import type { SpillShape } from "@/data/compass/shapes";
+import { mirrorMatrix } from "@/utils/compass/place";
 
 export type SpillTile = {
   key: string;
@@ -20,7 +21,7 @@ type Props = {
   variant: "desktop" | "phone";
 };
 
-const { shape, tiles, stage, neck, variant } = Astro.props;
+const { shape, tiles, stage, neck, rtl, variant } = Astro.props;
 // the phone board roughens at a finer grain and offsets the ants less
 const rough = variant === "phone" ? "cp-rough-ph" : "cp-rough";
 const ants = variant === "phone" ? "translate(4 3)" : "translate(5 4)";
@@ -35,27 +36,29 @@ const sparks = shape.sparks.split(/(?<=Z)/).filter(Boolean);
   height={stage.h}
   aria-hidden="true"
 >
-  <g filter={`url(#${rough})`}>
-    <g class="cp-pour" style={`transform-origin: ${neck[0]}px ${neck[1]}px`}>
-      <path class="pour cp-hit" d={shape.pour}></path>
-      <g class="cp-tiles">
-        {
-          tiles.map(t => (
-            <Fragment>
-              <path
-                class:list={["tl", t.tint, "cp-hit", { still: t.still }]}
-                d={shape.tiles[t.key].d}
-                data-tile={t.key}
-                data-win={t.win}
-                data-href={t.href}
-              />
-              {t.hero && <path class="tdots" d={shape.tiles[t.key].d} />}
-            </Fragment>
-          ))
-        }
+  <g transform={rtl ? mirrorMatrix(stage.w) : undefined}>
+    <g filter={`url(#${rough})`}>
+      <g class="cp-pour" style={`transform-origin: ${neck[0]}px ${neck[1]}px`}>
+        <path class="pour cp-hit" d={shape.pour}></path>
+        <g class="cp-tiles">
+          {
+            tiles.map(t => (
+              <Fragment>
+                <path
+                  class:list={["tl", t.tint, "cp-hit", { still: t.still }]}
+                  d={shape.tiles[t.key].d}
+                  data-tile={t.key}
+                  data-win={t.win}
+                  data-href={t.href}
+                />
+                {t.hero && <path class="tdots" d={shape.tiles[t.key].d} />}
+              </Fragment>
+            ))
+          }
+        </g>
+        <path class="cp-ants" transform={ants} d={shape.pour}></path>
+        {sparks.map(d => <path class="cp-spark" d={d} />)}
       </g>
-      <path class="cp-ants" transform={ants} d={shape.pour}></path>
-      {sparks.map(d => <path class="cp-spark" d={d} />)}
     </g>
   </g>
 </svg>

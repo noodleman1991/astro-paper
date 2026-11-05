@@ -1,5 +1,5 @@
 ---
-import { compassArcs } from "@/utils/compass/place";
+import { compassArcs, mirrorMatrix } from "@/utils/compass/place";
 import { localeDir, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale; variant: "desktop" | "phone" };
@@ -70,7 +70,10 @@ const ctl = (id: string) => `cp-${v}-${id}`;
         stroke-dasharray="2 9"
         stroke-linecap="round"></circle>
       <circle class="paper" cx={GEO.c} cy={GEO.c} r={GEO.paper}></circle>
-      <g filter="url(#cp-wobble)">
+      <g
+        filter="url(#cp-wobble)"
+        transform={rtl ? mirrorMatrix(GEO.size) : undefined}
+      >
         {
           slices.map(s => (
             <path

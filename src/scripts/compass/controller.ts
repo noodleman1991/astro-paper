@@ -5,6 +5,7 @@ import {
   dialAngle,
   dragStep,
   keyStep,
+  labelLayerAngle,
   rangeLabel,
   visibleProjects,
   wheelStep,
@@ -142,7 +143,7 @@ export function initCompass(root: HTMLElement): () => void {
         scale: s,
         opacity,
       } = geo[l.dataset.l as StreamId].label;
-      l.style.left = `${x}px`;
+      l.style.left = `${rtl ? 390 - x : x}px`; // HTML labels reflect their own x
       l.style.top = `${y}px`;
       l.style.width = `${width}px`;
       l.style.transform = `translate(-50%, -50%) scale(${s})`;
@@ -160,7 +161,7 @@ export function initCompass(root: HTMLElement): () => void {
     const { step } = state;
     const angle = dialAngle(step);
     el.style.setProperty("--ring", `${angle}deg`);
-    el.style.setProperty("--turn", `${rtl ? -angle : angle}deg`);
+    el.style.setProperty("--turn", `${labelLayerAngle(angle, rtl)}deg`);
     for (const c of qsa<HTMLElement | SVGElement>(el, "[data-cell]")) {
       const role = cellRole(Number(c.dataset.cell), step);
       if (c instanceof SVGElement)

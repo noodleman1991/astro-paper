@@ -5,10 +5,11 @@ import { SOCIALS } from "@/constants";
 import {
   cellRole,
   dialAngle,
+  labelLayerAngle,
   rangeLabel,
   visibleProjects,
 } from "@/scripts/compass/dial";
-import { placeBox } from "@/utils/compass/place";
+import { mirrorMatrix, mirrorPath, placeBox } from "@/utils/compass/place";
 import { fmt, localeDir, useTranslations, type Locale } from "@/i18n";
 
 type Props = { locale: Locale };
@@ -47,7 +48,7 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
   data-dial
   class="cp-region r-pf"
   aria-label={t.titles.portfolio}
-  style={`--ring: ${angle}deg; --turn: ${rtl ? -angle : angle}deg`}
+  style={`--ring: ${angle}deg; --turn: ${labelLayerAngle(angle, rtl)}deg`}
 >
   <svg
     class="cp-art"
@@ -59,47 +60,52 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
     <defs>
       <clipPath id="pf-win"><path d={pf.clip}></path></clipPath>
     </defs>
-    <g filter="url(#cp-rough)">
-      <g class="cp-pour" style="transform-origin: 640px 582px">
-        <path class="pour cp-hit" d={pf.pour}></path>
-        <g clip-path="url(#pf-win)">
-          <g class="pf-ring cp-tiles">
-            {
-              cells.map(c => (
-                <Fragment>
-                  <path
-                    class:list={[
-                      "tl",
-                      c.tint,
-                      "cp-hit",
-                      { "is-peek": c.role === "next" || c.role === "prev" },
-                    ]}
-                    d={c.d}
-                    data-cell={c.i}
-                    data-tile={c.id}
-                    data-win={
-                      c.project
-                        ? `portfolio/${projectHash(c.project.n)}`
-                        : undefined
-                    }
-                  />
-                  {DOTS.has(c.i) && <path class="tdots" d={c.d} />}
-                </Fragment>
-              ))
-            }
+    <g transform={rtl ? mirrorMatrix(stage.w) : undefined}>
+      <g filter="url(#cp-rough)">
+        <g class="cp-pour" style="transform-origin: 640px 582px">
+          <path class="pour cp-hit" d={pf.pour}></path>
+          <g clip-path="url(#pf-win)">
+            <g class="pf-ring cp-tiles">
+              {
+                cells.map(c => (
+                  <Fragment>
+                    <path
+                      class:list={[
+                        "tl",
+                        c.tint,
+                        "cp-hit",
+                        { "is-peek": c.role === "next" || c.role === "prev" },
+                      ]}
+                      d={c.d}
+                      data-cell={c.i}
+                      data-tile={c.id}
+                      data-win={
+                        c.project
+                          ? `portfolio/${projectHash(c.project.n)}`
+                          : undefined
+                      }
+                    />
+                    {DOTS.has(c.i) && <path class="tdots" d={c.d} />}
+                  </Fragment>
+                ))
+              }
+            </g>
           </g>
+          <path class="cp-ants" transform="translate(5 4)" d={pf.pour}></path>
+          {
+            pf.sparks
+              .split(/(?<=Z)/)
+              .filter(Boolean)
+              .map(d => <path class="cp-spark" d={d} />)
+          }
         </g>
-        <path class="cp-ants" transform="translate(5 4)" d={pf.pour}></path>
-        {
-          pf.sparks
-            .split(/(?<=Z)/)
-            .filter(Boolean)
-            .map(d => <path class="cp-spark" d={d} />)
-        }
       </g>
     </g>
   </svg>
-  <div class="pf-lbls" style={`clip-path: path('${pf.clip}')`}>
+  <div
+    class="pf-lbls"
+    style={`clip-path: path('${rtl ? mirrorPath(pf.clip, stage.w) : pf.clip}')`}
+  >
     <div class="pf-turn">
       {
         cells.map(c =>
@@ -144,7 +150,7 @@ const px = (p: { left: number; top: number; width: number; height: number }) =>
       }
     </div>
   </div>
-  <p class="cp-side" style="left: 56px; top: 600px; margin: 0">
+  <p class="cp-side" style="inset-inline-start: 56px; top: 600px; margin: 0">
     <b>{t.side.portfolio[0]}</b>
     <span>{t.side.portfolio[1]}</span>
     <span>{t.side.portfolio[2]}</span>
