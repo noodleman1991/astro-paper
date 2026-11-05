@@ -1,0 +1,192 @@
+---
+import LanguageToggle from "@/components/LanguageToggle.astro";
+import { SITE } from "@/config";
+import { SHARE_LINKS, SOCIALS } from "@/constants";
+import { localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const dict = useTranslations(locale);
+const t = dict.compass;
+
+const href = (name: string) => SOCIALS.find(s => s.name === name)?.href ?? "";
+const mail = href("Mail");
+const email = mail.replace(/^mailto:/, "");
+const home = new URL(localePath(locale, "/"), Astro.site).href;
+const enc = encodeURIComponent(home);
+const shareHref = (name: string) =>
+  `${SHARE_LINKS.find(s => s.name === name)?.href ?? ""}${enc}`;
+const targets = [
+  { label: "whatsapp", href: shareHref("WhatsApp") },
+  {
+    label: "linkedin",
+    href: `https://www.linkedin.com/sharing/share-offsite/?url=${enc}`,
+  },
+  { label: "telegram", href: shareHref("Telegram") },
+  { label: "x", href: shareHref("X") },
+  {
+    label: t.top.email,
+    href: `mailto:?subject=${encodeURIComponent(SITE.title)}&body=${enc}`,
+  },
+];
+---
+
+<a id="skip-to-content" class="cp-skip" href="#main-content">
+  {dict.a11y.skipToContent}
+</a>
+<header class="cp-chrome cp-bar" data-topbar>
+  <svg
+    class="cp-bar-line"
+    viewBox="0 0 1280 4"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path
+      class="ink"
+      filter="url(#cp-wobble)"
+      d="M0 2 C200 0 420 4 640 2 C860 0 1080 4 1280 2"
+      fill="none"
+      stroke-width="1.5"
+      vector-effect="non-scaling-stroke"></path>
+  </svg>
+  <div class="cp-bar-side">
+    <span class="cp-bar-name">{t.top.name}</span>
+    <a class="cp-sticker" href={mail} data-copy={email}>
+      <svg
+        width="15"
+        height="15"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        ><rect x="3" y="5" width="18" height="14"></rect><path d="M3 7l9 6 9-6"
+        ></path></svg
+      >
+      <span data-copy-label data-copied={t.top.emailCopied}>{email}</span>
+    </a>
+  </div>
+  <div class="cp-bar-side">
+    <a class="cp-sticker" href={href("LinkedIn")} rel="me">
+      linkedin <span class="cp-arrow" aria-hidden="true">↗</span>
+    </a>
+    <button
+      class="cp-sticker"
+      type="button"
+      popovertarget="cp-share"
+      data-share={home}
+      aria-label={t.top.shareAria}
+    >
+      {t.top.share}
+    </button>
+    <LanguageToggle class="cp-sticker" compact />
+    <button
+      id="theme-btn"
+      class="cp-sticker cp-theme"
+      type="button"
+      title={t.top.theme}
+      aria-label="auto"
+      aria-live="polite"
+    >
+      <svg
+        class="cp-moon"
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+        ><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"></path></svg
+      >
+      <svg
+        class="cp-sun"
+        width="17"
+        height="17"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        aria-hidden="true"
+        ><circle cx="12" cy="12" r="4"></circle><path
+          d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"
+        ></path></svg
+      >
+    </button>
+  </div>
+  <button
+    class="cp-sticker cp-say"
+    type="button"
+    data-drawer-open
+    aria-haspopup="dialog"
+  >
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      ><rect x="3" y="5" width="18" height="14"></rect><path d="M3 7l9 6 9-6"
+      ></path></svg
+    >
+    {t.drawer.open}
+  </button>
+</header>
+
+<div
+  id="cp-share"
+  class="cp-chrome cp-pop"
+  popover
+  role="dialog"
+  aria-label={t.top.shareAria}
+>
+  <div class="cp-pop-card" aria-hidden="true">
+    <svg viewBox="0 0 258 130" width="258" height="130">
+      <g transform="translate(204 66)" stroke="#282728" stroke-width="1.4">
+        <path
+          d="M27 15.6 A31 31 0 0 0 1.4 -31 L.6 -14 A14 14 0 0 1 12.4 6.5 Z"
+          fill="#a0c4f4"></path>
+        <path
+          d="M-1.4 -31 A31 31 0 0 0 -27 15.6 L-12.4 6.5 A14 14 0 0 1 -.6 -14 Z"
+          fill="#a0e8b4"></path>
+        <path
+          d="M-25.6 17.6 A31 31 0 0 0 25.6 17.6 L11.8 7.5 A14 14 0 0 1 -11.8 7.5 Z"
+          fill="#e8837c"></path>
+      </g>
+    </svg>
+    <span class="cp-pop-logo">spiro<br />spero</span>
+    <span class="cp-pop-line">{t.top.cardLine}</span>
+  </div>
+  <span class="cp-pop-k">{t.top.card}</span>
+  <button class="cp-sticker ink" type="button" data-copy={home}>
+    <span data-copy-label data-copied={t.top.copied}>{t.top.copyLink}</span>
+  </button>
+  <div class="cp-pop-chips">
+    {
+      targets.map(s => (
+        <a
+          class="cp-sticker sm"
+          href={s.href}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {s.label}
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<script>
+  import { mountChrome } from "@/scripts/compass/chrome";
+  mountChrome();
+</script>

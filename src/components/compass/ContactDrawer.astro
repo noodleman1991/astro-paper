@@ -1,0 +1,71 @@
+---
+import LanguageToggle from "@/components/LanguageToggle.astro";
+import { SOCIALS } from "@/constants";
+import { localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale).compass;
+
+const href = (name: string) => SOCIALS.find(s => s.name === name)?.href ?? "";
+const mail = href("Mail");
+const email = mail.replace(/^mailto:/, "");
+const home = new URL(localePath(locale, "/"), Astro.site).href;
+---
+
+<dialog class="cp-chrome cp-drawer" data-drawer aria-label={t.drawer.aria}>
+  <svg
+    class="cp-drawer-paper"
+    viewBox="0 0 390 500"
+    preserveAspectRatio="none"
+    aria-hidden="true"
+  >
+    <path
+      class="paper ink"
+      filter="url(#cp-rough)"
+      stroke-width="2"
+      vector-effect="non-scaling-stroke"
+      d="M-10 -10 H400 V466 C340 486 300 456 240 476 C180 496 130 462 70 480 C40 489 10 478 -10 472 Z"
+    ></path>
+  </svg>
+  <div class="cp-drawer-body">
+    <div class="cp-drawer-head">
+      <h2 class="cp-drawer-t">{t.drawer.title}</h2>
+      <form method="dialog">
+        <button class="cp-sticker" aria-label={t.drawer.closeAria}>
+          {t.drawer.close}
+        </button>
+      </form>
+    </div>
+    <a class="cp-sticker cp-row" href={mail}>
+      <span>{email}</span><span class="cp-arrow" aria-hidden="true">→</span>
+    </a>
+    <a class="cp-sticker cp-row" href={href("LinkedIn")} rel="me">
+      <span>linkedin</span><span class="cp-arrow" aria-hidden="true">↗</span>
+    </a>
+    <a class="cp-sticker ink cp-row" href={mail}>
+      <span>{t.drawer.write}</span><span class="cp-arrow" aria-hidden="true"
+        >→</span
+      >
+    </a>
+    <hr class="cp-drawer-rule" />
+    <div class="cp-drawer-row">
+      <button class="cp-sticker" type="button" data-share={home}>
+        {t.drawer.share}
+      </button>
+      <button class="cp-sticker" type="button" data-copy={home}>
+        <span data-copy-label data-copied={t.top.copied}>{t.drawer.copy}</span>
+      </button>
+    </div>
+    <div class="cp-drawer-row">
+      <LanguageToggle class="cp-sticker" compact />
+      <button class="cp-sticker" type="button" data-theme-toggle>
+        <span class="cp-when-light">{t.drawer.dark}</span>
+        <span class="cp-when-dark">{t.drawer.light}</span>
+      </button>
+      <button class="cp-sticker" type="button" data-nav-toggle>
+        {t.drawer.plain}
+      </button>
+    </div>
+  </div>
+</dialog>

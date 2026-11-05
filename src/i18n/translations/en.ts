@@ -140,6 +140,10 @@ const en = {
       sayHi: "say hi →",
     },
     top: {
+      name: "amit lockshinski",
+      card: "the card people will see",
+      cardLine: "websites, apps and knowledge hubs",
+      email: "email",
       share: "share",
       shareAria: "share this site",
       copyLink: "copy link",

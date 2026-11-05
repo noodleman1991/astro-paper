@@ -1,6 +1,13 @@
 ---
 import { alternatePath, pathLocale } from "@/i18n";
 
+type Props = {
+  class?: string;
+  /** Shows "en · עב" while the accessible name stays the target language. */
+  compact?: boolean;
+};
+const { class: className, compact = false } = Astro.props;
+
 const current = pathLocale(Astro.url.pathname);
 const target = current === "en" ? "he" : "en";
 const href = alternatePath(Astro.url.pathname, target);
@@ -13,9 +20,10 @@ const label = target === "he" ? "עברית" : "English";
   data-target={target}
   hreflang={target}
   lang={target}
-  class="font-heading font-medium hover:text-accent"
+  class={className ?? "font-heading font-medium hover:text-accent"}
+  aria-label={compact ? label : undefined}
 >
-  {label}
+  {compact ? <span aria-hidden="true">en · עב</span> : label}
 </a>
 
 <script>

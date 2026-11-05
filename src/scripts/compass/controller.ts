@@ -13,9 +13,11 @@ import { formatHash, parseHash, type SectionId } from "./route";
 import { fitScale, layoutFor } from "./stage";
 import { INITIAL, reduce, toRoute, type Action, type State } from "./state";
 
+// `crop` is the band the board kept for its top bar; the real bar sits
+// above the stage, so that band is cut rather than doubled.
 const STAGES = {
-  desktop: { w: 1280, h: 800 },
-  phone: { w: 390, h: 844 },
+  desktop: { w: 1280, h: 800, crop: 64 },
+  phone: { w: 390, h: 844, crop: 0 },
 } as const;
 
 const rand = (lo: number, hi: number) => lo + Math.random() * (hi - lo);
@@ -141,9 +143,15 @@ export function initCompass(root: HTMLElement): () => void {
     const layout = layoutFor(innerWidth);
     const stage = STAGES[layout];
     const top = document.querySelector("[data-topbar]")?.clientHeight ?? 0;
-    const k = fitScale(root.clientWidth, innerHeight - top, stage.w, stage.h);
+    const k = fitScale(
+      root.clientWidth,
+      innerHeight - top,
+      stage.w,
+      stage.h - stage.crop
+    );
     root.style.setProperty("--k", k.toFixed(4));
     root.style.setProperty("--stage-h", `${stage.h}px`);
+    root.style.setProperty("--crop", `${stage.crop}px`);
     root.dataset.layout = layout;
   }
 

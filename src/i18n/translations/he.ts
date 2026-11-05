@@ -139,6 +139,10 @@ const he: Dict = {
       sayHi: "להגיד היי ←",
     },
     top: {
+      name: "amit lockshinski",
+      card: "הכרטיס שאנשים יראו",
+      cardLine: "אתרים, אפליקציות והאבים של ידע",
+      email: "מייל",
       share: "שיתוף",
       shareAria: "שיתוף האתר",
       copyLink: "העתקת קישור",

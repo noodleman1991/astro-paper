@@ -1,7 +1,8 @@
 /* Compass homepage. Ported from the approved desktop board; tokens map to
    the site theme (global.css): --background, --foreground, --soft, --k1…--khot
    and the --spot-* colours. */
-.compass-home {
+.compass-home,
+.cp-chrome {
   --e: cubic-bezier(0.22, 0.61, 0.36, 1);
   --pf-s: var(--spot-portfolio);
   --sv-s: var(--spot-services);
@@ -14,11 +15,13 @@
   --bl-w: color-mix(in srgb, var(--bl-s) var(--wmix), var(--background));
   --ab-w: color-mix(in srgb, var(--ab-s) var(--wmix), var(--background));
 }
-[data-theme="dark"] .compass-home {
+[data-theme="dark"] .compass-home,
+[data-theme="dark"] .cp-chrome {
   --logo-sh: #a0c4f4;
   --wmix: 14%;
 }
-.compass-home a {
+.compass-home a,
+.cp-chrome a {
   color: var(--foreground);
 }
 .ink {
@@ -548,15 +551,6 @@
   text-decoration: underline wavy 1.5px;
   text-underline-offset: 5px;
 }
-.cp-bar {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 1280px;
-  height: 64px;
-  z-index: 6;
-  background: var(--background);
-}
 .cp-hint {
   position: absolute;
   left: 0;
@@ -571,26 +565,6 @@
 }
 .cp-hint.is-hidden {
   opacity: 0;
-}
-.cp-pop {
-  position: absolute;
-  z-index: 9;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-6px);
-  transition:
-    opacity 0.25s var(--e),
-    transform 0.3s var(--e),
-    visibility 0s linear 0.3s;
-}
-.cp-pop.is-open {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition:
-    opacity 0.25s var(--e),
-    transform 0.3s var(--e),
-    visibility 0s;
 }
 /* detail windows: native <dialog>, opened modal by the controller */
 dialog.cp-win {
@@ -719,7 +693,9 @@ dialog.cp-win::backdrop {
   color: #282728;
 }
 .compass-home button:focus-visible,
-.compass-home a:focus-visible {
+.compass-home a:focus-visible,
+.cp-chrome button:focus-visible,
+.cp-chrome a:focus-visible {
   outline: 2px dashed var(--accent);
   outline-offset: 3px;
 }
@@ -765,8 +741,9 @@ dialog.cp-win::backdrop {
 /* stages: each composition is authored at a fixed size and scaled to fit */
 .compass-home {
   --stage-h: 800px;
+  --crop: 64px;
   position: relative;
-  height: calc(var(--stage-h) * var(--k, 1));
+  height: calc((var(--stage-h) - var(--crop)) * var(--k, 1));
   overflow: hidden;
   background: var(--background);
   color: var(--foreground);
@@ -776,7 +753,7 @@ dialog.cp-win::backdrop {
 }
 .compass-home .stage {
   position: absolute;
-  top: 0;
+  top: calc(var(--crop) * var(--k, 1) * -1);
   left: 50%;
   overflow: hidden;
   background: var(--background);
@@ -843,4 +820,279 @@ dialog.cp-win::backdrop {
 /* post titles join the lowercase decoration on the blog tiles */
 .r-bl .cp-lbl .t {
   text-transform: lowercase;
+}
+
+/* chrome outside the stage: top bar, share popover, contact drawer */
+.cp-chrome {
+  color: var(--foreground);
+  line-height: normal;
+  font-family:
+    var(--font-google-sans-code), var(--font-assistant), ui-monospace, monospace;
+}
+.cp-skip {
+  position: absolute;
+  inset-inline-start: 16px;
+  top: -100%;
+  z-index: 50;
+  padding: 8px 12px;
+  background: var(--background);
+  color: var(--accent);
+}
+.cp-skip:focus {
+  top: 16px;
+}
+.cp-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  height: 64px;
+  padding: 0 32px;
+  box-sizing: border-box;
+  background: var(--background);
+}
+.cp-bar-line {
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  height: 4px;
+  overflow: visible;
+}
+.cp-bar-side {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cp-bar-side:first-of-type {
+  gap: 14px;
+}
+.cp-bar-name {
+  font:
+    18px/1 var(--font-mclaren),
+    cursive;
+  white-space: nowrap;
+}
+.cp-theme {
+  width: 36px;
+  padding: 0;
+}
+.cp-sun,
+.cp-when-dark,
+[data-theme="dark"] .cp-moon,
+[data-theme="dark"] .cp-when-light {
+  display: none;
+}
+[data-theme="dark"] .cp-sun {
+  display: block;
+}
+[data-theme="dark"] .cp-when-dark {
+  display: inline;
+}
+.cp-say {
+  display: none;
+}
+.cp-arrow {
+  display: inline-block;
+}
+[dir="rtl"] .cp-arrow {
+  transform: scaleX(-1);
+}
+@media (width < 768px) {
+  .cp-bar {
+    height: 0;
+    padding: 0;
+    background: none;
+  }
+  .cp-bar-side,
+  .cp-bar-line {
+    display: none;
+  }
+  .cp-say {
+    display: inline-flex;
+    position: absolute;
+    top: 14px;
+    inset-inline-end: 14px;
+  }
+}
+
+/* share: a native popover under the bar */
+.cp-pop {
+  position: fixed;
+  inset: 72px auto auto;
+  inset-inline-end: 32px;
+  width: 290px;
+  margin: 0;
+  padding: 14px;
+  box-sizing: border-box;
+  flex-direction: column;
+  gap: 10px;
+  border: 2px solid var(--foreground);
+  border-radius: 22px 12px 26px 12px / 14px 22px 12px 24px;
+  background: var(--background);
+  box-shadow: 6px 6px 0 var(--foreground);
+  opacity: 0;
+  transform: translateY(-6px);
+  transition:
+    opacity 0.25s var(--e),
+    transform 0.3s var(--e),
+    display 0.3s allow-discrete,
+    overlay 0.3s allow-discrete;
+}
+.cp-pop:popover-open {
+  display: flex;
+  opacity: 1;
+  transform: none;
+}
+@starting-style {
+  .cp-pop:popover-open {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+.cp-pop-card {
+  position: relative;
+  height: 130px;
+  overflow: hidden;
+  border: 2px solid var(--foreground);
+  background: #fdfdfd;
+  color: #282728;
+}
+.cp-pop-card svg {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.cp-pop-logo {
+  position: absolute;
+  left: 14px;
+  top: 16px;
+  font:
+    26px/0.9 var(--font-chicle),
+    cursive;
+  color: #006cac;
+  text-shadow: 2px 2px 0 #e8837c;
+}
+.cp-pop-line {
+  position: absolute;
+  left: 14px;
+  top: 82px;
+  width: 140px;
+  font:
+    10px/1.35 var(--font-google-sans-code),
+    var(--font-assistant),
+    monospace;
+}
+.cp-pop-k {
+  font-size: 11px;
+  color: var(--soft);
+}
+.cp-pop-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* contact drawer (phones): a modal dialog that drops from the top */
+dialog.cp-drawer {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+  max-width: none;
+  height: auto;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0 0 96px;
+  box-sizing: border-box;
+  overflow-y: auto;
+  border: 0;
+  background: transparent;
+  transform: translateY(-104%);
+  transition:
+    transform 0.5s var(--e),
+    display 0.5s allow-discrete,
+    overlay 0.5s allow-discrete;
+}
+dialog.cp-drawer[open] {
+  transform: none;
+}
+@starting-style {
+  dialog.cp-drawer[open] {
+    transform: translateY(-104%);
+  }
+}
+dialog.cp-drawer::backdrop {
+  background: color-mix(in srgb, var(--foreground) 24%, transparent);
+  opacity: 0;
+  transition:
+    opacity 0.3s,
+    display 0.3s allow-discrete,
+    overlay 0.3s allow-discrete;
+}
+dialog.cp-drawer[open]::backdrop {
+  opacity: 1;
+}
+@starting-style {
+  dialog.cp-drawer[open]::backdrop {
+    opacity: 0;
+  }
+}
+.cp-drawer-paper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+.cp-drawer-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+  margin-inline: auto;
+  padding: 18px 20px 0;
+}
+.cp-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cp-drawer-head form {
+  margin: 0;
+}
+.cp-drawer-t {
+  margin: 0;
+  font:
+    28px/1 var(--font-mclaren),
+    cursive;
+}
+.cp-row {
+  justify-content: space-between;
+  min-height: 50px;
+  padding: 0 16px;
+}
+.cp-drawer-rule {
+  height: 0;
+  margin: 6px 0;
+  border: 0;
+  border-top: 2px dashed var(--foreground);
+}
+.cp-drawer-row {
+  display: flex;
+  gap: 8px;
+}
+.cp-drawer-row > * {
+  flex: 1 1 0;
+  min-height: 44px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cp-pop,
+  dialog.cp-drawer,
+  dialog.cp-drawer::backdrop {
+    transition-duration: 0.01ms;
+  }
 }
