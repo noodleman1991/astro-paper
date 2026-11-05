@@ -12,3 +12,5 @@
 !.prettierrc
 !eslint.config.js
 !README.md
+# Generated shape data (kept identical to the design reference)
+/src/data/compass/shapes.json
