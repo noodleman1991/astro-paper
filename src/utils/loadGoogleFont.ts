@@ -34,6 +34,7 @@ async function loadGoogleFonts(
 ): Promise<
   Array<{ name: string; data: ArrayBuffer; weight: number; style: string }>
 > {
+  const hasHebrew = /[֐-׿]/.test(text);
   const fontsConfig = [
     {
       name: "Chicle",
@@ -41,6 +42,22 @@ async function loadGoogleFonts(
       weight: 400,
       style: "normal",
     },
+    ...(hasHebrew
+      ? [
+          {
+            name: "Assistant",
+            font: "Assistant",
+            weight: 400,
+            style: "normal",
+          },
+          {
+            name: "Assistant",
+            font: "Assistant",
+            weight: 700,
+            style: "normal",
+          },
+        ]
+      : []),
   ];
 
   const fonts = await Promise.all(

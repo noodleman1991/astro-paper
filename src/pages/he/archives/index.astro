@@ -1,0 +1,11 @@
+---
+import { SITE } from "@/config";
+import ArchivesPage from "@/pages/_shared/ArchivesPage.astro";
+
+// Redirect to 404 page if `showArchives` config is false
+if (!SITE.showArchives) {
+  return Astro.redirect("/404");
+}
+---
+
+<ArchivesPage locale="he" />

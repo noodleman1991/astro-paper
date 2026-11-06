@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>compass nav — flow wireframes</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Code:wght@400;600&amp;family=McLaren&amp;display=swap">
+<style>
+body{margin:0}
+.wf-fig{margin:0;display:flex;flex-direction:column;gap:10px}
+.wf-cap{display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:1.45;color:#4a494a}
+.wf-cap b{font:15px/1.2 'McLaren',cursive;color:#282728;font-weight:400}
+.wf-n{display:inline-block;margin-right:6px;padding:2px 6px;background:#282728;color:#fdfdfd;font:600 11px/1.2 'Google Sans Code',monospace}
+.wf-new{display:inline-block;margin-left:6px;padding:1px 5px;border:1.5px solid #282728;font:600 10px/1.2 'Google Sans Code',monospace;vertical-align:2px}
+</style>
+</helmet>
+<div style="width: 1680px; height: 940px; box-sizing: border-box; padding: 40px 32px 36px; background: #fdfdfd; color: #282728; font-family: 'Google Sans Code', ui-monospace, monospace; display: flex; flex-direction: column; gap: 28px">
+
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+      <pattern id="wf-hatch" width="22" height="22" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="22" height="22" fill="#fdfdfd"></rect><path d="M0 0V22" stroke="#282728" stroke-width="4" opacity=".45"></path></pattern>
+      <pattern id="wf-hatch-s" width="12" height="12" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="12" height="12" fill="#fdfdfd"></rect><path d="M0 0V12" stroke="#282728" stroke-width="2.4" opacity=".45"></path></pattern>
+      <clipPath id="wf-clip"><rect x="0" y="0" width="1280" height="800" rx="18"></rect></clipPath>
+      <clipPath id="wf-pclip"><rect x="0" y="0" width="390" height="844" rx="46"></rect></clipPath>
+
+      <!-- desktop: shared pieces (1280 × 800) -->
+      <rect id="wf-frame" x="3" y="3" width="1274" height="794" rx="18" fill="none" stroke="#282728" stroke-width="6"></rect>
+      <g id="wf-bar" fill="#fdfdfd" stroke="#282728" stroke-width="6">
+        <rect x="0" y="0" width="1280" height="64" stroke="none"></rect>
+        <path d="M0 64H1280" fill="none"></path>
+        <path d="M44 32h150" stroke-width="12" stroke-linecap="round" fill="none"></path>
+        <rect x="214" y="14" width="230" height="36"></rect>
+        <rect x="900" y="14" width="110" height="36"></rect>
+        <rect x="1020" y="14" width="96" height="36"></rect>
+        <rect x="1126" y="14" width="76" height="36"></rect>
+        <rect x="1212" y="14" width="36" height="36"></rect>
+      </g>
+      <g id="wf-rest">
+        <circle cx="640" cy="432" r="153" fill="#fdfdfd"></circle>
+        <g fill="none" stroke="#282728" stroke-width="6" stroke-linecap="round">
+          <circle cx="640" cy="432" r="150"></circle>
+          <circle cx="640" cy="432" r="66"></circle>
+          <path d="M640 366V282M582.8 465L510.1 507M697.2 465L769.9 507"></path>
+        </g>
+        <g font-family="McLaren, cursive" font-size="30" fill="#282728" text-anchor="middle">
+          <text x="546" y="388">blog</text>
+          <text x="734" y="388">services</text>
+          <text x="640" y="550">portfolio</text>
+          <text x="640" y="430" font-size="34" font-weight="700">LOGO</text>
+          <text x="640" y="462" font-size="20">bigger</text>
+        </g>
+      </g>
+      <path id="wf-rw-sv" d="M773.1 501.3 A150 150 0 0 0 646.5 282.1 L642.9 366.1 A66 66 0 0 1 698.5 462.5 Z"></path>
+      <path id="wf-rw-bl" d="M633.5 282.1 A150 150 0 0 0 506.9 501.3 L581.5 462.5 A66 66 0 0 1 637.1 366.1 Z"></path>
+      <path id="wf-rw-pf" d="M513.5 512.6 A150 150 0 0 0 766.5 512.6 L695.7 467.5 A66 66 0 0 1 584.3 467.5 Z"></path>
+
+      <!-- docked compass, drawn around (0,0) -->
+      <g id="wf-dock">
+        <circle r="120" fill="#fdfdfd"></circle>
+        <g fill="none" stroke="#282728" stroke-width="6" stroke-linecap="round">
+          <circle r="117"></circle><circle r="51"></circle>
+          <path d="M0 -51V-117M-44.2 25.5L-101.3 58.5M44.2 25.5L101.3 58.5"></path>
+        </g>
+        <text y="10" font-family="McLaren, cursive" font-size="26" font-weight="700" fill="#282728" text-anchor="middle">LOGO</text>
+      </g>
+      <path id="wf-dw-sv" d="M103.8 54 A117 117 0 0 0 5.1 -116.9 L2.2 -51 A51 51 0 0 1 45.2 23.5 Z"></path>
+      <path id="wf-dw-bl" d="M-5.1 -116.9 A117 117 0 0 0 -103.8 54 L-45.2 23.5 A51 51 0 0 1 -2.2 -51 Z"></path>
+      <path id="wf-dw-pf" d="M-98.7 62.9 A117 117 0 0 0 98.7 62.9 L43 27.4 A51 51 0 0 1 -43 27.4 Z"></path>
+      <circle id="wf-dw-ab" r="51"></circle>
+      <g id="wf-tab" fill="#fdfdfd" stroke="#282728" stroke-width="5"><rect x="-50" y="-20" width="100" height="40"></rect><path d="M-30 0h60" stroke-width="8" stroke-linecap="round"></path></g>
+
+      <!-- spills: each one pours out of its slice -->
+      <path id="wf-r-sv" d="M654 315C649 310 650 299 650 290C650 281 652 271 652 261C653 252 654 242 655 233C656 223 657 214 658 205C660 195 661 186 662 176C664 167 665 157 667 148C669 139 669 129 672 120C676 111 680 102 687 96C694 90 704 87 713 86C722 84 732 86 741 87C751 88 760 89 770 91C779 92 788 93 798 95C807 96 817 98 826 100C835 102 845 104 854 106C863 108 872 110 882 113C891 115 900 118 909 121C918 123 927 126 936 129C945 132 954 136 963 139C972 143 981 146 989 150C998 154 1007 158 1015 162C1024 166 1032 171 1041 175C1049 180 1057 184 1065 189C1073 194 1081 200 1089 205C1097 211 1105 216 1112 222C1120 228 1127 234 1134 241C1141 247 1148 254 1154 261C1161 267 1167 275 1173 282C1179 289 1185 297 1190 305C1195 313 1200 321 1204 330C1209 338 1212 347 1216 356C1219 365 1222 374 1224 383C1226 392 1228 402 1229 411C1230 421 1230 430 1230 440C1229 449 1228 459 1227 468C1225 477 1223 487 1220 496C1217 505 1214 514 1210 522C1206 531 1202 540 1197 548C1192 556 1187 564 1181 572C1175 579 1169 587 1163 594C1157 601 1150 608 1143 614C1137 621 1130 627 1122 634C1115 640 1108 646 1100 651C1092 656 1083 661 1074 663C1065 664 1055 663 1046 661C1037 658 1029 651 1021 646C1013 641 1006 635 998 630C990 624 982 619 974 614C966 608 959 603 951 598C943 593 935 587 927 582C919 577 910 572 902 567C894 562 886 558 878 553C870 548 861 543 853 539C845 534 836 530 828 525C819 521 811 516 803 512C794 508 786 503 777 499C769 495 755 493 751 486C748 480 753 470 754 461C755 452 758 442 758 432C758 423 757 413 754 404C752 395 749 386 744 377C740 369 734 361 728 354C722 347 715 341 707 335C699 330 691 325 682 322C673 319 659 321 654 315Z"></path>
+      <path id="wf-r-bl" d="M626 315C631 310 630 300 630 291C630 283 629 273 628 264C627 255 626 246 625 237C625 228 624 219 623 210C622 201 621 192 619 183C618 174 617 165 616 156C614 148 614 138 611 130C609 121 608 111 603 104C598 97 589 91 582 88C574 85 564 86 555 86C546 87 537 88 528 90C519 91 510 92 501 94C492 95 483 97 474 99C466 101 457 103 448 105C439 107 430 109 422 112C413 114 404 117 396 120C387 123 379 126 370 129C362 132 353 135 345 139C337 142 329 146 320 150C312 154 304 158 296 162C288 166 280 171 273 175C265 180 257 185 250 190C242 195 235 200 228 206C221 211 214 217 207 223C200 229 193 235 187 242C181 248 174 255 169 261C163 268 157 275 152 283C146 290 141 297 137 305C132 313 128 321 124 329C120 337 117 346 114 354C111 363 108 371 106 380C104 389 102 398 101 407C100 416 100 425 100 434C100 443 101 452 102 461C103 470 105 479 107 487C109 496 112 505 115 513C118 522 122 530 126 538C129 546 134 554 139 562C143 570 148 577 154 584C159 592 165 599 171 605C177 612 183 619 190 625C196 631 202 638 210 643C217 648 226 652 235 653C243 654 253 652 261 649C269 646 276 639 284 634C291 629 298 623 305 618C313 613 320 607 327 602C335 597 342 592 350 587C357 582 365 577 373 572C380 567 388 563 396 558C403 553 411 549 419 544C427 540 435 535 442 531C450 526 458 522 466 518C474 514 482 510 490 505C498 501 508 498 515 493C521 488 530 484 531 477C533 470 525 459 524 451C522 442 522 433 523 424C523 415 525 406 528 397C530 389 534 380 538 372C543 365 549 357 555 351C561 344 568 338 575 333C583 329 591 325 600 321C608 318 621 320 626 315Z"></path>
+      <path id="wf-r-pf" d="M541 496C535 494 527 498 520 501C513 503 506 508 499 511C491 515 484 518 476 521C469 524 461 526 454 529C446 531 438 533 430 535C423 537 415 539 407 541C399 542 391 544 383 546C375 547 367 549 360 551C352 553 343 554 337 558C330 562 323 568 321 575C319 582 321 591 324 598C326 606 331 613 335 620C339 626 344 633 348 640C353 646 358 653 363 659C368 665 373 671 379 677C384 683 390 689 396 694C402 699 408 705 414 710C420 715 427 720 433 724C440 729 447 733 454 738C460 742 467 746 475 749C482 753 489 757 496 760C504 763 511 766 519 769C526 772 534 774 542 776C549 778 557 780 565 782C573 784 581 785 589 786C597 787 605 788 613 789C621 790 629 790 637 790C645 790 653 790 661 789C669 789 677 788 685 787C693 786 701 785 709 783C717 782 724 780 732 778C740 776 748 773 755 771C763 768 770 765 778 762C785 759 793 756 800 752C807 749 814 745 821 741C828 737 835 732 841 728C848 723 854 719 861 714C867 709 873 704 879 698C885 693 891 687 897 682C902 676 908 670 913 664C918 658 923 651 928 645C933 638 937 632 942 625C946 618 951 612 954 604C957 597 961 588 960 581C959 574 954 566 949 561C943 556 934 554 926 552C919 550 911 549 903 547C895 545 887 544 879 542C871 540 864 539 856 537C848 535 840 533 832 531C825 528 817 526 810 523C802 520 795 517 787 514C780 511 773 507 765 504C758 500 750 492 744 493C738 494 734 505 728 510C722 516 717 522 710 526C704 531 697 535 690 539C682 542 675 545 667 546C659 548 651 549 643 550C635 550 627 550 619 548C611 547 603 544 596 541C589 538 581 534 575 530C568 525 562 520 556 515C551 509 547 498 541 496Z"></path>
+      <path id="wf-r-ab" d="M1073 432C1073 421 1072 409 1071 398C1069 386 1067 375 1065 364C1062 353 1059 342 1055 331C1051 320 1046 310 1041 299C1036 289 1030 279 1024 270C1018 260 1011 251 1004 242C997 233 990 224 982 216C974 207 966 199 957 192C949 184 940 177 930 170C921 163 912 157 902 151C892 145 882 139 872 134C862 129 851 124 841 119C830 115 820 111 809 107C798 103 787 100 776 97C765 94 754 91 742 89C731 87 720 85 709 83C697 82 686 81 674 80C663 79 651 79 640 79C629 79 617 79 606 80C594 81 583 82 571 83C560 85 549 87 538 89C526 91 515 94 504 97C493 100 482 103 471 107C460 111 450 115 439 119C429 124 418 129 408 134C398 139 388 145 378 151C368 157 359 163 350 170C340 177 331 184 323 192C314 199 306 207 298 216C290 224 283 233 276 242C269 251 262 260 256 270C250 279 244 289 239 299C234 310 229 320 225 331C221 342 218 353 215 364C213 375 211 386 209 398C208 409 207 421 207 432C207 443 208 455 209 466C211 478 213 489 215 500C218 511 221 522 225 533C229 544 234 554 239 565C244 575 250 585 256 594C262 604 269 613 276 622C283 631 290 640 298 648C306 657 314 665 323 672C331 680 340 687 350 694C359 701 368 707 378 713C388 719 398 725 408 730C418 735 429 740 439 745C450 749 460 753 471 757C482 761 493 764 504 767C515 770 526 773 538 775C549 777 560 779 571 781C583 782 594 783 606 784C617 785 629 785 640 785C651 785 663 785 674 784C686 783 697 782 709 781C720 779 731 777 742 775C754 773 765 770 776 767C787 764 798 761 809 757C820 753 830 749 841 745C851 740 862 735 872 730C882 725 892 719 902 713C912 707 921 701 930 694C940 687 949 680 957 672C966 665 974 657 982 648C990 640 997 631 1004 622C1011 613 1018 604 1024 594C1030 585 1036 575 1041 565C1046 554 1051 544 1055 533C1059 522 1062 511 1065 500C1067 489 1069 478 1071 466C1072 455 1073 443 1073 432Z"></path>
+      <clipPath id="wf-pfclip"><path d="M543 499C537 497 530 501 523 504C516 506 509 511 502 515C496 518 489 521 481 524C474 527 467 530 460 533C452 535 445 538 438 540C430 542 423 544 415 546C408 548 400 550 393 551C385 553 378 555 370 557C363 559 354 560 348 564C342 567 334 573 332 580C330 586 332 595 334 602C336 609 341 616 345 622C349 629 354 635 358 641C363 648 368 654 373 660C378 666 383 671 388 677C394 682 399 688 405 693C411 698 417 703 423 708C429 713 435 717 442 722C448 726 455 730 461 734C468 738 475 742 482 745C488 749 495 752 503 755C510 758 517 761 524 763C532 766 539 768 546 770C554 772 561 774 569 776C577 777 584 779 592 780C599 781 607 782 615 782C623 783 630 783 638 783C646 783 654 783 661 782C669 782 677 781 684 780C692 779 700 778 707 776C715 775 722 773 730 771C737 769 745 767 752 765C759 762 767 759 774 756C781 753 788 750 795 747C802 743 809 740 815 736C822 732 829 728 835 724C842 719 848 715 854 710C860 705 866 701 872 695C878 690 883 685 889 680C894 674 900 668 905 663C910 657 915 651 919 645C924 638 929 632 933 626C937 619 942 613 945 606C947 599 950 590 949 583C947 577 941 570 935 566C929 561 921 560 914 558C906 555 899 554 891 552C883 550 876 549 868 547C861 545 853 543 846 541C839 539 831 536 824 534C817 531 809 529 802 526C795 523 788 520 781 516C774 513 767 509 760 506C754 502 746 495 740 496C734 498 730 508 725 514C719 519 713 524 707 529C701 533 694 537 687 540C680 543 672 545 665 547C657 549 650 550 642 550C634 550 626 549 619 548C611 547 604 544 597 541C589 539 583 535 576 531C570 527 564 522 558 516C553 511 549 501 543 499Z"></path></clipPath>
+
+      <!-- tiles inside each spill -->
+      <g id="wf-t-sv" stroke="#282728" stroke-width="5" stroke-linejoin="round"><path d="M658 297C661 306 674 312 684 314C695 316 709 315 719 309C729 304 736 292 744 282C753 273 761 264 769 255C777 245 785 235 792 225C799 215 806 205 812 194C819 184 825 173 830 161C835 150 845 136 843 127C840 118 826 111 816 106C805 102 791 102 779 100C767 98 754 97 742 95C730 94 715 89 705 92C695 95 687 103 682 113C677 122 677 137 675 149C673 161 671 174 669 186C667 198 666 211 664 223C663 235 662 248 661 260C659 272 654 288 658 297Z" fill="#fdfdfd"></path><path d="M727 325C725 334 733 343 737 352C742 362 747 377 756 382C764 386 776 380 787 378C798 375 809 370 821 367C832 365 844 364 855 363C867 362 878 363 890 364C902 364 913 367 925 368C936 368 953 373 959 368C966 363 965 348 962 338C959 328 949 319 941 310C934 301 925 294 916 286C907 279 898 272 888 265C878 259 868 253 858 248C847 243 836 234 826 234C816 233 805 240 796 246C788 253 782 264 774 273C766 282 759 290 751 299C743 308 729 316 727 325Z" fill="#fdfdfd"></path><path d="M778 398C770 405 769 417 766 428C763 439 760 453 762 463C764 473 768 482 775 489C783 496 797 500 807 505C818 511 828 516 839 522C849 527 859 534 870 539C880 544 892 552 903 550C913 549 923 539 932 532C941 524 948 514 955 504C961 495 968 484 972 474C977 463 982 451 983 440C985 428 986 414 981 405C976 396 963 390 952 387C942 383 929 384 917 383C905 381 894 380 882 379C870 379 858 378 846 380C834 381 823 383 811 386C800 389 785 391 778 398Z" fill="#fdfdfd"></path><path d="M829 197C828 205 832 215 838 221C844 227 856 229 866 234C875 239 883 244 892 249C901 254 910 261 919 263C929 265 940 264 949 261C959 258 968 252 976 247C985 242 994 236 1002 230C1010 224 1019 219 1026 212C1034 205 1046 196 1045 190C1044 183 1028 178 1020 173C1011 168 1001 164 992 160C983 156 973 152 964 148C954 144 945 141 935 137C926 134 916 131 906 128C896 125 885 118 876 121C868 123 863 135 857 143C852 151 848 161 844 170C839 179 830 189 829 197Z" fill="#fdfdfd"></path><path d="M949 280C945 290 960 303 967 316C973 328 984 342 990 356C996 370 994 390 1004 400C1013 410 1032 411 1046 415C1061 420 1076 424 1091 429C1105 435 1119 442 1133 449C1147 456 1160 469 1174 472C1187 475 1207 475 1215 467C1223 459 1222 437 1221 421C1221 406 1218 390 1214 376C1210 361 1203 346 1196 332C1189 319 1181 306 1171 293C1162 281 1152 269 1141 258C1130 247 1118 236 1106 227C1093 218 1079 204 1066 205C1053 205 1041 222 1028 231C1015 240 1003 249 990 257C976 266 953 271 949 280Z" fill="url(#wf-hatch)"></path><path d="M1031 428C1019 430 1006 438 998 447C990 457 990 474 984 486C978 499 970 511 962 522C953 533 937 542 934 552C930 562 933 573 940 581C946 590 963 596 975 604C986 612 997 620 1009 628C1020 636 1031 648 1043 652C1055 657 1069 658 1081 655C1093 651 1104 638 1115 629C1125 621 1136 611 1145 601C1155 591 1165 581 1173 569C1181 558 1192 546 1194 534C1195 521 1190 506 1183 496C1175 486 1159 481 1147 475C1135 468 1122 461 1110 455C1097 449 1084 444 1071 439C1058 435 1043 427 1031 428Z" fill="#fdfdfd"></path></g>
+      <g id="wf-t-bl" stroke="#282728" stroke-width="5" stroke-linejoin="round"><path d="M623 299C617 310 600 314 587 318C574 322 558 325 545 322C532 318 521 304 510 295C498 285 486 276 474 267C463 258 451 248 440 239C429 229 418 219 407 209C396 199 384 188 376 177C369 165 359 149 363 141C368 132 391 130 405 125C419 121 434 117 448 113C463 109 477 106 492 104C506 101 521 99 536 97C550 95 569 88 580 92C591 96 597 110 602 122C607 134 607 151 609 166C611 181 613 196 615 210C616 225 618 240 619 255C620 269 628 289 623 299Z" fill="#fdfdfd"></path><path d="M540 340C544 355 533 385 520 393C508 401 483 391 463 389C443 387 422 382 401 381C380 381 360 382 339 385C319 388 298 393 278 399C258 404 239 411 219 417C199 422 176 433 158 431C141 428 118 416 112 402C107 387 119 361 127 342C135 323 146 305 158 288C170 271 184 255 199 241C214 227 230 214 247 202C264 190 282 174 300 169C318 165 338 166 354 175C370 183 381 206 396 221C411 235 427 249 443 262C459 275 475 288 491 301C508 314 535 325 540 340Z" fill="url(#wf-hatch)"></path><path d="M503 414C515 424 521 450 518 465C515 479 499 489 484 499C470 510 450 517 434 527C417 536 400 546 384 556C367 566 351 576 335 587C319 598 304 610 288 621C272 631 255 650 239 649C224 649 207 630 193 617C179 604 167 589 156 573C145 558 134 541 127 523C121 506 110 481 116 468C122 455 147 452 165 446C182 440 202 438 221 433C239 428 257 421 276 416C295 411 313 406 332 403C351 399 370 397 389 397C408 397 428 399 447 402C466 405 491 403 503 414Z" fill="#fdfdfd"></path></g>
+      <g id="wf-t-pf" clip-path="url(#wf-pfclip)"><g transform="rotate(-205 640 432)"><g id="wf-t-pf-in" stroke="#282728" stroke-width="5" stroke-linejoin="round"><path d="M817 423C809 420 807 408 804 399C800 390 798 379 794 369C791 359 781 348 783 339C785 331 797 325 806 319C814 312 824 308 833 303C843 298 852 293 862 289C872 285 882 280 892 277C902 274 913 267 922 269C931 271 939 281 945 289C951 297 954 309 957 319C961 329 964 339 967 349C969 359 972 370 973 380C974 391 978 406 973 411C968 417 954 415 943 415C933 416 922 413 912 413C901 413 890 414 880 414C869 415 859 417 848 418C838 420 824 426 817 423Z" fill="#fdfdfd"></path><path d="M779 320C771 321 762 315 754 310C746 305 734 298 729 291C724 284 721 276 723 267C725 259 735 250 741 241C747 232 753 224 759 215C764 206 770 197 775 188C780 179 784 168 789 159C795 151 800 137 807 136C815 134 826 144 835 150C844 156 852 162 860 169C868 176 876 183 884 191C891 198 899 205 905 214C910 223 918 235 916 243C913 251 901 257 892 262C883 267 872 270 862 274C853 278 843 282 834 287C824 291 815 297 806 302C797 308 788 318 779 320Z" fill="#fdfdfd"></path><path d="M708 265C701 270 690 270 679 270C669 270 656 268 647 265C637 262 627 260 623 252C618 244 621 230 619 219C618 208 616 197 613 186C610 176 607 165 603 155C600 144 592 133 592 124C593 114 600 104 608 99C617 95 630 97 641 97C652 96 663 97 674 98C685 99 696 101 707 103C718 106 729 108 739 112C750 115 764 116 770 123C776 130 778 142 777 152C776 162 768 172 763 182C757 191 751 200 745 210C739 219 733 228 727 237C721 246 716 259 708 265Z" fill="url(#wf-hatch)"></path><path d="M609 258C606 265 596 269 587 274C579 278 569 284 560 286C551 288 541 289 533 285C525 282 519 271 511 264C504 257 496 251 488 245C481 238 473 232 465 225C457 219 448 213 442 205C436 197 429 187 431 179C433 171 445 165 453 158C461 152 470 147 479 142C488 138 497 133 506 129C515 125 525 120 534 118C544 116 556 113 564 117C572 120 578 131 583 140C587 148 590 159 593 168C596 178 599 188 601 198C603 207 605 217 606 227C608 238 612 250 609 258Z" fill="#fdfdfd"></path><path d="M524 296C526 304 519 313 514 322C510 331 501 339 495 349C490 358 488 372 480 377C472 382 458 378 448 377C437 376 426 373 416 371C405 369 394 366 384 363C374 360 363 356 354 351C344 346 332 340 328 332C323 323 324 310 327 300C329 290 336 280 341 271C346 261 351 252 358 243C364 234 370 225 377 217C384 208 392 195 400 194C408 192 418 203 426 209C434 215 442 224 450 231C458 238 467 245 475 252C484 259 492 266 500 273C508 280 522 288 524 296Z" fill="#fdfdfd"></path><path d="M467 394C473 399 472 410 473 420C475 430 474 441 474 452C475 462 480 476 475 482C471 489 455 489 445 492C435 494 424 496 414 498C403 499 393 500 382 502C372 503 361 504 351 504C340 505 327 509 319 505C311 501 305 490 302 481C298 471 299 460 299 449C298 439 298 428 299 417C299 407 299 395 301 386C304 376 307 362 314 358C322 354 334 359 344 362C354 365 364 371 374 374C384 378 394 381 404 383C415 386 425 387 436 389C446 391 461 389 467 394Z" fill="#fdfdfd"></path><path d="M472 499C480 500 487 506 494 513C500 519 508 530 511 538C514 546 517 555 513 562C510 569 498 575 490 581C482 587 474 594 467 600C459 607 451 613 444 621C437 628 431 637 424 643C417 650 409 661 401 660C394 660 386 647 380 640C373 632 368 623 362 615C357 607 351 598 347 589C342 580 337 571 334 562C330 552 325 540 328 533C331 525 343 521 352 518C362 515 373 517 383 516C393 515 403 514 413 512C423 511 433 509 443 507C452 505 463 498 472 499Z" fill="#fdfdfd"></path><path d="M526 570C535 567 545 572 555 576C565 579 576 584 585 590C593 595 601 600 603 609C606 617 599 630 598 641C597 652 596 663 596 674C595 685 596 696 596 707C597 718 602 731 598 740C595 748 585 756 576 758C567 760 554 754 544 751C533 748 523 744 513 740C503 736 493 731 483 726C473 721 464 715 455 709C446 703 433 697 429 689C424 681 426 668 429 659C433 650 443 642 451 634C458 626 467 619 475 611C483 604 492 598 500 591C509 584 517 572 526 570Z" fill="#fdfdfd"></path><path d="M618 608C623 601 635 601 645 599C655 597 668 594 678 595C688 595 699 595 706 600C714 606 718 619 724 628C730 637 736 645 742 654C748 663 755 672 761 681C766 690 774 699 777 709C780 719 784 732 779 740C775 748 761 751 751 756C742 760 731 762 720 765C710 767 699 769 688 771C678 772 666 774 656 774C645 773 632 772 625 766C618 760 616 747 613 737C611 727 611 715 610 705C610 694 609 683 610 672C610 661 611 650 612 640C614 629 612 614 618 608Z" fill="#fdfdfd"></path><path d="M718 593C718 585 726 578 732 571C738 565 748 559 756 552C764 546 770 535 779 534C787 533 797 542 806 547C815 552 824 557 832 563C841 568 849 574 857 580C865 587 873 594 880 601C887 608 896 616 899 624C902 633 900 645 896 654C892 662 883 669 876 676C868 683 861 690 853 696C845 703 837 710 828 714C819 719 808 725 801 721C793 718 791 704 785 695C780 686 775 678 769 669C764 661 758 652 752 644C746 636 740 627 734 619C729 610 719 601 718 593Z" fill="#fdfdfd"></path><path d="M795 525C790 518 792 508 793 498C795 489 800 478 803 468C806 458 805 444 812 438C819 432 833 434 844 433C854 431 865 430 876 429C886 428 897 427 908 427C918 427 930 426 940 429C950 432 962 435 967 443C972 450 969 464 968 474C968 485 965 496 963 506C960 516 957 527 954 537C951 547 947 557 943 567C938 577 934 590 927 595C920 600 908 602 899 599C891 597 884 585 876 578C867 571 859 564 850 558C842 552 833 546 823 541C814 535 800 532 795 525Z" fill="#fdfdfd"></path></g></g></g>
+      <g id="wf-t-ab" stroke="#282728" stroke-width="5" stroke-linejoin="round"><path d="M693 309C682 316 664 306 648 306C633 307 616 314 601 312C587 311 572 305 561 295C550 285 545 268 537 254C530 239 523 225 517 210C510 196 503 181 499 166C494 151 484 131 489 120C495 109 517 106 532 102C547 97 563 96 579 94C595 92 611 91 627 90C643 90 659 90 675 91C690 92 706 94 722 97C738 99 760 100 769 106C778 113 779 125 776 137C773 148 759 164 751 178C743 192 737 206 730 220C723 235 717 250 711 265C705 279 703 302 693 309Z" fill="#fdfdfd"></path><path d="M559 323C560 345 529 364 522 388C515 411 515 440 519 465C522 489 549 514 543 534C538 555 506 571 486 588C467 606 447 624 426 639C405 654 383 681 362 680C341 679 318 652 300 634C282 616 267 593 255 570C243 547 233 522 227 497C221 472 217 445 218 419C220 394 226 367 234 343C242 318 254 294 268 272C282 250 299 230 318 212C336 194 358 178 380 164C401 150 431 124 449 128C467 131 476 162 488 183C500 204 508 232 520 255C532 278 559 301 559 323Z" fill="#fdfdfd"></path><path d="M558 543C575 537 596 554 616 556C637 557 660 554 679 552C699 549 718 534 735 539C752 544 766 568 780 584C795 600 809 616 821 633C834 650 854 669 857 686C860 703 851 722 838 734C825 745 798 749 778 755C757 761 736 765 716 768C695 771 673 773 652 774C631 774 609 773 588 771C567 769 546 766 525 761C505 756 484 750 464 743C444 735 414 729 406 716C398 704 405 684 415 670C424 655 447 642 464 629C480 615 496 602 512 587C528 573 540 548 558 543Z" fill="#fdfdfd"></path><path d="M741 523C735 501 763 475 764 450C766 425 760 396 751 373C742 349 712 333 710 310C708 287 729 260 741 236C752 212 760 182 777 164C794 147 819 131 841 132C863 133 889 155 911 170C933 186 954 203 972 222C990 241 1008 262 1021 285C1034 308 1044 334 1051 359C1058 385 1062 412 1062 438C1061 464 1056 492 1048 517C1040 542 1028 567 1014 589C1000 612 982 633 963 651C944 669 919 700 899 698C880 696 865 662 848 642C831 622 816 599 798 579C780 560 747 544 741 523Z" fill="url(#wf-hatch)"></path></g>
+      <g id="wf-p-t-sv" stroke="#282728" stroke-width="4" stroke-linejoin="round"><path d="M24 227C31 238 50 241 66 244C81 247 101 243 118 242C135 241 153 239 170 238C187 236 204 234 222 232C239 230 256 228 273 227C291 226 310 228 325 224C341 220 359 216 366 204C373 192 367 169 366 152C365 135 369 112 360 101C351 91 328 94 311 92C294 90 276 92 259 92C241 92 224 92 206 92C189 92 172 92 154 92C137 92 120 92 102 92C85 92 63 87 50 92C37 97 28 109 24 122C20 136 24 157 24 175C24 192 17 215 24 227Z" fill="url(#wf-hatch-s)"></path><path d="M24 379C30 391 47 398 62 400C78 403 98 397 115 396C133 394 150 392 168 391C185 389 203 388 220 387C238 386 255 385 273 384C291 384 310 387 326 384C341 382 359 380 366 369C373 358 366 334 366 316C366 299 371 277 366 263C361 250 349 240 335 236C321 232 300 237 282 238C265 239 247 241 230 243C212 245 195 247 177 249C160 251 142 253 124 254C107 255 88 253 72 256C55 259 34 262 26 273C18 285 24 308 24 326C24 344 18 366 24 379Z" fill="#fdfdfd"></path><path d="M24 553C29 560 42 561 52 561C63 562 76 559 88 558C100 557 111 556 123 555C135 555 148 557 159 554C169 551 181 545 187 536C193 528 192 513 195 502C198 490 201 479 204 467C207 456 212 444 213 433C214 422 216 406 210 401C204 396 187 401 175 402C163 403 151 404 139 406C128 407 116 408 104 409C92 410 80 411 69 412C57 413 41 409 33 415C26 421 26 435 24 446C22 457 24 470 24 482C24 493 24 505 24 517C24 529 19 545 24 553Z" fill="#fdfdfd"></path><path d="M202 525C203 535 207 548 215 553C222 559 237 557 248 558C259 559 270 560 281 562C293 563 304 564 315 565C326 567 340 572 348 569C357 566 363 558 366 550C369 541 366 527 366 516C366 505 366 493 366 482C366 471 366 460 366 448C366 437 370 423 366 415C362 406 353 400 344 397C335 394 321 396 310 396C299 396 288 396 277 396C265 397 252 394 243 399C235 405 231 417 227 427C223 437 222 449 219 460C216 471 213 481 210 492C207 503 202 515 202 525Z" fill="#fdfdfd"></path><path d="M24 664C27 670 35 672 42 674C50 676 59 674 68 674C76 675 85 675 93 677C101 679 110 682 117 685C124 688 133 698 137 695C140 693 136 678 136 670C136 662 137 653 138 645C139 636 141 628 143 620C145 611 149 603 149 595C149 587 150 576 145 572C141 567 129 568 121 567C112 567 104 568 95 569C87 570 79 571 70 572C62 572 52 572 45 574C37 577 29 581 25 588C22 594 24 605 24 613C24 622 24 630 24 639C24 647 21 658 24 664Z" fill="#fdfdfd"></path><path d="M149 698C152 712 162 725 168 739C173 753 176 770 183 781C190 793 199 802 211 806C223 810 241 806 256 806C271 806 286 806 302 806C317 806 336 812 347 806C358 800 363 784 366 771C369 757 366 740 366 725C366 710 366 695 366 680C366 665 367 649 366 634C365 620 366 600 357 591C349 582 330 581 315 577C301 574 285 574 270 572C255 571 240 569 225 568C210 568 191 564 180 570C169 577 163 595 158 608C153 622 151 638 149 653C148 668 146 684 149 698Z" fill="#fdfdfd"></path></g>
+
+      <!-- marks -->
+      <polygon id="wf-cur" points="0,0 0,58 15,44 27,70 38,65 26,40 46,40" fill="#006cac" stroke="#fdfdfd" stroke-width="4" stroke-linejoin="round"></polygon>
+      <path id="wf-burst" d="M-30 -22l-20 -14M-4 -36l-3 -24M22 -26l16 -18" fill="none" stroke="#006cac" stroke-width="7" stroke-linecap="round"></path>
+      <g id="wf-x" fill="#fdfdfd" stroke="#282728" stroke-width="6"><circle r="23"></circle><path d="M-9 -9l18 18M9 -9l-18 18" stroke-linecap="round"></path></g>
+      <marker id="wf-ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#006cac"></path></marker>
+
+      <!-- phone (390 × 844) -->
+      <rect id="wf-p-frame" x="3" y="3" width="384" height="838" rx="46" fill="none" stroke="#282728" stroke-width="6"></rect>
+      <g id="wf-p-rest">
+        <circle cx="195" cy="430" r="133" fill="#fdfdfd"></circle>
+        <g fill="none" stroke="#282728" stroke-width="5" stroke-linecap="round">
+          <circle cx="195" cy="430" r="130"></circle><circle cx="195" cy="430" r="56"></circle>
+          <path d="M195 374V300M146.5 458L82.4 495M243.5 458L307.6 495"></path>
+        </g>
+        <text x="195" y="440" font-family="McLaren, cursive" font-size="28" font-weight="700" fill="#282728" text-anchor="middle">LOGO</text>
+      </g>
+      <g id="wf-p-dock">
+        <circle r="96" fill="#fdfdfd"></circle>
+        <g fill="none" stroke="#282728" stroke-width="5" stroke-linecap="round">
+          <circle r="94"></circle><circle r="40"></circle>
+          <path d="M0 -40V-94M-34.6 20L-81.4 47M34.6 20L81.4 47"></path>
+        </g>
+      </g>
+      <path id="wf-pw-sv" d="M83.4 43.4 A94 94 0 0 0 4.1 -93.9 L1.7 -40 A40 40 0 0 1 35.5 18.5 Z"></path>
+      <path id="wf-p-r-sv" d="M-10 -10 H400 V860 H250 C190 856 151.6 826 151.6 786 A93.6 93.6 0 0 0 104.8 704.9 C91 697 50 664 -10 660 Z"></path>
+      <g id="wf-p-hi" fill="#fdfdfd" stroke="#282728" stroke-width="5"><rect x="276" y="14" width="100" height="44"></rect></g>
+      <g id="wf-p-close" fill="#fdfdfd" stroke="#282728" stroke-width="5"><rect x="14" y="14" width="86" height="44"></rect><path d="M30 26l20 20M50 26l-20 20" stroke-linecap="round"></path></g>
+    </defs>
+  </svg>
+
+  <header style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px">
+    <div style="display: flex; flex-direction: column; gap: 8px; max-width: 980px">
+      <h1 style="margin: 0; font: 32px/1.1 'McLaren', cursive; font-weight: 400">your sketch, as a flow — v6</h1>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #4a494a">click a slice and its section pours out of it, like the sketch. on a desktop the compass stays where it is and the slice itself grows: its edges carry straight out and end in one smooth front, with paper around it. the tiles inside fit into each other with even channels between. the titles share one circle, like a seal: blog and services over the top, portfolio under the bottom, no boxes. only on a phone does the compass step aside, because there is no room otherwise.</p>
+    </div>
+    <ul style="margin: 0; padding: 0; list-style: none; display: flex; gap: 18px; font-size: 12px; color: #4a494a">
+      <li style="display: flex; gap: 8px; align-items: center"><svg viewBox="0 0 60 80" width="15" height="20" aria-hidden="true"><use href="#wf-cur" x="6" y="4"></use></svg>pointer</li>
+      <li style="display: flex; gap: 8px; align-items: center"><svg viewBox="-60 -70 120 80" width="24" height="16" aria-hidden="true"><use href="#wf-burst"></use></svg>click / tap</li>
+      <li style="display: flex; gap: 8px; align-items: center"><svg viewBox="0 0 40 24" width="34" height="20" aria-hidden="true"><rect x="2" y="2" width="36" height="20" fill="url(#wf-hatch-s)" stroke="#282728" stroke-width="2"></rect></svg>active slice / spot tile</li>
+      <li style="display: flex; gap: 8px; align-items: center"><svg viewBox="0 0 40 24" width="34" height="20" aria-hidden="true"><path d="M4 18 C14 4 26 4 36 14" fill="none" stroke="#006cac" stroke-width="2.5" stroke-dasharray="3 5" marker-end="url(#wf-ah)"></path></svg>it pours this way</li>
+      <li style="display: flex; gap: 8px; align-items: center"><span class="wf-new" style="margin: 0">new</span>from your notes</li>
+    </ul>
+  </header>
+
+  <div style="display: flex; gap: 24px">
+    <figure class="wf-fig" style="width: 304px">
+      <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="rest: top bar, compass in the middle with a bigger logo">
+        <use href="#wf-rest"></use>
+        <use href="#wf-bar"></use>
+        <path d="M440 676h400" stroke="#282728" stroke-width="6" stroke-linecap="round" opacity=".35"></path>
+        <use href="#wf-cur" x="1010" y="590"></use>
+        <use href="#wf-frame"></use>
+      </svg>
+      <figcaption class="wf-cap"><b><span class="wf-n">1</span>rest<span class="wf-new">new</span></b>top bar always on: name + email on the left; linkedin, share, language and theme on the right. the logo is bigger, with a riso offset.</figcaption>
+    </figure>
+    <figure class="wf-fig" style="width: 304px">
+      <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="hover services: the slice grows a little, faintly; the compass stays put">
+        <g clip-path="url(#wf-clip)"><g transform="translate(770 357) scale(.34) translate(-770 -357)"><use href="#wf-r-sv" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="16" stroke-dasharray="10 30" stroke-linecap="round"></use></g></g>
+        <use href="#wf-rest"></use><use href="#wf-rw-sv" fill="url(#wf-hatch)" stroke="#282728" stroke-width="6"></use>
+        <use href="#wf-bar"></use>
+        <use href="#wf-cur" x="740" y="370"></use>
+        <use href="#wf-frame"></use>
+      </svg>
+      <figcaption class="wf-cap"><b><span class="wf-n">2</span>hover a slice</b>the slice grows a third of the way, faintly, to show where it will open. nothing moves, so the slice stays under the pointer.</figcaption>
+    </figure>
+    <figure class="wf-fig" style="width: 304px">
+      <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="click services: the compass stays in the middle and services pours out of its slice, up and right">
+        <g clip-path="url(#wf-clip)"><use href="#wf-r-sv" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="6" stroke-dasharray="28 18"></use><use href="#wf-t-sv"></use><path d="M825 66Q825 75 834 75Q825 75 825 84Q825 75 816 75Q825 75 825 66ZM1219 560Q1219 567 1226 567Q1219 567 1219 574Q1219 567 1212 567Q1219 567 1219 560Z" transform="translate(0 0)" fill="#fdfdfd" stroke="#282728" stroke-width="5" stroke-linejoin="round"></path></g>
+        <use href="#wf-rest"></use><use href="#wf-rw-sv" fill="url(#wf-hatch)" stroke="#282728" stroke-width="6"></use>
+        <use href="#wf-bar"></use>
+        <path d="M800 330 C880 250 960 210 1060 190" fill="none" stroke="#006cac" stroke-width="7" stroke-dasharray="6 16" stroke-linecap="round" marker-end="url(#wf-ah)"></path>
+        <g fill="#fdfdfd" stroke="#282728" stroke-width="6"><path d="M60 610h170" stroke-width="14" stroke-linecap="round"></path><path d="M60 650h130M60 680h150" stroke-width="7" stroke-linecap="round"></path></g>
+        <use href="#wf-frame"></use>
+      </svg>
+      <figcaption class="wf-cap"><b><span class="wf-n">3</span>click → it pours</b>the services slice grows into a wide, lopsided slice: an inner ring of three, an outer ring of three. the compass doesn&#39;t move.</figcaption>
+    </figure>
+    <figure class="wf-fig" style="width: 304px">
+      <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="portfolio: the grown bottom slice is a window onto a dial of projects that turns">
+        <g clip-path="url(#wf-clip)"><use href="#wf-r-pf" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="6" stroke-dasharray="28 18"></use><use href="#wf-t-pf"></use></g>
+        <use href="#wf-rest"></use><use href="#wf-rw-pf" fill="url(#wf-hatch)" stroke="#282728" stroke-width="6"></use>
+        <use href="#wf-bar"></use>
+        <g fill="none" stroke="#282728" stroke-linecap="round"><path d="M60 600h190" stroke-width="14"></path><path d="M60 640h150M60 668h170" stroke-width="7"></path></g>
+        <path d="M900 640 Q640 900 380 640" fill="none" stroke="#006cac" stroke-width="7" stroke-dasharray="6 16" stroke-linecap="round" marker-end="url(#wf-ah)"></path>
+        <use href="#wf-frame"></use>
+      </svg>
+      <figcaption class="wf-cap"><b><span class="wf-n">4</span>portfolio<span class="wf-new">new</span></b>the bottom slice grows into a window onto a dial of ten projects. scroll or drag and the dial turns: projects slide in from under one edge and out under the other. the slivers at the edges are the hint, and clicking one turns to it. a click opens a window.</figcaption>
+    </figure>
+    <figure class="wf-fig" style="width: 304px">
+      <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="blog: the compass stays in the middle, the blog slice grows up and left, cut like a pie">
+        <g clip-path="url(#wf-clip)"><use href="#wf-r-bl" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="6" stroke-dasharray="28 18"></use><use href="#wf-t-bl"></use><path d="M507 62Q507 69 514 69Q507 69 507 76Q507 69 500 69Q507 69 507 62ZM131 255Q131 264 140 264Q131 264 131 273Q131 264 122 264Q131 264 131 255Z" transform="translate(0 0)" fill="#fdfdfd" stroke="#282728" stroke-width="5" stroke-linejoin="round"></path></g>
+        <use href="#wf-rest"></use><use href="#wf-rw-bl" fill="url(#wf-hatch)" stroke="#282728" stroke-width="6"></use>
+        <use href="#wf-bar"></use>
+        <path d="M480 330 C420 260 360 230 300 220" fill="none" stroke="#006cac" stroke-width="7" stroke-dasharray="6 16" stroke-linecap="round" marker-end="url(#wf-ah)"></path>
+        <use href="#wf-frame"></use>
+      </svg>
+      <figcaption class="wf-cap"><b><span class="wf-n">5</span>blog</b>the blog slice grows up and left and is cut like a pie: the latest post (dotted), the one before, and "all posts" for the blog page.</figcaption>
+    </figure>
+  </div>
+
+  <div style="display: flex; gap: 40px; align-items: flex-start">
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <p style="margin: 0; font: 15px/1.2 'McLaren', cursive">about, details, sharing</p>
+      <div style="display: flex; gap: 24px">
+        <figure class="wf-fig" style="width: 304px">
+          <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="logo click: a halo breathes out all the way around the compass">
+        <g clip-path="url(#wf-clip)"><use href="#wf-r-ab" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="6" stroke-dasharray="28 18"></use><use href="#wf-t-ab"></use></g>
+        <use href="#wf-rest"></use>
+        <use href="#wf-x" x="640" y="362"></use>
+        <use href="#wf-bar"></use>
+        <use href="#wf-frame"></use>
+      </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">6</span>click the logo</b>the logo breathes out a halo all the way round: intro, photo, "how i work" (opens a window) and say hi. no separate about page.</figcaption>
+        </figure>
+        <figure class="wf-fig" style="width: 304px">
+          <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="clicking a tile opens a window with details">
+            <g clip-path="url(#wf-clip)">
+              <use href="#wf-r-sv" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="6"></use>
+              <use href="#wf-t-sv"></use>
+              <use href="#wf-rest"></use>
+              <rect x="0" y="0" width="1280" height="800" fill="#282728" opacity=".28"></rect>
+            </g>
+            <g stroke="#282728" stroke-width="6">
+              <rect x="300" y="140" width="700" height="560" rx="30" fill="#282728"></rect>
+              <rect x="290" y="130" width="700" height="560" rx="30" fill="#fdfdfd"></rect>
+              <path d="M290 186H990" fill="none"></path>
+              <rect x="293" y="133" width="694" height="53" rx="27" fill="url(#wf-hatch)" stroke="none"></rect>
+              <rect x="860" y="142" width="110" height="34" fill="#fdfdfd"></rect>
+              <path d="M330 250h300" stroke-width="20" stroke-linecap="round"></path>
+              <path d="M330 310h560M330 345h600M330 380h520M330 430h580M330 465h480" stroke-width="10" stroke-linecap="round" fill="none"></path>
+              <rect x="330" y="510" width="90" height="34" fill="#fdfdfd"></rect><rect x="430" y="510" width="90" height="34" fill="#fdfdfd"></rect><rect x="530" y="510" width="120" height="34" fill="#fdfdfd"></rect>
+              <rect x="330" y="620" width="260" height="40" fill="#282728"></rect><rect x="600" y="620" width="100" height="40" fill="#fdfdfd"></rect>
+            </g>
+            <use href="#wf-bar"></use>
+            <use href="#wf-frame"></use>
+          </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">7</span>tile → window<span class="wf-new">new</span></b>a service or project tile opens a window: the details, tools, related writing and a way to start. "next →" flips to the next one.</figcaption>
+        </figure>
+        <figure class="wf-fig" style="width: 304px">
+          <svg viewBox="0 0 1280 800" width="304" height="190" role="img" aria-label="share popover under the share button with a link preview">
+            <use href="#wf-rest"></use>
+            <use href="#wf-bar"></use>
+            <g stroke="#282728" stroke-width="6">
+              <rect x="958" y="82" width="300" height="400" rx="24" fill="#282728"></rect>
+              <rect x="948" y="72" width="300" height="400" rx="24" fill="#fdfdfd"></rect>
+              <rect x="966" y="90" width="264" height="140" fill="url(#wf-hatch)"></rect>
+              <path d="M966 260h180" stroke-width="8" stroke-linecap="round"></path>
+              <rect x="966" y="285" width="264" height="40" fill="#fdfdfd"></rect>
+              <rect x="966" y="345" width="80" height="30" fill="#fdfdfd"></rect><rect x="1058" y="345" width="80" height="30" fill="#fdfdfd"></rect><rect x="1150" y="345" width="80" height="30" fill="#fdfdfd"></rect>
+              <rect x="966" y="390" width="80" height="30" fill="#fdfdfd"></rect><rect x="1058" y="390" width="80" height="30" fill="#fdfdfd"></rect><rect x="1150" y="390" width="80" height="30" fill="#fdfdfd"></rect>
+            </g>
+            <use href="#wf-burst" x="1065" y="40"></use>
+            <use href="#wf-frame"></use>
+          </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">8</span>share<span class="wf-new">new</span></b>a small card: the link preview people will see, copy link, and the usual apps. on phones it opens the system share sheet instead.</figcaption>
+        </figure>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px">
+      <p style="margin: 0; font: 15px/1.2 'McLaren', cursive">on a phone</p>
+      <div style="display: flex; gap: 16px">
+        <figure class="wf-fig" style="width: 140px">
+          <svg viewBox="0 0 390 844" width="112" height="242" role="img" aria-label="phone at rest: say hi button, compass with a hide button">
+            <use href="#wf-p-hi"></use>
+            <use href="#wf-p-rest"></use>
+            <use href="#wf-x" x="311" y="302" transform="scale(1)"></use>
+            <path d="M110 640h170M130 664h130" stroke="#282728" stroke-width="5" stroke-linecap="round" opacity=".35"></path>
+            <use href="#wf-p-frame"></use>
+          </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">9</span>rest</b>"say hi" up top. × on the ring hides the compass.</figcaption>
+        </figure>
+        <figure class="wf-fig" style="width: 140px">
+          <svg viewBox="0 0 390 844" width="112" height="242" role="img" aria-label="phone after tapping services: compass to the bottom-left, section fills the rest">
+            <g clip-path="url(#wf-pclip)">
+              <path d="M18 116C19 108 21 97 27 92C32 87 43 87 51 86C60 85 69 86 77 86C86 86 95 86 103 86C112 86 121 86 129 86C138 86 147 86 155 86C164 86 173 86 181 86C190 86 199 86 207 86C216 86 225 86 233 86C242 86 251 86 259 86C268 86 277 86 285 86C294 86 303 86 311 86C320 86 329 85 337 86C346 87 356 87 362 92C368 96 370 107 372 115C374 123 372 132 372 141C372 149 372 158 372 167C372 175 372 184 372 193C372 201 372 210 372 219C372 227 372 236 372 245C372 253 372 262 372 271C372 279 372 288 372 297C372 305 372 314 372 323C372 331 372 340 372 349C372 357 372 366 372 375C372 383 372 392 372 401C372 409 372 418 372 427C372 435 372 444 372 453C372 461 372 470 372 479C372 487 372 496 372 505C372 513 372 522 372 531C372 539 372 548 372 557C372 565 372 574 372 583C372 591 372 600 372 609C372 617 372 626 372 635C372 643 372 652 372 661C372 669 372 678 372 687C372 695 372 704 372 713C372 721 372 730 372 739C372 747 372 756 372 765C372 773 373 783 372 791C371 799 372 808 367 812C362 816 350 812 341 812C333 812 324 812 315 812C307 812 298 812 289 812C281 812 272 812 263 812C255 812 246 812 237 812C229 812 220 812 211 812C203 812 191 815 185 812C179 809 177 801 175 794C173 787 174 777 172 768C170 760 168 751 165 743C162 736 157 728 152 721C146 714 140 708 133 703C127 697 119 693 111 689C103 686 95 683 87 682C78 680 69 680 61 680C52 680 42 683 35 680C28 677 21 669 19 662C16 655 18 645 18 636C18 627 18 619 18 610C18 601 18 593 18 584C18 575 18 567 18 558C18 549 18 541 18 532C18 523 18 515 18 506C18 497 18 489 18 480C18 471 18 463 18 454C18 445 18 437 18 428C18 419 18 411 18 402C18 393 18 385 18 376C18 367 18 359 18 350C18 341 18 333 18 324C18 315 18 307 18 298C18 289 18 281 18 272C18 263 18 255 18 246C18 237 18 229 18 220C18 211 18 203 18 194C18 185 18 177 18 168C18 159 18 151 18 142C18 133 17 124 18 116Z" fill="#282728" fill-opacity=".05" stroke="#282728" stroke-width="5" stroke-dasharray="22 14"></path>
+              <use href="#wf-p-t-sv"></use>
+              <g transform="translate(58 786)"><use href="#wf-p-dock"></use><use href="#wf-pw-sv" fill="url(#wf-hatch-s)" stroke="#282728" stroke-width="5"></use></g>
+            </g>
+            <use href="#wf-p-close"></use><use href="#wf-p-hi"></use>
+            <use href="#wf-p-frame"></use>
+          </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">10</span>tap a slice</b>the compass docks and the section pours from its slice. portfolio&#39;s envelope stays still; the projects stream through it and narrow into the slice as they rise.</figcaption>
+        </figure>
+        <figure class="wf-fig" style="width: 140px">
+          <svg viewBox="0 0 390 844" width="112" height="242" role="img" aria-label="contact drawer dropping from the top">
+            <use href="#wf-p-rest"></use>
+            <rect x="0" y="0" width="390" height="844" fill="#282728" opacity=".25"></rect>
+            <path d="M-10 -10 H400 V486 C340 506 300 476 240 496 C180 516 130 482 70 500 C40 509 10 498 -10 492 Z" fill="#fdfdfd" stroke="#282728" stroke-width="5"></path>
+            <path d="M24 50h120" stroke="#282728" stroke-width="14" stroke-linecap="round"></path>
+            <g fill="#fdfdfd" stroke="#282728" stroke-width="5">
+              <rect x="20" y="90" width="350" height="52"></rect><rect x="20" y="152" width="350" height="52"></rect><rect x="20" y="214" width="350" height="52" fill="#282728"></rect>
+              <rect x="20" y="300" width="170" height="44"></rect><rect x="200" y="300" width="170" height="44"></rect>
+              <rect x="20" y="354" width="110" height="44"></rect><rect x="140" y="354" width="110" height="44"></rect><rect x="260" y="354" width="110" height="44"></rect>
+            </g>
+            <use href="#wf-p-frame"></use>
+          </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">11</span>contact drawer<span class="wf-new">new</span></b>drops from the top: mail, linkedin, a message form, share, copy link, language, theme.</figcaption>
+        </figure>
+        <figure class="wf-fig" style="width: 140px">
+          <svg viewBox="0 0 390 844" width="112" height="242" role="img" aria-label="plain menu: compass hidden, bottom tab bar, logo leads">
+            <use href="#wf-p-hi"></use>
+            <text x="28" y="250" font-family="McLaren, cursive" font-size="64" font-weight="700" fill="#282728">LOGO</text>
+            <path d="M28 300h200M28 340h320M28 372h280" stroke="#282728" stroke-width="10" stroke-linecap="round"></path>
+            <g fill="#fdfdfd" stroke="#282728" stroke-width="5">
+              <path d="M0 772H390"></path>
+              <path d="M78 772V844M156 772V844M234 772V844M312 772V844"></path>
+              <path d="M18 808h42M96 808h42M174 808h42M252 808h42" stroke-width="10" stroke-linecap="round"></path>
+              <circle cx="351" cy="808" r="18"></circle>
+            </g>
+            <use href="#wf-p-frame"></use>
+          </svg>
+          <figcaption class="wf-cap"><b><span class="wf-n">12</span>plain menu<span class="wf-new">new</span></b>compass hidden: a tab bar, the logo leads. sections pour from a paper plug. the ring icon brings it back.</figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1680,"height":940}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,166 @@
+---
+import { SHAPES, STAGE } from "@/data/compass/shapes";
+import { PROJECTS, projectHash } from "@/config/projects";
+import { SOCIALS } from "@/constants";
+import {
+  cellRole,
+  dialAngle,
+  labelLayerAngle,
+  rangeLabel,
+  visibleProjects,
+} from "@/scripts/compass/dial";
+import { mirrorMatrix, mirrorPath, placeBox } from "@/utils/compass/place";
+import { fmt, localeDir, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const stage = STAGE.desktop;
+const pf = SHAPES.pf;
+const projects = PROJECTS[locale];
+const mail = SOCIALS.find(s => s.name === "Mail")?.href ?? "";
+
+// Tints and riso-dot cells as on the approved board, cell by cell.
+const TINT = ["k3", "k2", "k4", "k2", "k3", "k2", "k4", "k3", "k2", "k4", "k2"];
+const DOTS = new Set([2, 7]);
+const angle = dialAngle(0);
+const cells = pf.cells.map((cell, i) => ({
+  ...cell,
+  i,
+  tint: TINT[i],
+  role: cellRole(i, 0),
+  project: projects[i],
+  place: placeBox(cell.box, {
+    rtl,
+    stageWidth: stage.w,
+    minW: 140,
+    pad: 36,
+  }),
+}));
+const px = (p: { left: number; top: number; width: number; height: number }) =>
+  `left: ${p.left}px; top: ${p.top}px; width: ${p.width}px; height: ${p.height}px`;
+---
+
+<section
+  id="cp-d-portfolio"
+  data-region="portfolio"
+  data-dial
+  class="cp-region r-pf"
+  aria-label={t.titles.portfolio}
+  style={`--ring: ${angle}deg; --turn: ${labelLayerAngle(angle, rtl)}deg`}
+>
+  <svg
+    class="cp-art"
+    viewBox={`0 0 ${stage.w} ${stage.h}`}
+    width={stage.w}
+    height={stage.h}
+    aria-hidden="true"
+  >
+    <defs>
+      <clipPath id="pf-win"><path d={pf.clip}></path></clipPath>
+    </defs>
+    <g transform={rtl ? mirrorMatrix(stage.w) : undefined}>
+      <g filter="url(#cp-rough)">
+        <g class="cp-pour" style="transform-origin: 640px 582px">
+          <path class="pour cp-hit" d={pf.pour}></path>
+          <g clip-path="url(#pf-win)">
+            <g class="pf-ring cp-tiles">
+              {
+                cells.map(c => (
+                  <Fragment>
+                    <path
+                      class:list={[
+                        "tl",
+                        c.tint,
+                        "cp-hit",
+                        { "is-peek": c.role === "next" || c.role === "prev" },
+                      ]}
+                      d={c.d}
+                      data-cell={c.i}
+                      data-tile={c.id}
+                      data-win={
+                        c.project
+                          ? `portfolio/${projectHash(c.project.n)}`
+                          : undefined
+                      }
+                    />
+                    {DOTS.has(c.i) && <path class="tdots" d={c.d} />}
+                  </Fragment>
+                ))
+              }
+            </g>
+          </g>
+          <path class="cp-ants" transform="translate(5 4)" d={pf.pour}></path>
+          {
+            pf.sparks
+              .split(/(?<=Z)/)
+              .filter(Boolean)
+              .map(d => <path class="cp-spark" d={d} />)
+          }
+        </g>
+      </g>
+    </g>
+  </svg>
+  <div
+    class="pf-lbls"
+    style={`clip-path: path('${rtl ? mirrorPath(pf.clip, stage.w) : pf.clip}')`}
+  >
+    <div class="pf-turn">
+      {
+        cells.map(c =>
+          c.project ? (
+            <button
+              class:list={["cp-lbl", { "is-out": c.role !== "visible" }]}
+              type="button"
+              data-cell={c.i}
+              data-tile-label={c.id}
+              data-win={`portfolio/${projectHash(c.project.n)}`}
+              inert={c.role !== "visible"}
+              style={`${px(c.place)}; gap: 5px`}
+            >
+              <span class="cp-date">{projectHash(c.project.n)}</span>
+              <span class="t" style="font-size: 17px; white-space: nowrap">
+                {c.project.title}
+              </span>
+              <span class="s">
+                [{c.project.tag} · {t.dial.year}]
+              </span>
+            </button>
+          ) : (
+            <div
+              class:list={[
+                "cp-lbl",
+                "cp-still",
+                { "is-out": c.role !== "visible" },
+              ]}
+              data-cell={c.i}
+              inert={c.role !== "visible"}
+              style={`${px(c.place)}; gap: 7px`}
+            >
+              <span class="t" style="font-size: 18px">
+                {t.dial.end}
+              </span>
+              <a class="cp-sticker sm" href={mail} draggable="false">
+                {t.dial.sayHi}
+              </a>
+            </div>
+          )
+        )
+      }
+    </div>
+  </div>
+  <p class="cp-side" style="inset-inline-start: 56px; top: 600px; margin: 0">
+    <b>{t.side.portfolio[0]}</b>
+    <span>{t.side.portfolio[1]}</span>
+    <span>{t.side.portfolio[2]}</span>
+  </p>
+  <p
+    class="sr-only"
+    data-dial-status
+    data-template={t.dial.status}
+    aria-live="polite"
+  >
+    {fmt(t.dial.status, { range: rangeLabel(visibleProjects(0)) })}
+  </p>
+</section>

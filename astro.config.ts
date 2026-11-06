@@ -1,6 +1,7 @@
 import { defineConfig, envField, fontProviders } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
 import sitemap from "@astrojs/sitemap";
+import { unified } from "@astrojs/markdown-remark";
 import remarkToc from "remark-toc";
 import remarkCollapse from "remark-collapse";
 import {
@@ -16,11 +17,35 @@ import icon from "astro-icon";
 // https://astro.build/config
 export default defineConfig({
   site: SITE.website,
-  integrations: [sitemap({
-    filter: page => SITE.showArchives || !page.endsWith("/archives"),
-  }), icon()],
+  // about lives on the compass now
+  redirects: {
+    "/about": "/#about",
+    "/he/about": "/he/#about",
+  },
+  i18n: {
+    defaultLocale: "en",
+    locales: ["en", "he"],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+  },
+  integrations: [
+    sitemap({
+      filter: page => SITE.showArchives || !page.endsWith("/archives"),
+      i18n: {
+        defaultLocale: "en",
+        locales: { en: "en", he: "he" },
+      },
+    }),
+    icon(),
+  ],
   markdown: {
-    remarkPlugins: [remarkToc, [remarkCollapse, { test: "Table of contents" }]],
+    processor: unified({
+      remarkPlugins: [
+        remarkToc,
+        [remarkCollapse, { test: "Table of contents" }],
+      ],
+    }),
     shikiConfig: {
       // For more themes, visit https://shiki.style/themes
       themes: { light: "min-light", dark: "night-owl" },
@@ -57,33 +82,48 @@ export default defineConfig({
       }),
     },
   },
-  experimental: {
-    preserveScriptOrder: true,
-    fonts: [
-      {
-        name: "Google Sans Code",
-        cssVariable: "--font-google-sans-code",
-        provider: fontProviders.google(),
-        fallbacks: ["monospace"],
-        weights: [300, 400, 500, 600, 700],
-        styles: ["normal", "italic"],
-      },
-      {
-        name: "Chicle",
-        cssVariable: "--font-chicle",
-        provider: fontProviders.google(),
-        fallbacks: ["cursive"],
-        weights: [400],
-        styles: ["normal"],
-      },
-      {
-        name: "McLaren",
-        cssVariable: "--font-mclaren",
-        provider: fontProviders.google(),
-        fallbacks: ["sans-serif"],
-        weights: [400],
-        styles: ["normal"],
-      },
-    ],
-  },
+  fonts: [
+    {
+      name: "Google Sans Code",
+      cssVariable: "--font-google-sans-code",
+      provider: fontProviders.google(),
+      fallbacks: [],
+      weights: [300, 400, 500, 600, 700],
+      styles: ["normal", "italic"],
+    },
+    {
+      name: "Chicle",
+      cssVariable: "--font-chicle",
+      provider: fontProviders.google(),
+      fallbacks: ["cursive"],
+      weights: [400],
+      styles: ["normal"],
+    },
+    {
+      name: "McLaren",
+      cssVariable: "--font-mclaren",
+      provider: fontProviders.google(),
+      fallbacks: [],
+      weights: [400],
+      styles: ["normal"],
+    },
+    {
+      name: "Assistant",
+      cssVariable: "--font-assistant",
+      provider: fontProviders.google(),
+      fallbacks: ["sans-serif"],
+      weights: [300, 400, 500, 600, 700],
+      styles: ["normal"],
+      subsets: ["hebrew", "latin"],
+    },
+    {
+      name: "Fredoka",
+      cssVariable: "--font-fredoka",
+      provider: fontProviders.google(),
+      fallbacks: ["sans-serif"],
+      weights: [400, 500],
+      styles: ["normal"],
+      subsets: ["hebrew", "latin"],
+    },
+  ],
 });

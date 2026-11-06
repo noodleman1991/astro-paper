@@ -1,18 +1,24 @@
 ---
 import { Icon } from "astro-icon/components";
 import LinkButton from "./LinkButton.astro";
+import LanguageToggle from "./LanguageToggle.astro";
 import { SITE } from "@/config";
+import { localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale?: Locale };
+const { locale = "en" } = Astro.props;
+const t = useTranslations(locale);
 
 const { pathname } = Astro.url;
 
-// Remove trailing slash from current pathname if exists
+// Compare locale-agnostically so nav highlighting works under /he/ too.
+const bare = pathname.replace(/^\/he(?=\/|$)/, "") || "/";
 const currentPath =
-  pathname.endsWith("/") && pathname !== "/" ? pathname.slice(0, -1) : pathname;
+  bare.endsWith("/") && bare !== "/" ? bare.slice(0, -1) : bare;
 
 const isActive = (path: string) => {
   const currentPathArray = currentPath.split("/").filter(p => p.trim());
   const pathArray = path.split("/").filter(p => p.trim());
-
   return currentPath === path || currentPathArray[0] === pathArray[0];
 };
 ---
@@ -22,23 +28,25 @@ const isActive = (path: string) => {
   href="#main-content"
   class="absolute start-16 -top-full z-50 bg-background px-3 py-2 text-accent backdrop-blur-lg transition-all focus:top-4"
 >
-  Skip to content
+  {t.a11y.skipToContent}
 </a>
 
 <header
-  class="app-layout flex flex-col items-center justify-between sm:flex-row"
+  id="site-header"
+  data-hidden
+  class="site-header flex flex-col items-center justify-between sm:flex-row"
 >
   <div
     id="top-nav-wrap"
     class:list={[
+      "app-layout",
       "py-4 sm:py-6",
-      "border-b border-border",
       "relative w-full bg-background",
       "flex items-baseline justify-between sm:items-center",
     ]}
   >
     <a
-      href="/"
+      href={localePath(locale, "/")}
       class="absolute py-1 font-logo text-xl leading-8 font-semibold whitespace-nowrap sm:static sm:my-auto sm:text-2xl sm:leading-none"
     >
       {SITE.title}
@@ -50,9 +58,11 @@ const isActive = (path: string) => {
       <button
         id="menu-btn"
         class="focus-outline self-end p-2 sm:hidden"
-        aria-label="Open Menu"
+        aria-label={t.a11y.openMenu}
         aria-expanded="false"
         aria-controls="menu-items"
+        data-label-open={t.a11y.openMenu}
+        data-label-close={t.a11y.closeMenu}
       >
         <Icon name="tabler:x" id="close-icon" class="hidden" />
         <Icon name="tabler:menu-deep" id="menu-icon" />
@@ -67,52 +77,61 @@ const isActive = (path: string) => {
         ]}
       >
         <li class="col-span-2">
-          <a href="/posts" class:list={{ "active-nav": isActive("/posts") }}>
-            Posts
+          <a
+            href={localePath(locale, "/posts")}
+            class:list={{ "active-nav": isActive("/posts") }}
+          >
+            {t.nav.posts}
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/tags" class:list={{ "active-nav": isActive("/tags") }}>
-            Tags
+          <a
+            href={localePath(locale, "/tags")}
+            class:list={{ "active-nav": isActive("/tags") }}
+          >
+            {t.nav.tags}
           </a>
         </li>
         <li class="col-span-2">
-          <a href="/about" class:list={{ "active-nav": isActive("/about") }}>
-            About
+          <a href={localePath(locale, "/#about")}>
+            {t.nav.about}
           </a>
         </li>
         {
           SITE.showArchives && (
             <li class="col-span-2">
               <LinkButton
-                href="/archives"
+                href={localePath(locale, "/archives")}
                 class:list={[
                   "focus-outline flex justify-center p-3 sm:p-1",
                   {
                     "active-nav [&>svg]:stroke-accent": isActive("/archives"),
                   },
                 ]}
-                title="Archives"
-                aria-label="archives"
+                title={t.nav.archives}
+                aria-label={t.nav.archives}
               >
-                <Icon name="streamline-ultimate-color:archive-books" class="hidden sm:inline-block" />
-                <span class="sm:sr-only">Archives</span>
+                <Icon
+                  name="streamline-ultimate-color:archive-books"
+                  class="hidden sm:inline-block"
+                />
+                <span class="sm:sr-only">{t.nav.archives}</span>
               </LinkButton>
             </li>
           )
         }
         <li class="col-span-1 flex items-center justify-center">
           <LinkButton
-            href="/search"
+            href={localePath(locale, "/search")}
             class:list={[
               "focus-outline flex p-3 sm:p-1",
               { "[&>svg]:stroke-accent": isActive("/search") },
             ]}
-            title="Search"
-            aria-label="search"
+            title={t.nav.search}
+            aria-label={t.nav.search}
           >
             <Icon name="streamline-ultimate-color:search-circle" />
-            <span class="sr-only">Search</span>
+            <span class="sr-only">{t.nav.search}</span>
           </LinkButton>
         </li>
         {
@@ -121,16 +140,25 @@ const isActive = (path: string) => {
               <button
                 id="theme-btn"
                 class="focus-outline relative size-12 p-4 sm:size-8 hover:[&>svg]:stroke-accent"
-                title="Toggles light & dark"
+                title={t.a11y.themeToggle}
                 aria-label="auto"
                 aria-live="polite"
               >
-                <Icon name="streamline-ultimate-color:night-moon-half-1" class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-                <Icon name="streamline-ultimate-color:weather-sun" class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+                <Icon
+                  name="streamline-ultimate-color:night-moon-half-1"
+                  class="absolute top-[50%] left-[50%] -translate-[50%] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90"
+                />
+                <Icon
+                  name="streamline-ultimate-color:weather-sun"
+                  class="absolute top-[50%] left-[50%] -translate-[50%] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0"
+                />
               </button>
             </li>
           )
         }
+        <li class="col-span-2 flex items-center justify-center sm:col-span-1">
+          <LanguageToggle />
+        </li>
       </ul>
     </nav>
   </div>
@@ -149,7 +177,11 @@ const isActive = (path: string) => {
       const openMenu = menuBtn.getAttribute("aria-expanded") === "true";
 
       menuBtn.setAttribute("aria-expanded", openMenu ? "false" : "true");
-      menuBtn.setAttribute("aria-label", openMenu ? "Open Menu" : "Close Menu");
+      const { labelOpen, labelClose } = (menuBtn as HTMLElement).dataset;
+      menuBtn.setAttribute(
+        "aria-label",
+        (openMenu ? labelOpen : labelClose) ?? ""
+      );
 
       menuItems.classList.toggle("hidden");
       menuIcon.classList.toggle("hidden");
@@ -159,6 +191,125 @@ const isActive = (path: string) => {
 
   toggleNav();
 
+  function smartHeader() {
+    const header = document.querySelector<HTMLElement>("#site-header");
+    if (!header) return;
+
+    // Read actual rendered height so the threshold stays accurate even if the
+    // header's padding/content changes. Fall back to 80 if not yet laid out.
+    const headerH = header.offsetHeight || 80;
+
+    let lastY = window.scrollY;
+    let ticking = false;
+    let hovering = false; // pointer is in the top reveal zone
+    // Distance scrolled down (since the last reveal) before the header hides —
+    // hysteresis so tiny scroll jitter doesn't flicker it away. Reveal stays
+    // instant on any scroll-up.
+    const HIDE_DELTA = 64;
+    let downFrom = window.scrollY; // anchor for accumulating downward scroll
+
+    // "At top" threshold scales with how much the page can actually scroll, so a
+    // barely-scrollable homepage reveals the header on the smallest scroll-up,
+    // while a long article keeps the larger header-height threshold. Floored at
+    // 8px so a nudge at the very top still counts as "at top".
+    function topThreshold() {
+      const scrollable =
+        document.documentElement.scrollHeight - window.innerHeight;
+      return Math.max(8, Math.min(headerH, scrollable * 0.15));
+    }
+
+    function update() {
+      const y = window.scrollY;
+      if (hovering) {
+        header!.removeAttribute("data-hidden"); // pointer near top → reveal
+      } else if (y <= topThreshold()) {
+        header!.setAttribute("data-hidden", ""); // at top → hidden
+        downFrom = y;
+      } else if (y < lastY) {
+        header!.removeAttribute("data-hidden"); // scrolling up → reveal instantly
+        downFrom = y;
+      } else if (y - downFrom > HIDE_DELTA) {
+        header!.setAttribute("data-hidden", ""); // scrolled down enough → hide
+      }
+      lastY = y;
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(update);
+        ticking = true;
+      }
+    }
+
+    const onResize = () => update();
+
+    // Hover-to-reveal: moving the pointer into the top strip shows the header.
+    // This is the escape hatch on pages that barely scroll (e.g. the homepage),
+    // where scroll-up can never reveal it. Only meaningful for fine pointers.
+    const canHover = window.matchMedia("(hover: hover)").matches;
+    const onPointerMove = (e: PointerEvent) => {
+      const next = e.clientY <= headerH;
+      if (next !== hovering) {
+        hovering = next;
+        update();
+      }
+    };
+    if (canHover) {
+      window.addEventListener("pointermove", onPointerMove, { passive: true });
+    }
+
+    document.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onResize);
+    update(); // set correct initial state (hidden at top, no flash)
+
+    document.addEventListener(
+      "astro:before-swap",
+      () => {
+        document.removeEventListener("scroll", onScroll);
+        window.removeEventListener("resize", onResize);
+        if (canHover) {
+          window.removeEventListener("pointermove", onPointerMove);
+        }
+      },
+      { once: true }
+    );
+  }
+
+  smartHeader();
+
   // Runs on view transitions navigation
-  document.addEventListener("astro:after-swap", toggleNav);
+  document.addEventListener("astro:after-swap", () => {
+    toggleNav();
+    smartHeader();
+  });
 </script>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset-block-start: 0;
+    inset-inline: 0;
+    z-index: 40;
+    width: 100%;
+    background: var(--background);
+    /* Pronounced, symmetric ease-in-out slide + fade so appearing and
+       disappearing are clearly deliberate — a long curve reads as smooth,
+       intentional motion rather than a flickery snap when the state flips near
+       the threshold. */
+    transition:
+      transform 0.55s var(--ease-in-out-soft),
+      opacity 0.5s var(--ease-in-out-soft);
+  }
+  /* Hidden at the top / on scroll-down: slid fully up (past its own height) and
+     faded out, so the exit is unmistakable. */
+  .site-header[data-hidden] {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .site-header {
+      transition: none;
+    }
+  }
+</style>

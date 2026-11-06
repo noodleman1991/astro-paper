@@ -28,3 +28,5 @@ public/pagefind
 
 # claude code skills (local only)
 .claude/skills/
+# Brainstorming visual companion
+.superpowers/

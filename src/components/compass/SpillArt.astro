@@ -1,0 +1,64 @@
+---
+import type { SpillShape } from "@/data/compass/shapes";
+import { mirrorMatrix } from "@/utils/compass/place";
+
+export type SpillTile = {
+  key: string;
+  tint: "k2" | "k3" | "k4";
+  hero?: boolean;
+  still?: boolean;
+  win?: string;
+  href?: string;
+};
+
+type Props = {
+  shape: SpillShape;
+  tiles: SpillTile[];
+  stage: { w: number; h: number };
+  /** Where the pour grows from (the slice's neck). */
+  neck: [number, number];
+  rtl: boolean;
+  variant: "desktop" | "phone";
+};
+
+const { shape, tiles, stage, neck, rtl, variant } = Astro.props;
+// the phone board roughens at a finer grain and offsets the ants less
+const rough = variant === "phone" ? "cp-rough-ph" : "cp-rough";
+const ants = variant === "phone" ? "translate(4 3)" : "translate(5 4)";
+// one path per sparkle, so each can turn in place
+const sparks = shape.sparks.split(/(?<=Z)/).filter(Boolean);
+---
+
+<svg
+  class="cp-art"
+  viewBox={`0 0 ${stage.w} ${stage.h}`}
+  width={stage.w}
+  height={stage.h}
+  aria-hidden="true"
+>
+  <g transform={rtl ? mirrorMatrix(stage.w) : undefined}>
+    <g filter={`url(#${rough})`}>
+      <g class="cp-pour" style={`transform-origin: ${neck[0]}px ${neck[1]}px`}>
+        <path class="pour cp-hit" d={shape.pour}></path>
+        <g class="cp-tiles">
+          {
+            tiles.map(t => (
+              <Fragment>
+                <path
+                  class:list={["tl", t.tint, "cp-hit", { still: t.still }]}
+                  d={shape.tiles[t.key].d}
+                  data-tile={t.key}
+                  data-win={t.win}
+                  data-href={t.href}
+                />
+                {t.hero && <path class="tdots" d={shape.tiles[t.key].d} />}
+              </Fragment>
+            ))
+          }
+        </g>
+        <path class="cp-ants" transform={ants} d={shape.pour}></path>
+        {sparks.map(d => <path class="cp-spark" d={d} />)}
+      </g>
+    </g>
+  </g>
+</svg>

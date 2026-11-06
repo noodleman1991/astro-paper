@@ -1,0 +1,200 @@
+---
+import "@/styles/compass.css";
+import type { CollectionEntry } from "astro:content";
+import Compass from "./Compass.astro";
+import ServicesSection from "./ServicesSection.astro";
+import BlogSection from "./BlogSection.astro";
+import AboutSection from "./AboutSection.astro";
+import PortfolioDial from "./PortfolioDial.astro";
+import PortfolioStream from "./PortfolioStream.astro";
+import PlainMenu from "./PlainMenu.astro";
+import DetailWindows from "./DetailWindows.astro";
+import { SERVICES } from "@/config/services";
+import { PROJECTS, projectHash } from "@/config/projects";
+import { SOCIALS } from "@/constants";
+import { SECTIONS } from "@/scripts/compass/route";
+import { getPath } from "@/utils/getPath";
+import { localeDir, localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale; posts: CollectionEntry<"blog">[] };
+const { locale, posts } = Astro.props;
+const t = useTranslations(locale).compass;
+const link = (name: string) => SOCIALS.find(s => s.name === name)?.href ?? "";
+---
+
+<div class="compass-home" data-compass data-dir={localeDir(locale)}>
+  <!-- rerun: the router skips inline scripts it has run once per document -->
+  <script is:inline data-astro-rerun>
+    (function (root) {
+      // scale the stage before first paint with fit()'s sum (controller.ts),
+      // so nothing shifts when the controller takes over
+      const phone = innerWidth < 768;
+      const bar = document.querySelector("[data-topbar]");
+      const k = Math.min(
+        root.clientWidth / (phone ? 390 : 1280),
+        (innerHeight - (bar ? bar.clientHeight : 0)) / (phone ? 844 : 736),
+        1.25
+      );
+      root.style.setProperty("--k", k.toFixed(4));
+      // restore the plain menu before first paint; storage may be blocked
+      try {
+        if (localStorage.getItem("compass-nav") === "bar")
+          root.classList.add("nav-bar");
+      } catch {
+        // blocked storage: stay on the compass
+      }
+    })(document.currentScript.parentElement);
+  </script>
+  <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+    <defs>
+      <filter id="cp-rough" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.016"
+          numOctaves="3"
+          seed="7"
+          result="n"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="n"
+          scale="8"
+          xChannelSelector="R"
+          yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <filter id="cp-rough-ph" x="-5%" y="-5%" width="110%" height="110%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.022"
+          numOctaves="3"
+          seed="7"
+          result="n"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="n"
+          scale="7"
+          xChannelSelector="R"
+          yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <filter id="cp-wobble" x="-10%" y="-10%" width="120%" height="120%">
+        <feTurbulence
+          type="fractalNoise"
+          baseFrequency="0.035"
+          numOctaves="2"
+          seed="3"
+          result="n"></feTurbulence>
+        <feDisplacementMap
+          in="SourceGraphic"
+          in2="n"
+          scale="3.5"
+          xChannelSelector="R"
+          yChannelSelector="G"></feDisplacementMap>
+      </filter>
+      <pattern id="cp-dots" width="9" height="9" patternUnits="userSpaceOnUse">
+        <circle class="cp-dot" cx="4.5" cy="4.5" r="1.35"></circle>
+      </pattern>
+      <pattern
+        id="cp-dots-ph"
+        width="8"
+        height="8"
+        patternUnits="userSpaceOnUse"
+      >
+        <circle class="cp-dot" cx="4" cy="4" r="1.2"></circle>
+      </pattern>
+    </defs>
+  </svg>
+
+  <div class="stage" data-stage="desktop">
+    <div class="cp-release" data-release></div>
+    <p class="cp-hint">{t.hint.desktop}</p>
+    <!-- the compass leads, so Tab goes from a title into what it opened -->
+    <Compass locale={locale} variant="desktop" />
+    <ServicesSection locale={locale} variant="desktop" />
+    <BlogSection locale={locale} variant="desktop" posts={posts} />
+    <AboutSection locale={locale} variant="desktop" />
+    <PortfolioDial locale={locale} />
+  </div>
+
+  <div class="stage" data-stage="phone">
+    <p class="cp-hint">{t.hint.phone}<br />{t.hint.phonePlain}</p>
+    <PlainMenu locale={locale} />
+    <Compass locale={locale} variant="phone" />
+    <ServicesSection locale={locale} variant="phone" />
+    <BlogSection locale={locale} variant="phone" posts={posts} />
+    <AboutSection locale={locale} variant="phone" />
+    <PortfolioStream locale={locale} />
+    <button
+      class="cp-sticker cp-close-ph"
+      type="button"
+      data-close
+      aria-label={t.close}>×</button
+    >
+  </div>
+
+  <!-- without JS the stages can't move, so a plain index stands in for them
+       and the windows below read inline as articles -->
+  <div class="cp-nojs">
+    <nav class="cp-nojs-nav" aria-label={t.plain.sections}>
+      {
+        SECTIONS.map(id => (
+          <a class="cp-sticker" href={`#${id}`}>
+            {t.titles[id]}
+          </a>
+        ))
+      }
+    </nav>
+    <section aria-labelledby="services">
+      <h2 id="services">{t.titles.services}</h2>
+      <ul>
+        {
+          SERVICES[locale].map(s => (
+            <li>
+              <a href={`#services/${s.slug}`}>{s.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+    <section aria-labelledby="blog">
+      <h2 id="blog">{t.titles.blog}</h2>
+      <ul>
+        {
+          posts.map(p => (
+            <li>
+              <a href={localePath(locale, getPath(p.id, p.filePath))}>
+                {p.data.title}
+              </a>
+            </li>
+          ))
+        }
+        <li><a href={localePath(locale, "/posts")}>{t.blog.allPosts}</a></li>
+      </ul>
+    </section>
+    <section aria-labelledby="portfolio">
+      <h2 id="portfolio">{t.titles.portfolio}</h2>
+      <ul>
+        {
+          PROJECTS[locale].map(p => (
+            <li>
+              <a href={`#portfolio/${projectHash(p.n)}`}>{p.title}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </section>
+    <section aria-labelledby="about">
+      <h2 id="about">{t.titles.about}</h2>
+      <p>{t.about.hi} · {t.about.intro}</p>
+      <ul>
+        <li><a href="#about/how">{t.about.how}</a></li>
+        <li><a href={link("Mail")}>{t.about.mail}</a></li>
+        <li><a href={link("LinkedIn")}>{t.about.linkedin}</a></li>
+      </ul>
+    </section>
+  </div>
+  <DetailWindows locale={locale} />
+</div>
+
+<script>
+  import { mountCompass } from "@/scripts/compass/controller";
+  mountCompass();
+</script>

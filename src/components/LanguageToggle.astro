@@ -1,0 +1,41 @@
+---
+import { alternatePath, pathLocale } from "@/i18n";
+
+type Props = {
+  class?: string;
+  /** Shows "en · עב" while the accessible name stays the target language. */
+  compact?: boolean;
+};
+const { class: className, compact = false } = Astro.props;
+
+const current = pathLocale(Astro.url.pathname);
+const target = current === "en" ? "he" : "en";
+const href = alternatePath(Astro.url.pathname, target);
+const label = target === "he" ? "עברית" : "English";
+---
+
+<a
+  href={href}
+  data-lang-toggle
+  data-target={target}
+  hreflang={target}
+  lang={target}
+  class={className ?? "font-heading font-medium hover:text-accent"}
+  aria-label={compact ? label : undefined}
+>
+  {compact ? <span aria-hidden="true">en · עב</span> : label}
+</a>
+
+<script>
+  // Remember the visitor's explicit choice so the root auto-detect
+  // (functions/index.ts) respects it on the next visit. Functional cookie —
+  // consent-exempt; disclosed on /privacy (phase 5).
+  document.addEventListener("click", e => {
+    const toggle = (e.target as HTMLElement).closest?.("[data-lang-toggle]");
+    if (!(toggle instanceof HTMLElement)) return;
+    const target = toggle.dataset.target;
+    if (target === "en" || target === "he") {
+      document.cookie = `lang-pref=${target};path=/;max-age=31536000;SameSite=Lax`;
+    }
+  });
+</script>

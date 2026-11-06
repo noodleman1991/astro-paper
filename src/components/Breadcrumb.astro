@@ -1,6 +1,25 @@
 ---
-// Remove current url path and remove trailing slash if exists
-const currentUrlPath = Astro.url.pathname.replace(/\/+$/, "");
+import { localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale?: Locale };
+const { locale = "en" } = Astro.props;
+const t = useTranslations(locale);
+
+// Remove locale segment, then remove trailing slash if exists
+const currentUrlPath = Astro.url.pathname
+  .replace(/^\/he(?=\/|$)/, "")
+  .replace(/\/+$/, "");
+
+// Known section segments render through the nav dictionary; anything else
+// (tag names, slugs) passes through as-is.
+const sectionLabels: Record<string, string> = {
+  posts: t.nav.posts,
+  tags: t.nav.tags,
+  archives: t.nav.archives,
+  search: t.nav.search,
+  about: t.nav.about,
+};
+const label = (segment: string) => sectionLabels[segment] ?? segment;
 
 // Get url array from path
 // eg: /tags/tailwindcss => ['tags', 'tailwindcss']
@@ -9,7 +28,11 @@ const breadcrumbList = currentUrlPath.split("/").slice(1);
 // if breadcrumb is Home > Posts > 1 <etc>
 // replace Posts with Posts (page number)
 if (breadcrumbList[0] === "posts") {
-  breadcrumbList.splice(0, 2, `Posts (page ${breadcrumbList[1] || 1})`);
+  breadcrumbList.splice(
+    0,
+    2,
+    `${t.nav.posts} (${t.breadcrumb.page} ${breadcrumbList[1] || 1})`
+  );
 }
 
 // if breadcrumb is Home > Tags > [tag] > [page] <etc>
@@ -18,7 +41,7 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
   breadcrumbList.splice(
     1,
     3,
-    `${breadcrumbList[1]} ${Number(breadcrumbList[2]) === 1 ? "" : "(page " + breadcrumbList[2] + ")"}`
+    `${breadcrumbList[1]} ${Number(breadcrumbList[2]) === 1 ? "" : `(${t.breadcrumb.page} ` + breadcrumbList[2] + ")"}`
   );
 }
 ---
@@ -28,7 +51,9 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
     class="font-light [&>li]:inline [&>li:not(:last-child)>a]:hover:opacity-100"
   >
     <li>
-      <a href="/" class="opacity-80">Home</a>
+      <a href={localePath(locale, "/")} class="opacity-80"
+        >{t.breadcrumb.home}</a
+      >
       <span aria-hidden="true" class="opacity-80">&raquo;</span>
     </li>
     {
@@ -40,13 +65,16 @@ if (breadcrumbList[0] === "tags" && !isNaN(Number(breadcrumbList[2]))) {
               aria-current="page"
             >
               {/* make the last part lowercase in Home > Tags > some-tag */}
-              {decodeURIComponent(breadcrumb)}
+              {label(decodeURIComponent(breadcrumb))}
             </span>
           </li>
         ) : (
           <li>
-            <a href={`/${breadcrumb}/`} class="capitalize opacity-70">
-              {breadcrumb}
+            <a
+              href={localePath(locale, `/${breadcrumb}/`)}
+              class="capitalize opacity-70"
+            >
+              {label(breadcrumb)}
             </a>
             <span aria-hidden="true">&raquo;</span>
           </li>

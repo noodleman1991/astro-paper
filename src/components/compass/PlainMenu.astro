@@ -1,0 +1,103 @@
+---
+import { localeDir, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const x = (cx: number) => (rtl ? 390 - cx : cx);
+
+// Docked centres from the phone board; a plug closes the hole each section
+// poured from while the compass is tucked away.
+const PLUGS = [
+  { id: "services", cx: 58, cy: 786, dy: -62 },
+  { id: "blog", cx: 332, cy: 786, dy: -62 },
+  { id: "portfolio", cx: 195, cy: 38, dy: 62 },
+  { id: "about", cx: 195, cy: 800, dy: -62 },
+] as const;
+const TABS = [
+  { id: "portfolio", cls: "tb-pf" },
+  { id: "services", cls: "tb-sv" },
+  { id: "blog", cls: "tb-bl" },
+  { id: "about", cls: "tb-ab" },
+] as const;
+---
+
+<div class="cp-plain">
+  <span class="cp-plain-logo">spiro<br />spero</span>
+  <span class="cp-plain-hi">{t.about.hi}</span>
+  <span class="cp-plain-p">{t.about.intro}</span>
+  <span class="cp-plain-pick">{t.plain.pick}</span>
+</div>
+
+<svg
+  class="cp-plugs"
+  viewBox="0 0 390 844"
+  width="390"
+  height="844"
+  aria-hidden="true"
+>
+  {
+    PLUGS.map(p => (
+      <g class={`cp-plug pl-${p.id}`} filter="url(#cp-wobble)">
+        <circle
+          class="paper ink"
+          cx={x(p.cx)}
+          cy={p.cy}
+          r="96"
+          stroke-width="2"
+        />
+        <circle
+          class="ink"
+          cx={x(p.cx)}
+          cy={p.cy}
+          r="104"
+          fill="none"
+          stroke-width="1.4"
+          stroke-dasharray="2 9"
+          stroke-linecap="round"
+        />
+        <text x={x(p.cx)} y={p.cy + p.dy} text-anchor="middle">
+          {t.titles[p.id]}
+        </text>
+      </g>
+    ))
+  }
+</svg>
+
+<nav class="cp-tabs" aria-label={t.plain.sections}>
+  {
+    TABS.map(tab => (
+      <button
+        class={`cp-tab ${tab.cls}`}
+        type="button"
+        data-toggle={tab.id}
+        aria-expanded="false"
+        aria-controls={`cp-p-${tab.id}`}
+      >
+        <i aria-hidden="true" />
+        {t.titles[tab.id]}
+      </button>
+    ))
+  }
+  <button
+    class="cp-tab cp-tab-ring"
+    type="button"
+    data-nav-toggle
+    aria-label={t.plain.back}
+  >
+    <svg width="28" height="28" viewBox="0 0 40 40" aria-hidden="true">
+      <g stroke="currentColor" stroke-width="1.6">
+        <path
+          d="M36.4 27.3 A18 18 0 0 0 21.9 2.1 L20.7 13 A7 7 0 0 1 26.4 22.8 Z"
+          fill="#a0c4f4"></path>
+        <path
+          d="M18.1 2.1 A18 18 0 0 0 3.6 27.3 L13.6 22.8 A7 7 0 0 1 19.3 13 Z"
+          fill="#a0e8b4"></path>
+        <path
+          d="M5.4 30.6 A18 18 0 0 0 34.6 30.6 L25.7 24.1 A7 7 0 0 1 14.3 24.1 Z"
+          fill="#e8837c"></path>
+      </g>
+    </svg>
+  </button>
+</nav>

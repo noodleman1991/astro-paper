@@ -1,0 +1,141 @@
+---
+import type { CollectionEntry } from "astro:content";
+import SpillArt from "./SpillArt.astro";
+import { SHAPES, STAGE } from "@/data/compass/shapes";
+import { SITE } from "@/config";
+import { getPath } from "@/utils/getPath";
+import { placeBox } from "@/utils/compass/place";
+import { postDate } from "@/utils/compass/date";
+import { localeDir, localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = {
+  locale: Locale;
+  variant: "desktop" | "phone";
+  posts: CollectionEntry<"blog">[];
+};
+const { locale, variant, posts } = Astro.props;
+const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const stage = STAGE[variant];
+const phone = variant === "phone";
+const shape = phone ? SHAPES.pbl : SHAPES.bl;
+
+const [latest, before] = posts;
+const href = (p: CollectionEntry<"blog">) =>
+  localePath(locale, getPath(p.id, p.filePath));
+const date = (p: CollectionEntry<"blog">, withYear: boolean) =>
+  postDate(
+    new Date(p.data.pubDatetime),
+    locale,
+    p.data.timezone ?? SITE.timezone,
+    withYear
+  );
+const allPosts = localePath(locale, "/posts");
+// pads as on each approved board
+const PAD = phone ? { k1: 16, w1: 12, all: 12 } : { k1: 30, w1: 40, all: 18 };
+const place = (key: keyof typeof PAD) =>
+  placeBox(
+    shape.tiles[key].box,
+    phone
+      ? { rtl, stageWidth: stage.w, minW: 96, pad: PAD[key], maxW: 360 }
+      : { rtl, stageWidth: stage.w, minW: 112, pad: PAD[key] }
+  );
+const px = (p: { left: number; top: number; width: number; height: number }) =>
+  `left: ${p.left}px; top: ${p.top}px; width: ${p.width}px; height: ${p.height}px`;
+const go = rtl ? "←" : "→";
+---
+
+<section
+  id={`cp-${variant[0]}-blog`}
+  data-region="blog"
+  class="cp-region r-bl"
+  aria-label={t.titles.blog}
+>
+  <SpillArt
+    shape={shape}
+    stage={stage}
+    neck={phone ? shape.origin : [510, 357]}
+    rtl={rtl}
+    variant={variant}
+    tiles={[
+      { key: "k1", tint: "k4", hero: true, href: latest && href(latest) },
+      { key: "w1", tint: "k3", href: before && href(before) },
+      { key: "all", tint: "k2", href: allPosts },
+    ]}
+  />
+  {
+    latest && (
+      <a
+        class="cp-lbl"
+        href={href(latest)}
+        data-tile-label="k1"
+        style={`--i: 0; ${px(place("k1"))}; gap: 7px`}
+      >
+        <span class="cp-date">{date(latest, true)}</span>
+        <span class="t" style={phone ? "font-size: 24px" : ""} dir="auto">
+          {latest.data.title}
+        </span>
+        {phone && (
+          <span class="s" dir="auto">
+            {latest.data.description}
+          </span>
+        )}
+        <span class:list={[phone ? "cp-read" : "s"]}>{t.blog.read}</span>
+      </a>
+    )
+  }
+  {
+    before &&
+      (phone ? (
+        <a
+          class="cp-lbl"
+          href={href(before)}
+          data-tile-label="w1"
+          style={`--i: 1; ${px(place("w1"))}; gap: 6px`}
+        >
+          <span class="cp-date">{date(before, false)}</span>
+          <span class="t" style="font-size: 20px" dir="auto">
+            {before.data.title}
+          </span>
+          <span class="cp-read">{t.blog.read}</span>
+        </a>
+      ) : (
+        <a
+          class="cp-lbl"
+          href={href(before)}
+          data-tile-label="w1"
+          style={`--i: 1; ${px(place("w1"))}; gap: 4px`}
+        >
+          <span class="t" style="font-size: 19px" dir="auto">
+            {before.data.title}
+          </span>
+          <span class="s">
+            {date(before, false)} · {t.blog.read}
+          </span>
+        </a>
+      ))
+  }
+  <a
+    class="cp-lbl"
+    href={allPosts}
+    data-tile-label="all"
+    style={`--i: 2; ${px(place("all"))}; gap: ${phone ? 5 : 8}px`}
+  >
+    <span class="t" style={`font-size: ${phone ? 18 : 20}px`}>
+      {t.blog.allPosts}<span class="go" aria-hidden="true">{go}</span>
+    </span>
+    <span class="s">{t.blog.allPostsSub}</span>
+  </a>
+  {
+    !phone && (
+      <p
+        class="cp-side cp-side-end"
+        style="inset-inline-end: 56px; top: 600px; margin: 0"
+      >
+        <b>{t.side.blog[0]}</b>
+        <span>{t.side.blog[1]}</span>
+        <span>{t.side.blog[2]}</span>
+      </p>
+    )
+  }
+</section>

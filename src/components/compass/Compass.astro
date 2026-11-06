@@ -1,0 +1,158 @@
+---
+import { compassArcs, mirrorMatrix } from "@/utils/compass/place";
+import { localeDir, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale; variant: "desktop" | "phone" };
+const { locale, variant } = Astro.props;
+const t = useTranslations(locale).compass;
+const rtl = localeDir(locale) === "rtl";
+const v = variant[0];
+
+// Wedges as on the approved boards (math degrees: services −28…88,
+// blog 92…208, portfolio 212…328). Desktop: outer r 150, inner r 66,
+// hub r 62. Phone: outer r 130, inner r 56, hub r 53.
+const GEO = {
+  desktop: {
+    size: 360,
+    c: 180,
+    orbit: 166,
+    paper: 153,
+    hub: 62,
+    wedges: {
+      blog: "M174.8 30.1 A150 150 0 0 0 47.6 250.4 L121.7 211 A66 66 0 0 1 177.7 114 Z",
+      services:
+        "M312.4 250.4 A150 150 0 0 0 185.2 30.1 L182.3 114 A66 66 0 0 1 238.3 211 Z",
+      portfolio:
+        "M52.8 259.5 A150 150 0 0 0 307.2 259.5 L236 215 A66 66 0 0 1 124 215 Z",
+    },
+  },
+  phone: {
+    size: 300,
+    c: 150,
+    orbit: 144,
+    paper: 133,
+    hub: 53,
+    wedges: {
+      blog: "M145 20.1 A130 130 0 0 0 35 210.6 L100.5 176.1 A56 56 0 0 1 147.9 94 Z",
+      services:
+        "M265 210.6 A130 130 0 0 0 155 20.1 L152.1 94 A56 56 0 0 1 199.5 176.1 Z",
+      portfolio:
+        "M40 219.3 A130 130 0 0 0 260 219.3 L197.4 179.8 A56 56 0 0 1 102.6 179.8 Z",
+    },
+  },
+}[variant];
+const phone = variant === "phone";
+const arcs = compassArcs(variant, rtl);
+const slices = [
+  { id: "blog", cls: "w-bl", lb: "lb-bl" },
+  { id: "services", cls: "w-sv", lb: "lb-sv" },
+  { id: "portfolio", cls: "w-pf", lb: "lb-pf" },
+] as const;
+const ctl = (id: string) => `cp-${v}-${id}`;
+---
+
+<div class="cp-compass">
+  <svg
+    viewBox={`0 0 ${GEO.size} ${GEO.size}`}
+    width={GEO.size}
+    height={GEO.size}
+    aria-hidden="true"
+    style="position: absolute; left: 0; top: 0; overflow: visible"
+  >
+    <g class="cp-breathe">
+      <circle
+        class:list={["ink", { "cp-orbit": !phone }]}
+        cx={GEO.c}
+        cy={GEO.c}
+        r={GEO.orbit}
+        fill="none"
+        stroke-width="1.4"
+        stroke-dasharray="2 9"
+        stroke-linecap="round"></circle>
+      <circle class="paper" cx={GEO.c} cy={GEO.c} r={GEO.paper}></circle>
+      <g
+        filter="url(#cp-wobble)"
+        transform={rtl ? mirrorMatrix(GEO.size) : undefined}
+      >
+        {
+          slices.map(s => (
+            <path
+              class:list={["cp-wedge", s.cls]}
+              d={GEO.wedges[s.id]}
+              data-toggle={s.id}
+              data-wedge={s.id}
+            />
+          ))
+        }
+        <circle
+          class="cp-hub ink"
+          cx={GEO.c}
+          cy={GEO.c}
+          r={GEO.hub}
+          stroke-width="2"
+          data-wedge="about"></circle>
+      </g>
+      <defs>
+        {slices.map(s => <path id={`cp-arc-${v}-${s.id}`} d={arcs[s.id]} />)}
+      </defs>
+      {
+        slices.map(s => (
+          <text class="cp-arc" data-title={s.id}>
+            <textPath
+              href={`#cp-arc-${v}-${s.id}`}
+              startOffset="50%"
+              text-anchor="middle"
+            >
+              {t.titles[s.id]}
+              <tspan class="x"> ×</tspan>
+            </textPath>
+          </text>
+        ))
+      }
+    </g>
+  </svg>
+  <button
+    class="cp-logo"
+    type="button"
+    data-toggle="about"
+    aria-expanded="false"
+    aria-controls={ctl("about")}
+    aria-label={t.logoAria}
+  >
+    <span style="display: block">spiro</span>
+    <span style="display: block">spero</span>
+  </button>
+  {
+    slices.map(s => (
+      <button
+        class:list={["cp-label", s.lb]}
+        type="button"
+        data-toggle={s.id}
+        data-title={s.id}
+        aria-expanded="false"
+        aria-controls={ctl(s.id)}
+      >
+        {t.titles[s.id]}
+        <span class="x" aria-hidden="true">
+          ×
+        </span>
+      </button>
+    ))
+  }
+  {
+    phone ? (
+      <button
+        class="cp-hide"
+        type="button"
+        data-nav-toggle
+        aria-label={t.plain.hide}
+      >
+        ×
+      </button>
+    ) : (
+      <button class="cp-x" type="button" data-close aria-label={t.closeAbout}>
+        ×
+      </button>
+    )
+  }
+</div>

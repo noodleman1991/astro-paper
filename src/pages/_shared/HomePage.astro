@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "@/layouts/Layout.astro";
+import Footer from "@/components/Footer.astro";
+import CompassHome from "@/components/compass/CompassHome.astro";
+import TopBar from "@/components/compass/TopBar.astro";
+import ContactDrawer from "@/components/compass/ContactDrawer.astro";
+import getSortedPosts from "@/utils/getSortedPosts";
+import { localePath, useTranslations, type Locale } from "@/i18n";
+
+type Props = { locale: Locale };
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const posts = await getCollection("blog");
+const recentPosts = getSortedPosts(posts).slice(0, 2);
+---
+
+<Layout locale={locale} description={t.site.desc}>
+  <TopBar locale={locale} />
+  <main
+    id="main-content"
+    data-layout="index"
+    data-home-url={localePath(locale, "/")}
+  >
+    <CompassHome locale={locale} posts={recentPosts} />
+  </main>
+  <Footer locale={locale} />
+  <ContactDrawer locale={locale} />
+</Layout>
+
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const indexLayout = (document.querySelector("#main-content") as HTMLElement)
+      ?.dataset?.layout;
+    if (indexLayout) {
+      const homeUrl =
+        (document.querySelector("#main-content") as HTMLElement)?.dataset
+          ?.homeUrl ?? "/";
+      sessionStorage.setItem("backUrl", homeUrl);
+    }
+  });
+</script>
